@@ -61,7 +61,9 @@ namespace GGJ24
             _state = ChickenState.Neutral;
             _body = GetComponent<Rigidbody>();
             _shooting.CanShoot = false;
-            _agent.speed *= Random.Range(0.8f, 2f);
+            _agent.speed *= Random.Range(1f, 10f);
+            _agent.acceleration *= Random.Range(1f, 2f);
+            _agent.angularSpeed *= Random.Range(1f, 2f);
         }
 
         private void OnEnable()
@@ -143,7 +145,7 @@ namespace GGJ24
                     ReturnToNeutral();
                     break;
             }
-            Debug.Log("state changed: " + _state);
+            //Debug.Log("state changed: " + _state);
         }
 
         private void ReturnToNeutral()
