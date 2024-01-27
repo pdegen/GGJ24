@@ -251,6 +251,7 @@ namespace GGJ24
             _shooting.CanShoot = true;
             _body.velocity = Vector3.zero;
             _body.isKinematic = true;
+            transform.position = Vector3.zero;
             transform.rotation = Quaternion.identity;
             _agent.enabled = true;
             //Debug.Log("nav mesh enabled");
