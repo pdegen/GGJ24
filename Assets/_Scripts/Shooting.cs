@@ -54,6 +54,7 @@ namespace GGJ24
             if (_cooldownDeltaTime > _cooldown && CanShoot && !_isShooting)
             {
                 Shoot();
+                _cooldownDeltaTime = 0;
             }
             _cooldownDeltaTime += Time.deltaTime;
             _firedirection = _firepoint.forward; // shitty solution
@@ -61,8 +62,9 @@ namespace GGJ24
 
         public void CommenceHostilities()
         {
+            if (IsHostile) return;
             IsHostile = true;
-            _cooldownDeltaTime = _cooldown;
+            _cooldownDeltaTime = 0;
         }
 
         public void StopShooting()

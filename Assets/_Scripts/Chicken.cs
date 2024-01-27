@@ -81,8 +81,6 @@ namespace GGJ24
             if (IsSleeping || IsMovedByRigidBody) return;
             if (!_agent.enabled) return;
 
-            if (!IsAgentOnNavMesh()) return;
-
             HandleDistanceCheck();
         }
 
@@ -122,7 +120,12 @@ namespace GGJ24
 
         private void OnTargetStateChanged()
         {
-            if (IsMovedByRigidBody) return;
+            if (IsMovedByRigidBody)
+            {
+                if (_state == ChickenState.Hostile)
+                    ReturnToNeutral();
+                return;
+            }
 
             switch(_bazooka.State)
             {
@@ -135,14 +138,27 @@ namespace GGJ24
                     _pathRoutine = StartCoroutine(_autoNewDestination());
                     break;
                 case Bazooka.BazookaState.Hostile:
-                    _targetDistanceReached = _targetDistanceHostile;
-                    _state = ChickenState.Hostile;
-                    if (_pathRoutine != null)
-                        StopCoroutine(_pathRoutine);
-                    _agent.SetDestination(_bazooka.Target.position);
+                    ReturnToNeutral();
                     break;
             }
             Debug.Log("state changed: " + _state);
+        }
+
+        private void ReturnToNeutral()
+        {
+            _targetDistanceReached = _targetDistanceHostile;
+            _state = ChickenState.Hostile;
+            if (_pathRoutine != null)
+                StopCoroutine(_pathRoutine);
+            if (_agent.enabled)
+            {
+                _agent.SetDestination(_bazooka.Target.position);
+            }
+            else
+            {
+                transform.position = Vector3.zero;
+                _agent.enabled = true;
+            }
         }
 
         public void WakeUp()
@@ -217,7 +233,7 @@ namespace GGJ24
             _body.isKinematic = false;
             _agent.enabled = false;
             _shooting.CanShoot = false;
-            _shooting.IsHostile = false;
+            //_shooting.IsHostile = false;
             yield return new WaitForSeconds(duration);
             _shooting.CanShoot = true;
             _body.velocity = Vector3.zero;
