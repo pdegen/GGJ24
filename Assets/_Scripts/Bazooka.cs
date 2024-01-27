@@ -99,6 +99,7 @@ namespace GGJ24
             State = BazookaState.Neutral;
             TargetStateChanged?.Invoke();
             _shooting.IsHostile = false;
+            //Debug.Log("return to neutral");
         }
 
         bool IsInCone()

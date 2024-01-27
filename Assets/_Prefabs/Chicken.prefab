@@ -46,14 +46,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damageAmount: 1
   _weaponRange: 100
-  _bulletSpeed: 200
+  _bulletSpeed: 7
   _shootingSystem: {fileID: 0}
   _impactSystem: {fileID: 0}
   _firepoint: {fileID: 5861571706455978527}
-  _fireRate: 1
+  _fireRate: 0.1
   _cooldown: 1
   _commenceHostilitiesDelay: 0.5
   _shotsPerBurst: 1
+  _bulletPrefab: {fileID: 5632713401504439107, guid: 6ffe2f138d260ce43a4a66e566b26b5c,
+    type: 3}
 --- !u!1 &2282417172288404023
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +182,7 @@ MonoBehaviour:
   _maxDistance: 60
   _pathUpdateSpeed: 5
   _bazooka: {fileID: 9025435668193257961}
-  _targetDistanceReachedHostile: 15
+  _targetDistanceHostile: 15
   _state: 0
 --- !u!195 &8958378915651254641
 NavMeshAgent:
@@ -361,7 +363,7 @@ MonoBehaviour:
     m_Bits: 64
   _ignoreLayers:
     serializedVersion: 2
-    m_Bits: 148
+    m_Bits: 1876
   _coneAngle: 24.3
   _coneRangeSquared: 200
   _targetLostDelay: 3
@@ -377,7 +379,7 @@ GameObject:
   - component: {fileID: 4970869172054119522}
   - component: {fileID: 1716525128338133758}
   - component: {fileID: 6800800431332920991}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BazookaMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -23,6 +23,8 @@ namespace GGJ24
         [SerializeField] private float _commenceHostilitiesDelay = 1.6f;
         [SerializeField] private int _shotsPerBurst = 15;
 
+        [SerializeField] private GameObject _bulletPrefab;
+
         private float _cooldownDeltaTime = 0f;
         private bool _isHostile = false;
         public bool IsHostile { get => _isHostile; set => _isHostile = value; }
@@ -40,7 +42,8 @@ namespace GGJ24
 
         protected virtual void Shoot()
         {
-            Debug.Log("shoot");
+            GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+            bullet.GetComponent<Rigidbody>().velocity = _bulletSpeed * transform.forward;
         }
 
         private void Update()

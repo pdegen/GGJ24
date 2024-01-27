@@ -13,6 +13,8 @@ namespace GGJ24
         [SerializeField] protected Transform _destinationGizmo;
         [SerializeField, Min(0)] protected float _maxDistance = 60f;
         [SerializeField, Min(0.1f)] protected float _pathUpdateSpeed = 0.5f;
+        [SerializeField] private float _rotationSpeed = 10f;
+
         protected Vector3 _destinationPos;
         protected NavMeshAgent _agent;
         protected Coroutine _pathRoutine;
@@ -86,7 +88,7 @@ namespace GGJ24
         {
             Vector3 direction = (_bazooka.Target.position - transform.position).normalized;
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _rotationSpeed);
         }
 
         private void OnTargetStateChanged()
