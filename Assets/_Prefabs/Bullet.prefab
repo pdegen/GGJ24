@@ -148,6 +148,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _explosionEffect: {fileID: 2433282508537954060, guid: c854e0b773860ac42808ae0167421d81,
     type: 3}
-  _explosionForce: 15
+  _explosionForce: 30
   _explosionBaseDamage: 0
-  _upwardsModifier: 1000
+  _upwardsModifier: 3
