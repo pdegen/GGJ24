@@ -18,16 +18,14 @@ namespace GGJ24
         protected Vector3 _firedirection;
         protected bool _isShooting = false;
         public bool IsShooting { get => _isShooting; private set => _isShooting = value; }
-        [SerializeField] private float _fireRate = 0.15f;
         [SerializeField] private float _cooldown = 2f;
-        [SerializeField] private float _commenceHostilitiesDelay = 1.6f;
-        [SerializeField] private int _shotsPerBurst = 15;
 
         [SerializeField] private GameObject _bulletPrefab;
 
         private float _cooldownDeltaTime = 0f;
         private bool _isHostile = false;
         public bool IsHostile { get => _isHostile; set => _isHostile = value; }
+        public bool CanShoot = true;
 
 
         private void Awake()
@@ -53,33 +51,25 @@ namespace GGJ24
                 return;
             }
 
-            if (_cooldownDeltaTime > _cooldown && !_isShooting)
+            if (_cooldownDeltaTime > _cooldown && CanShoot && !_isShooting)
             {
-                StartCoroutine(BurstFire());
+                Shoot();
+                _cooldownDeltaTime = 0;
             }
             _cooldownDeltaTime += Time.deltaTime;
             _firedirection = _firepoint.forward; // shitty solution
         }
 
-        public IEnumerator CommenceHostilities()
+        public void CommenceHostilities()
         {
-            yield return new WaitForSeconds(_commenceHostilitiesDelay);
+            if (IsHostile) return;
             IsHostile = true;
-            _cooldownDeltaTime = _cooldown;
+            _cooldownDeltaTime = 0.5f * _cooldown;
         }
 
-        private IEnumerator BurstFire()
+        public void StopShooting()
         {
-            _isShooting = true;
-            // TO DO: Object pooling
-            for (int i = 0; i < _shotsPerBurst; ++i)
-            {
-                if (!IsHostile) break;
-                Shoot();
-                yield return new WaitForSeconds(_fireRate);
-            }
-            _isShooting = false;
-            _cooldownDeltaTime = 0f;
+
         }
     }
 }
