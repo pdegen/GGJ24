@@ -16,6 +16,8 @@ namespace GGJ24
         [SerializeField] private float _wavePeriod = 2f;
         [SerializeField] private float _numChickensPerRageLevel = 2;
 
+        [SerializeField] private bool _enableDummyWave = false;
+
         private void Awake()
         {
             if (Instance == null)
@@ -23,6 +25,16 @@ namespace GGJ24
                 Debug.LogWarning("Found more than one Spawner Instance");
             }
             Instance = this;
+        }
+
+        private void OnEnable()
+        {
+            Egg.CollectedEgg += OnEggCollected;
+        }
+
+        private void OnDisable()
+        {
+            Egg.CollectedEgg -= OnEggCollected;
         }
 
         private List<Chicken> _chickenList = new List<Chicken>();
@@ -55,12 +67,16 @@ namespace GGJ24
 
         public void Update()
         {
-            _waveTimer += Time.deltaTime;
-            if (_waveTimer > _wavePeriod)
-            {
-                WakeUpChickens();
-                _waveTimer = 0;
+
+            if (_enableDummyWave) {
+                _waveTimer += Time.deltaTime;
+                if (_waveTimer > _wavePeriod)
+                {
+                    WakeUpChickens();
+                    _waveTimer = 0;
+                }
             }
+
         }
 
         public void WakeUpChickens()
@@ -74,6 +90,11 @@ namespace GGJ24
                 _chickensAwake++;
                 //Debug.Log("wake up chicken " + i);
             }
+        }
+
+        private void OnEggCollected()
+        {
+            WakeUpChickens();
         }
 
 

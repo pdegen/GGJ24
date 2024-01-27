@@ -46,7 +46,7 @@ namespace GGJ24
 
         public void WakeUp()
         {
-            _agent.enabled = true;
+            _agent.enabled = true   ;
             _isSleeping = false;
             _pathRoutine = StartCoroutine(_autoNewDestination());
             transform.parent = null;
