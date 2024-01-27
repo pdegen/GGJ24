@@ -9,14 +9,14 @@ namespace GGJ24
     public class Egg : MonoBehaviour, ICollecetable
     {
         public static event Action CollectedEgg;
-        public static int TotalEggs = 0;
+        //public static int TotalEggs = 0;
         public static int CollectedEggs = 0;
         public string InteractionPrompt { get => "Collect"; }
 
-        private void Awake()
-        {
-            TotalEggs++;
-        }
+        //private void Awake()
+        //{
+        //    TotalEggs++;
+        //}
 
         private void Start()
         {

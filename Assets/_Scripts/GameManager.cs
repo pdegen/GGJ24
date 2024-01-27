@@ -14,4 +14,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("Victory!");
         //Time.timeScale = 0;
     }
+
+    private void OnDrawGizmos()
+    {
+        // Set the color of the gizmo
+        Gizmos.color = Color.green;
+        // Draw a wire sphere at the position of the explosion with the specified radius
+        Gizmos.DrawWireSphere(transform.position, LevelRadius);
+    }
 }

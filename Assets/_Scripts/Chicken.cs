@@ -33,6 +33,7 @@ namespace GGJ24
         public bool IsSleeping = true;
         public bool IsMovedByRigidBody = false;
         [SerializeField] private ChickenState _state;
+        private float _oobRadius;
 
         private Rigidbody _body;
 
@@ -64,6 +65,7 @@ namespace GGJ24
             _agent.speed *= Random.Range(1f, 10f);
             _agent.acceleration *= Random.Range(1f, 2f);
             _agent.angularSpeed *= Random.Range(1f, 2f);
+            _oobRadius = GameManager.LevelRadius * GameManager.LevelRadius;
         }
 
         private void OnEnable()
@@ -79,10 +81,9 @@ namespace GGJ24
         // Update is called once per frame
         protected virtual void Update()
         {
-            // When falling below map?
-            if (transform.position.y < -10) transform.position = new Vector3(transform.position.x, 1, transform.position.z);
 
             if (IsSleeping || IsMovedByRigidBody) return;
+            if (IsOOB()) transform.position = Vector3.zero;
             if (!_agent.enabled) return;
 
             HandleDistanceCheck();
@@ -107,6 +108,11 @@ namespace GGJ24
             {
                 _agent.isStopped = false;
             }
+        }
+
+        bool IsOOB()
+        {
+            return transform.position.sqrMagnitude > _oobRadius;
         }
 
         bool IsAgentOnNavMesh()

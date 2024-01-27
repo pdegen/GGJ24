@@ -1860,7 +1860,7 @@ PrefabInstance:
     - target: {fileID: 961586475154973867, guid: 025ac95bf930eb44ca652950fdcc3b88,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99146557
+      value: 0.9927382
       objectReference: {fileID: 0}
     - target: {fileID: 961586475154973867, guid: 025ac95bf930eb44ca652950fdcc3b88,
         type: 3}
@@ -1870,7 +1870,7 @@ PrefabInstance:
     - target: {fileID: 961586475154973867, guid: 025ac95bf930eb44ca652950fdcc3b88,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.13036883
+      value: -0.12029547
       objectReference: {fileID: 0}
     - target: {fileID: 961586475154973867, guid: 025ac95bf930eb44ca652950fdcc3b88,
         type: 3}
@@ -1885,7 +1885,7 @@ PrefabInstance:
     - target: {fileID: 961586475154973867, guid: 025ac95bf930eb44ca652950fdcc3b88,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 14.982
+      value: -13.818
       objectReference: {fileID: 0}
     - target: {fileID: 961586475154973867, guid: 025ac95bf930eb44ca652950fdcc3b88,
         type: 3}
@@ -6038,10 +6038,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6519508322857786456, guid: 025ac95bf930eb44ca652950fdcc3b88,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6552879289219083633, guid: 025ac95bf930eb44ca652950fdcc3b88,
         type: 3}
       propertyPath: m_Name
       value: Stall
+      objectReference: {fileID: 0}
+    - target: {fileID: 9156979917578166406, guid: 025ac95bf930eb44ca652950fdcc3b88,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9156979917578166406, guid: 025ac95bf930eb44ca652950fdcc3b88,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9156979917578166406, guid: 025ac95bf930eb44ca652950fdcc3b88,
+        type: 3}
+      propertyPath: m_BaseOffset
+      value: 0.09
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
