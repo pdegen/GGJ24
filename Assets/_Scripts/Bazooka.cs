@@ -24,7 +24,6 @@ namespace GGJ24
         private float _coneRange;
         private bool _targetIsInCone = false;
         private bool _targetAcquried = false;
-        private Coroutine _returnToNeutralRoutine;
 
         [SerializeField] private BazookaState _state;
         public BazookaState State { get => _state; private set => _state = value; }
@@ -62,20 +61,14 @@ namespace GGJ24
 
             _targetAcquried = _targetIsInCone && !IsObstructed();
 
-            if (_targetAcquried && _returnToNeutralRoutine != null)
-            {
-                StopCoroutine(_returnToNeutralRoutine);
-                _returnToNeutralRoutine = null;
-            }
-
             if (!isHostile && _targetAcquried)
             {
                 ChangeToHostile();
             }
 
-            if (isHostile && !_targetAcquried && _returnToNeutralRoutine == null)
+            if (isHostile && !_targetAcquried)
             {
-                _returnToNeutralRoutine = StartCoroutine(RetrunToNeutral(0));
+                RetrunToNeutral();
                 return;
             }
         }
@@ -84,18 +77,11 @@ namespace GGJ24
         {
             State = BazookaState.Hostile;
             TargetStateChanged?.Invoke();
-            StartCoroutine(_shooting.CommenceHostilities());
+            if (!_shooting.IsHostile) _shooting.CommenceHostilities();
         }
 
-        private IEnumerator RetrunToNeutral(float delayMultiplicator = 1f)
+        private void RetrunToNeutral(float delayMultiplicator = 1f)
         {
-            while (_shooting.IsShooting)
-            {
-                yield return null;
-            }
-
-            yield return new WaitForSeconds(_targetLostDelay * delayMultiplicator);
-            _returnToNeutralRoutine = null;
             State = BazookaState.Neutral;
             TargetStateChanged?.Invoke();
             _shooting.IsHostile = false;

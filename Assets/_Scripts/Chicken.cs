@@ -24,6 +24,8 @@ namespace GGJ24
         [SerializeField] private Bazooka _bazooka;
         [SerializeField] private Shooting _shooting;
 
+        [SerializeField] private Transform _spawnCenter;
+
         [SerializeField] private float _targetDistanceHostile = 15f;
         private float _targetDistanceReached;
         private readonly float _targetDistanceNeutral = 0.3f;
@@ -53,6 +55,7 @@ namespace GGJ24
         protected virtual void Start()
         {
             _autoNewDestination = AutoNewDestination;
+            _destinationGizmo.gameObject.SetActive(false);
             if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
             _bazooka.gameObject.SetActive(false);
             _state = ChickenState.Neutral;
@@ -149,6 +152,8 @@ namespace GGJ24
             IsSleeping = false;
             _pathRoutine = StartCoroutine(_autoNewDestination());
             _bazooka.gameObject.SetActive(true);
+            _destinationGizmo.gameObject.SetActive(true);
+            if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
         }
 
         protected virtual void SetNewDestination()
@@ -167,7 +172,6 @@ namespace GGJ24
         {
             SetNewDestination();
         }
-
         protected virtual IEnumerator AutoNewDestination()
         {
 
@@ -213,20 +217,22 @@ namespace GGJ24
             _body.isKinematic = false;
             _agent.enabled = false;
             _shooting.CanShoot = false;
+            _shooting.IsHostile = false;
             yield return new WaitForSeconds(duration);
             _shooting.CanShoot = true;
+            _body.velocity = Vector3.zero;
             _body.isKinematic = true;
             transform.rotation = Quaternion.identity;
             _agent.enabled = true;
-            _body.velocity = Vector3.zero;
             Debug.Log("nav mesh enabled");
             NavmeshDisabledRoutine = null;
             IsMovedByRigidBody = false;
             if (!IsAgentOnNavMesh())
             {
                 Debug.Log("Setting chicken to origin");
-                transform.position = Vector3.zero;   
+                //transform.position = Vector3.zero;   
             }
+            SetNewDestination();
         }
     }
 }

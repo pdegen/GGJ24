@@ -150,4 +150,4 @@ MonoBehaviour:
     type: 3}
   _explosionForce: 5
   _explosionBaseDamage: 0
-  _upwardsModifier: 0.1
+  _upwardsModifier: 0.5

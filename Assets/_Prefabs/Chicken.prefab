@@ -50,10 +50,7 @@ MonoBehaviour:
   _shootingSystem: {fileID: 0}
   _impactSystem: {fileID: 0}
   _firepoint: {fileID: 5861571706455978527}
-  _fireRate: 0.1
   _cooldown: 3
-  _commenceHostilitiesDelay: 0.5
-  _shotsPerBurst: 1
   _bulletPrefab: {fileID: 5632713401504439107, guid: 6ffe2f138d260ce43a4a66e566b26b5c,
     type: 3}
   CanShoot: 1
@@ -187,6 +184,7 @@ MonoBehaviour:
   _agentDisableDuration: 7
   _bazooka: {fileID: 9025435668193257961}
   _shooting: {fileID: 5114573725616625717}
+  _spawnCenter: {fileID: 0}
   _targetDistanceHostile: 15
   IsSleeping: 1
   IsMovedByRigidBody: 0

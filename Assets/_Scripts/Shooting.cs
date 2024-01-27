@@ -18,10 +18,7 @@ namespace GGJ24
         protected Vector3 _firedirection;
         protected bool _isShooting = false;
         public bool IsShooting { get => _isShooting; private set => _isShooting = value; }
-        [SerializeField] private float _fireRate = 0.15f;
         [SerializeField] private float _cooldown = 2f;
-        [SerializeField] private float _commenceHostilitiesDelay = 1.6f;
-        [SerializeField] private int _shotsPerBurst = 15;
 
         [SerializeField] private GameObject _bulletPrefab;
 
@@ -56,31 +53,21 @@ namespace GGJ24
 
             if (_cooldownDeltaTime > _cooldown && CanShoot && !_isShooting)
             {
-                StartCoroutine(BurstFire());
+                Shoot();
             }
             _cooldownDeltaTime += Time.deltaTime;
             _firedirection = _firepoint.forward; // shitty solution
         }
 
-        public IEnumerator CommenceHostilities()
+        public void CommenceHostilities()
         {
-            yield return new WaitForSeconds(_commenceHostilitiesDelay);
             IsHostile = true;
             _cooldownDeltaTime = _cooldown;
         }
 
-        private IEnumerator BurstFire()
+        public void StopShooting()
         {
-            _isShooting = true;
-            // TO DO: Object pooling
-            for (int i = 0; i < _shotsPerBurst; ++i)
-            {
-                if (!IsHostile) break;
-                Shoot();
-                yield return new WaitForSeconds(_fireRate);
-            }
-            _isShooting = false;
-            _cooldownDeltaTime = 0f;
+
         }
     }
 }
