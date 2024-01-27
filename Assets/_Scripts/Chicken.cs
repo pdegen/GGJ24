@@ -132,7 +132,7 @@ namespace GGJ24
             if (IsMovedByRigidBody)
             {
                 if (_state == ChickenState.Hostile)
-                    ReturnToNeutral();
+                    CommenceHostilities();
                 return;
             }
 
@@ -147,13 +147,13 @@ namespace GGJ24
                     _pathRoutine = StartCoroutine(_autoNewDestination());
                     break;
                 case Bazooka.BazookaState.Hostile:
-                    ReturnToNeutral();
+                    CommenceHostilities();
                     break;
             }
             //Debug.Log("state changed: " + _state);
         }
 
-        private void ReturnToNeutral()
+        private void CommenceHostilities()
         {
             _targetDistanceReached = _targetDistanceHostile;
             _state = ChickenState.Hostile;
