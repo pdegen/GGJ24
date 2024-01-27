@@ -46,16 +46,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damageAmount: 1
   _weaponRange: 100
-  _bulletSpeed: 7
+  _bulletSpeed: 15
   _shootingSystem: {fileID: 0}
   _impactSystem: {fileID: 0}
   _firepoint: {fileID: 5861571706455978527}
   _fireRate: 0.1
-  _cooldown: 1
+  _cooldown: 3
   _commenceHostilitiesDelay: 0.5
   _shotsPerBurst: 1
   _bulletPrefab: {fileID: 5632713401504439107, guid: 6ffe2f138d260ce43a4a66e566b26b5c,
     type: 3}
+  CanShoot: 1
 --- !u!1 &2282417172288404023
 GameObject:
   m_ObjectHideFlags: 0
@@ -70,7 +71,8 @@ GameObject:
   - component: {fileID: 6430960868077864367}
   - component: {fileID: 3971071785757614310}
   - component: {fileID: 8958378915651254641}
-  m_Layer: 0
+  - component: {fileID: 1129371843837106901}
+  m_Layer: 11
   m_Name: Chicken
   m_TagString: Chicken
   m_Icon: {fileID: 0}
@@ -181,8 +183,13 @@ MonoBehaviour:
   _destinationGizmo: {fileID: 2570822196753753695}
   _maxDistance: 60
   _pathUpdateSpeed: 5
+  _rotationSpeed: 10
+  _agentDisableDuration: 7
   _bazooka: {fileID: 9025435668193257961}
+  _shooting: {fileID: 5114573725616625717}
   _targetDistanceHostile: 15
+  IsSleeping: 1
+  IsMovedByRigidBody: 0
   _state: 0
 --- !u!195 &8958378915651254641
 NavMeshAgent:
@@ -206,6 +213,33 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!54 &1129371843837106901
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2282417172288404023}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5896246506698475961
 GameObject:
   m_ObjectHideFlags: 0

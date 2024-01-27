@@ -37,7 +37,7 @@ namespace GGJ24
             Egg.CollectedEgg -= OnEggCollected;
         }
 
-        private List<Chicken> _chickenList = new List<Chicken>();
+        private readonly List<Chicken> _chickenList = new List<Chicken>();
 
         private void Start()
         {

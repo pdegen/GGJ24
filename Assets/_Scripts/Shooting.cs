@@ -28,6 +28,7 @@ namespace GGJ24
         private float _cooldownDeltaTime = 0f;
         private bool _isHostile = false;
         public bool IsHostile { get => _isHostile; set => _isHostile = value; }
+        public bool CanShoot = true;
 
 
         private void Awake()
@@ -53,7 +54,7 @@ namespace GGJ24
                 return;
             }
 
-            if (_cooldownDeltaTime > _cooldown && !_isShooting)
+            if (_cooldownDeltaTime > _cooldown && CanShoot && !_isShooting)
             {
                 StartCoroutine(BurstFire());
             }

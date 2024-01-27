@@ -9,16 +9,9 @@ public class GameManager : MonoBehaviour
     public static int EggsCollected = 0;
     public static float LevelRadius = 60f;
 
-
-
-    // Start is called before the first frame update
-    void Start()
+    public static void Victory()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        Debug.Log("Victory!");
+        //Time.timeScale = 0;
     }
 }
