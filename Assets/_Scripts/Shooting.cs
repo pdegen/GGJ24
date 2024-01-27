@@ -13,6 +13,7 @@ namespace GGJ24
 
         [SerializeField] protected ParticleSystem _shootingSystem;
         [SerializeField] protected ParticleSystem _impactSystem;
+        [SerializeField] private Chicken _chicken;
 
         protected Vector3 _firedirection;
         protected bool _isShooting = false;
@@ -38,6 +39,23 @@ namespace GGJ24
         private void Start()
         {
             InvokeRepeating(nameof(RandomShoot), 2.0f, _randomShootPeriod);
+            _chicken = GetComponentInParent<Chicken>();
+        }
+
+        private void OnEnable()
+        {
+            Egg.CollectedEgg += OnEggCollected;
+        }
+
+        private void OnDisable()
+        {
+            Egg.CollectedEgg -= OnEggCollected;
+        }
+
+        private void OnEggCollected()
+        {
+            _randomShootProbability *= GameManager.Instance.RageMultiplier;
+            _randomShootPeriod = Mathf.Max(1, _randomShootPeriod /= GameManager.Instance.RageMultiplier);
         }
 
         private void RandomShoot()
@@ -62,6 +80,7 @@ namespace GGJ24
             if (_cooldownDeltaTime > _cooldown && CanShoot && !_isShooting)
             {
                 Shoot();
+                _chicken.Recoil();
                 _cooldownDeltaTime = 0;
             }
             _cooldownDeltaTime += Time.deltaTime;

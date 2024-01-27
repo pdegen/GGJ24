@@ -1,26 +1,30 @@
+using GGJ24;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; }
 
-    public static int RageLevel = 0;
     public static int EggsCollected = 0;
     private static float _levelRadius;
     public static float LevelRadius { get; private set; }  = 40f;
+    [Header("Multiply speed, random shoot by this factor for every egg collected")] public float RageMultiplier = 1.01f;
 
-    public static void Victory()
+    private void Awake()
     {
-        Debug.Log("Victory!");
-        //Time.timeScale = 0;
+        if (Instance == null)
+        {
+            Debug.LogWarning("Found more than one Spawner Instance");
+        }
+        Instance = this;
     }
 
     private void OnDrawGizmos()
     {
-        // Set the color of the gizmo
         Gizmos.color = Color.green;
-        // Draw a wire sphere at the position of the explosion with the specified radius
         Gizmos.DrawWireSphere(transform.position, LevelRadius);
     }
 }
