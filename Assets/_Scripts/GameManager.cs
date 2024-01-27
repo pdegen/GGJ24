@@ -7,7 +7,8 @@ public class GameManager : MonoBehaviour
 
     public static int RageLevel = 0;
     public static int EggsCollected = 0;
-    public static float LevelRadius = 60f;
+    private static float _levelRadius;
+    public static float LevelRadius { get; private set; }  = 40f;
 
     public static void Victory()
     {

@@ -11,7 +11,6 @@ namespace GGJ24
     {
         [SerializeField] protected float _wanderDuration;
         [SerializeField] protected Transform _destinationGizmo;
-        [SerializeField, Min(0)] protected float _maxDistance = 60f;
         [SerializeField, Min(0.1f)] protected float _pathUpdateSpeed = 0.5f;
         [SerializeField] private float _rotationSpeed = 10f;
         [SerializeField] private float _agentDisableDuration = 3f;
@@ -57,14 +56,14 @@ namespace GGJ24
         {
             _autoNewDestination = AutoNewDestination;
             _destinationGizmo.gameObject.SetActive(false);
-            if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
+            //if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
             _bazooka.gameObject.SetActive(false);
             _state = ChickenState.Neutral;
             _body = GetComponent<Rigidbody>();
             _shooting.CanShoot = false;
-            _agent.speed *= Random.Range(1f, 10f);
-            _agent.acceleration *= Random.Range(1f, 2f);
-            _agent.angularSpeed *= Random.Range(1f, 2f);
+            _agent.speed *= Random.Range(1f, 5f);
+            _agent.acceleration *= Random.Range(0.8f, 2f);
+            _agent.angularSpeed *= Random.Range(0.8f, 2f);
             _oobRadius = GameManager.LevelRadius * GameManager.LevelRadius;
         }
 
@@ -179,8 +178,8 @@ namespace GGJ24
             IsSleeping = false;
             _pathRoutine = StartCoroutine(_autoNewDestination());
             _bazooka.gameObject.SetActive(true);
-            _destinationGizmo.gameObject.SetActive(true);
-            if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
+            //_destinationGizmo.gameObject.SetActive(true);
+            //if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
             _shooting.CanShoot = true;
         }
 
@@ -193,14 +192,14 @@ namespace GGJ24
 
             try
             {
-                _destinationPos = RandomNavSphere(Vector3.zero, _maxDistance, -1);
+                _destinationPos = RandomNavSphere(Vector3.zero, GameManager.LevelRadius, -1);
                 _agent.SetDestination(_destinationPos);
             }
             catch (System.Exception ex)
             {
                 Debug.LogError("Error setting destination: " + ex.Message);
             }
-            if (_destinationGizmo != null) _destinationGizmo.position = _destinationPos;
+            //if (_destinationGizmo != null && _destinationGizmoEnabled) _destinationGizmo.position = _destinationPos;
         }
 
         protected virtual void TargetReached()
