@@ -60,6 +60,10 @@ namespace GGJ24
             _bazooka.gameObject.SetActive(false);
             _state = ChickenState.Neutral;
             _body = GetComponent<Rigidbody>();
+            _shooting.CanShoot = false;
+            _agent.speed *= Random.Range(1f, 10f);
+            _agent.acceleration *= Random.Range(1f, 2f);
+            _agent.angularSpeed *= Random.Range(1f, 2f);
         }
 
         private void OnEnable()
@@ -141,7 +145,7 @@ namespace GGJ24
                     ReturnToNeutral();
                     break;
             }
-            Debug.Log("state changed: " + _state);
+            //Debug.Log("state changed: " + _state);
         }
 
         private void ReturnToNeutral()
@@ -164,12 +168,14 @@ namespace GGJ24
         public void WakeUp()
         {
             transform.parent = null;
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
             _agent.enabled = true   ;
             IsSleeping = false;
             _pathRoutine = StartCoroutine(_autoNewDestination());
             _bazooka.gameObject.SetActive(true);
             _destinationGizmo.gameObject.SetActive(true);
             if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
+            _shooting.CanShoot = true;
         }
 
         protected virtual void SetNewDestination()
@@ -179,8 +185,15 @@ namespace GGJ24
                 return;
             }
 
-            _destinationPos = RandomNavSphere(Vector3.zero, _maxDistance, -1);
-            _agent.SetDestination(_destinationPos);
+            try
+            {
+                _destinationPos = RandomNavSphere(Vector3.zero, _maxDistance, -1);
+                _agent.SetDestination(_destinationPos);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError("Error setting destination: " + ex.Message);
+            }
             if (_destinationGizmo != null) _destinationGizmo.position = _destinationPos;
         }
 
@@ -228,7 +241,7 @@ namespace GGJ24
         }
         public IEnumerator TemporarilyDisableNavMesh(float duration = 1f)
         {
-            Debug.Log("disabling navmesh for " + duration + " s");
+            //Debug.Log("disabling navmesh for " + duration + " s");
             IsMovedByRigidBody = true;
             _body.isKinematic = false;
             _agent.enabled = false;
@@ -240,14 +253,9 @@ namespace GGJ24
             _body.isKinematic = true;
             transform.rotation = Quaternion.identity;
             _agent.enabled = true;
-            Debug.Log("nav mesh enabled");
+            //Debug.Log("nav mesh enabled");
             NavmeshDisabledRoutine = null;
             IsMovedByRigidBody = false;
-            if (!IsAgentOnNavMesh())
-            {
-                Debug.Log("Setting chicken to origin");
-                //transform.position = Vector3.zero;   
-            }
             SetNewDestination();
         }
     }

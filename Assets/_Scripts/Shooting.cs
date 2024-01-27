@@ -27,6 +27,9 @@ namespace GGJ24
         public bool IsHostile { get => _isHostile; set => _isHostile = value; }
         public bool CanShoot = true;
 
+        [SerializeField] private float _randomShootPeriod = 5f;
+        [SerializeField, Range(0f,1f)] private float _randomShootProbability = 0.1f;
+
 
         private void Awake()
         {
@@ -36,6 +39,17 @@ namespace GGJ24
             {
                 _firepoint = transform;
             }
+        }
+
+        private void Start()
+        {
+            InvokeRepeating(nameof(RandomShoot), 2.0f, _randomShootPeriod);
+        }
+
+        private void RandomShoot()
+        {
+            if (!CanShoot) return;
+            if (Random.Range(0f, 1f) < _randomShootProbability) Shoot();
         }
 
         protected virtual void Shoot()
