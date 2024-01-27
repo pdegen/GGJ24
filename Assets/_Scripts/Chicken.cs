@@ -13,6 +13,7 @@ namespace GGJ24
         [SerializeField] protected Transform _destinationGizmo;
         [SerializeField, Min(0.1f)] protected float _pathUpdateSpeed = 0.5f;
         [SerializeField] private float _rotationSpeed = 10f;
+        [SerializeField] private float _recoilForce = 2f;
         [SerializeField] private float _agentDisableDuration = 3f;
 
         protected Vector3 _destinationPos;
@@ -80,7 +81,11 @@ namespace GGJ24
         {
 
             if (IsSleeping || IsMovedByRigidBody) return;
-            if (IsOOB()) transform.position = Vector3.zero;
+            if (IsOOB())
+            {
+                Debug.Log("OOB, resetting");
+                transform.position = Vector3.zero;
+            }
             if (!_agent.enabled) return;
 
             HandleDistanceCheck();
@@ -130,7 +135,7 @@ namespace GGJ24
             if (IsMovedByRigidBody)
             {
                 if (_state == ChickenState.Hostile)
-                    ReturnToNeutral();
+                    _state = ChickenState.Neutral;
                 return;
             }
 
@@ -142,13 +147,13 @@ namespace GGJ24
                     _targetDistanceReached = _targetDistanceNeutral;
                     break;
                 case Bazooka.BazookaState.Hostile:
-                    ReturnToNeutral();
+                    CommenceHostilities();
                     break;
             }
             //Debug.Log("state changed: " + _state);
         }
 
-        private void ReturnToNeutral()
+        private void CommenceHostilities()
         {
             _targetDistanceReached = _targetDistanceHostile;
             _state = ChickenState.Hostile;
@@ -158,6 +163,7 @@ namespace GGJ24
             }
             else
             {
+                Debug.LogWarning("Hostilities failed, resetting");
                 transform.position = Vector3.zero;
                 _agent.enabled = true;
             }
@@ -211,6 +217,14 @@ namespace GGJ24
             return navHit.position;
         }
 
+        public void Recoil()
+        {
+            if (NavmeshDisabledRoutine != null) return;
+
+            NavmeshDisabledRoutine = StartCoroutine(TemporarilyDisableNavMesh(_agentDisableDuration));
+            _body.AddForce(_recoilForce * transform.TransformDirection(new Vector3(0, 1, -1)), ForceMode.Impulse);
+        }
+
         public void CoroutineWrapper()
         {
             if (NavmeshDisabledRoutine == null)
@@ -230,7 +244,7 @@ namespace GGJ24
             _shooting.CanShoot = true;
             _body.velocity = Vector3.zero;
             _body.isKinematic = true;
-            transform.position = Vector3.zero;
+            //transform.position = Vector3.zero;
             transform.rotation = Quaternion.identity;
             _agent.enabled = true;
             //Debug.Log("nav mesh enabled");
