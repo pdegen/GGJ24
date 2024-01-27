@@ -34,7 +34,7 @@ public class EggSpawner : MonoBehaviour
         NavMeshHit hit;
 
         // Get a random point near the current object's position
-        Vector3 randomPoint = transform.position + new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5f, 5f));
+        Vector3 randomPoint = new Vector3(Random.Range(-GameManager.LevelRadius, GameManager.LevelRadius), 0, Random.Range(-GameManager.LevelRadius, GameManager.LevelRadius));
 
         // Sample the position on the NavMesh
         if (NavMesh.SamplePosition(randomPoint, out hit, 10f, NavMesh.AllAreas))

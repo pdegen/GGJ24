@@ -42,6 +42,22 @@ namespace GGJ24
             _chicken = GetComponentInParent<Chicken>();
         }
 
+        private void OnEnable()
+        {
+            Egg.CollectedEgg += OnEggCollected;
+        }
+
+        private void OnDisable()
+        {
+            Egg.CollectedEgg -= OnEggCollected;
+        }
+
+        private void OnEggCollected()
+        {
+            _randomShootProbability *= GameManager.Instance.RageMultiplier;
+            _randomShootPeriod = Mathf.Max(1, _randomShootPeriod /= GameManager.Instance.RageMultiplier);
+        }
+
         private void RandomShoot()
         {
             if (!CanShoot) return;

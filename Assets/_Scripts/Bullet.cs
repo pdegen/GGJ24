@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float _explosionForce = 10f;
     [SerializeField] private float _explosionBaseDamage;
     [SerializeField] private float _upwardsModifier = 3f; // Adjust the force applied upwards
+
     private void OnTriggerEnter(Collider other)
     {
         Explode();

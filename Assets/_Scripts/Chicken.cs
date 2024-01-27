@@ -69,11 +69,13 @@ namespace GGJ24
         private void OnEnable()
         {
             _bazooka.TargetStateChanged += OnTargetStateChanged;
+            Egg.CollectedEgg += OnEggCollected;
         }
 
         private void OnDisable()
         {
             _bazooka.TargetStateChanged -= OnTargetStateChanged;
+            Egg.CollectedEgg -= OnEggCollected;
         }
 
         // Update is called once per frame
@@ -84,7 +86,7 @@ namespace GGJ24
             if (IsOOB())
             {
                 Debug.Log("OOB, resetting");
-                transform.position = Vector3.zero;
+                ResetPosition();
             }
             if (!_agent.enabled) return;
 
@@ -130,6 +132,11 @@ namespace GGJ24
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _rotationSpeed);
         }
 
+        private void OnEggCollected()
+        {
+            _agent.speed *= GameManager.Instance.RageMultiplier;
+        }
+
         private void OnTargetStateChanged()
         {
             if (IsMovedByRigidBody)
@@ -164,7 +171,7 @@ namespace GGJ24
             else
             {
                 Debug.LogWarning("Hostilities failed, resetting");
-                transform.position = Vector3.zero;
+                ResetPosition();
                 _agent.enabled = true;
             }
         }
@@ -195,10 +202,15 @@ namespace GGJ24
             }
             catch (System.Exception ex)
             {
-                Debug.LogError("Error setting destination: " + ex.Message);
-                transform.position = Vector3.zero;
+                Debug.LogError("Error setting destination, resetting: " + ex.Message);
+                ResetPosition();
             }
             //if (_destinationGizmo != null && _destinationGizmoEnabled) _destinationGizmo.position = _destinationPos;
+        }
+
+        private void ResetPosition()
+        {
+            transform.position = Vector3.zero;
         }
 
         protected virtual void TargetReached()
@@ -222,7 +234,7 @@ namespace GGJ24
             if (NavmeshDisabledRoutine != null) return;
 
             NavmeshDisabledRoutine = StartCoroutine(TemporarilyDisableNavMesh(_agentDisableDuration));
-            _body.AddForce(_recoilForce * transform.TransformDirection(new Vector3(0, 1, -1)), ForceMode.Impulse);
+            _body.AddForce(_recoilForce * transform.TransformDirection(new Vector3(0, 0.8f, -1)), ForceMode.Impulse);
         }
 
         public void CoroutineWrapper()

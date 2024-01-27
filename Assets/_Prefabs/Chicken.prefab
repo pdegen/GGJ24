@@ -132,7 +132,7 @@ MonoBehaviour:
   _pathUpdateSpeed: 1
   _rotationSpeed: 10
   _recoilForce: 8
-  _agentDisableDuration: 7
+  _agentDisableDuration: 6
   _bazooka: {fileID: 9025435668193257961}
   _shooting: {fileID: 5114573725616625717}
   _spawnCenter: {fileID: 0}
@@ -150,7 +150,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 1
+  m_Speed: 2
   m_Acceleration: 12
   avoidancePriority: 50
   m_AngularSpeed: 120
