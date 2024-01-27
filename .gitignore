@@ -73,3 +73,5 @@ crashlytics-build.properties
 
 # Custom
 /Assets/Polygon*
+/Assets/SH-Test/*
+.vscode\*
