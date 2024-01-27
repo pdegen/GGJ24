@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1775025441497542166}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0039999792, y: 0.1615, z: -0.004006669}
+  m_LocalPosition: {x: -0.0039999792, y: 0.019, z: -0.004006669}
   m_LocalScale: {x: -3.2258067, y: -3.2258053, z: -1.1585387}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -46,10 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damageAmount: 1
   _weaponRange: 100
-  _bulletSpeed: 15
+  _bulletSpeed: 10
   _shootingSystem: {fileID: 0}
   _impactSystem: {fileID: 0}
-  _firepoint: {fileID: 5861571706455978527}
   _cooldown: 3
   _bulletPrefab: {fileID: 5632713401504439107, guid: 6ffe2f138d260ce43a4a66e566b26b5c,
     type: 3}
@@ -129,7 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wanderDuration: 0
   _destinationGizmo: {fileID: 2570822196753753695}
-  _pathUpdateSpeed: 5
+  _pathUpdateSpeed: 1
   _rotationSpeed: 10
   _agentDisableDuration: 7
   _bazooka: {fileID: 9025435668193257961}
@@ -149,7 +148,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
+  m_Speed: 1
   m_Acceleration: 12
   avoidancePriority: 50
   m_AngularSpeed: 120
