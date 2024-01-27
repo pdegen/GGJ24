@@ -6,8 +6,9 @@ namespace GGJ24
 {
     public class Bazooka : MonoBehaviour
     {
+        public Transform Target;
+
         [SerializeField] private GameObject _firePoint;
-        [SerializeField] private Transform _target;
         [SerializeField] private LayerMask _targetLayer;
         [SerializeField] private LayerMask _ignoreLayers;
 
@@ -25,7 +26,7 @@ namespace GGJ24
         private bool _targetAcquried = false;
         private Coroutine _returnToNeutralRoutine;
 
-        private BazookaState _state;
+        [SerializeField] private BazookaState _state;
         public BazookaState State { get => _state; private set => _state = value; }
         private Shooting _shooting;
 
@@ -34,8 +35,7 @@ namespace GGJ24
         public enum BazookaState
         {
             Neutral = 0,
-            Hostile = 1,
-            Alert = 2
+            Hostile = 1
         }
 
         private void Awake()
@@ -47,7 +47,7 @@ namespace GGJ24
         {
             _shooting = _firePoint.GetComponent<Shooting>();
             _shooting.IsHostile = false;
-            _target = GameObject.FindWithTag("Player").transform;
+            Target = GameObject.FindWithTag("PlayerTarget").transform;
         }
 
         void Update()
@@ -59,7 +59,6 @@ namespace GGJ24
         {
             _targetIsInCone = IsInCone();
             bool isHostile = State == BazookaState.Hostile;
-            bool isAlert = State == BazookaState.Alert;
 
             _targetAcquried = _targetIsInCone && !IsObstructed();
 
@@ -71,39 +70,14 @@ namespace GGJ24
 
             if (!isHostile && _targetAcquried)
             {
-                SetOffAlert();
                 ChangeToHostile();
             }
-            else if (isAlert)
-            {
-                _alertTimer += Time.deltaTime;
-                if (_alertTimer < _targetLostDelay)
-                {
-                    return;
-                }
-                else if (_returnToNeutralRoutine == null)
-                {
-                    _returnToNeutralRoutine = StartCoroutine(RetrunToNeutral(0));
-                    return;
-                }
 
-            }
-            else if (isHostile && !_targetAcquried && _returnToNeutralRoutine == null)
+            if (isHostile && !_targetAcquried && _returnToNeutralRoutine == null)
             {
-                State = BazookaState.Alert;
-                TargetStateChanged?.Invoke();
-                _shooting.IsHostile = false;
-                _returnToNeutralRoutine = StartCoroutine(RetrunToNeutral());
+                _returnToNeutralRoutine = StartCoroutine(RetrunToNeutral(0));
+                return;
             }
-        }
-
-        public void SetOffAlert()
-        {
-            // TO DO: Rotate in direction of alert source
-            if (State != BazookaState.Neutral) return;
-            State = BazookaState.Alert;
-            TargetStateChanged?.Invoke();
-            _alertTimer = 0;
         }
 
         private void ChangeToHostile()
@@ -129,9 +103,9 @@ namespace GGJ24
 
         bool IsInCone()
         {
-            if (_target == null) return false;
+            if (Target == null) return false;
 
-            Vector3 directionToTarget = _target.position - _firePoint.transform.position;
+            Vector3 directionToTarget = Target.position - _firePoint.transform.position;
 
             if (directionToTarget.sqrMagnitude > _coneRangeSquared) return false;
 
@@ -141,7 +115,7 @@ namespace GGJ24
 
         bool IsObstructed()
         {
-            if (Physics.Raycast(_firePoint.transform.position, _target.position - _firePoint.transform.position, out RaycastHit hit, _coneRange, ~_ignoreLayers))
+            if (Physics.Raycast(_firePoint.transform.position, Target.position - _firePoint.transform.position, out RaycastHit hit, _coneRange, ~_ignoreLayers))
             {
                 // Check if the ray hit a layer other than the target layer
                 if ((1 << hit.collider.gameObject.layer & _targetLayer) == 0)
@@ -162,7 +136,7 @@ namespace GGJ24
             {
                 // Draw the raycast gizmo
                 Gizmos.color = Color.red;
-                Gizmos.DrawLine(_firePoint.transform.position, _target.position);
+                Gizmos.DrawLine(_firePoint.transform.position, Target.position);
             }
         }
 

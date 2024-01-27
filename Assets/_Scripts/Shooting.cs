@@ -50,6 +50,10 @@ namespace GGJ24
                 return;
             }
 
+            if (_cooldownDeltaTime > _cooldown && !_isShooting)
+            {
+                StartCoroutine(BurstFire());
+            }
             _cooldownDeltaTime += Time.deltaTime;
             _firedirection = _firepoint.forward; // shitty solution
         }
@@ -59,6 +63,20 @@ namespace GGJ24
             yield return new WaitForSeconds(_commenceHostilitiesDelay);
             IsHostile = true;
             _cooldownDeltaTime = _cooldown;
+        }
+
+        private IEnumerator BurstFire()
+        {
+            _isShooting = true;
+            // TO DO: Object pooling
+            for (int i = 0; i < _shotsPerBurst; ++i)
+            {
+                if (!IsHostile) break;
+                Shoot();
+                yield return new WaitForSeconds(_fireRate);
+            }
+            _isShooting = false;
+            _cooldownDeltaTime = 0f;
         }
     }
 }

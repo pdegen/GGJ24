@@ -20,19 +20,23 @@ namespace GGJ24
         protected GetNewDestination _autoNewDestination;
         [SerializeField] private Bazooka _bazooka;
 
+        [SerializeField] private float _targetDistanceHostile = 15f;
+        private float _targetDistanceReached;
+        private readonly float _targetDistanceNeutral = 0.3f;
+
         private bool _isSleeping = true;
-        private ChickenState _state;
+        [SerializeField] private ChickenState _state;
         private enum ChickenState
         {
             Neutral = 0,
-            Hostile = 1,
-            Alert = 2
+            Hostile = 1
         }
 
         protected virtual void Awake()
         {
             _agent = GetComponent<NavMeshAgent>();
             _agent.enabled = false;
+            _targetDistanceReached = _targetDistanceNeutral;
         }
 
         // Start is called before the first frame update
@@ -59,20 +63,50 @@ namespace GGJ24
         {
             if (_isSleeping) return;
 
-            if (_agent.remainingDistance < 0.3)
+            if (_agent.remainingDistance < _targetDistanceReached)
             {
-                TargetReached();
+                switch (_state)
+                {
+                    case ChickenState.Neutral:
+                        TargetReached();
+                        break;
+                    case ChickenState.Hostile:
+                        _agent.isStopped = true;
+                        RotateTowardsTarget();
+                        break;
+                }
             }
+            else
+            {
+                _agent.isStopped = false;
+            }
+        }
+
+        void RotateTowardsTarget()
+        {
+            Vector3 direction = (_bazooka.Target.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
         }
 
         private void OnTargetStateChanged()
         {
             switch(_bazooka.State)
             {
-                case Bazooka.BazookaState.Neutral: _state = ChickenState.Neutral; break;
-                case Bazooka.BazookaState.Alert: _state = ChickenState.Alert; break;
-                case Bazooka.BazookaState.Hostile: _state = ChickenState.Hostile; break;
+                case Bazooka.BazookaState.Neutral: 
+                    _state = ChickenState.Neutral;
+                    _targetDistanceReached = _targetDistanceNeutral;
+                    StopCoroutine(_pathRoutine);
+                    _pathRoutine = StartCoroutine(_autoNewDestination());
+                    break;
+                case Bazooka.BazookaState.Hostile:
+                    _targetDistanceReached = _targetDistanceHostile;
+                    _state = ChickenState.Hostile;
+                    StopCoroutine(_pathRoutine);
+                    _agent.SetDestination(_bazooka.Target.position);
+                    break;
             }
+            Debug.Log("state changed: " + _state);
         }
 
         public void WakeUp()
@@ -82,7 +116,6 @@ namespace GGJ24
             _pathRoutine = StartCoroutine(_autoNewDestination());
             transform.parent = null;
             _bazooka.gameObject.SetActive(true);
-
         }
 
         protected virtual void SetNewDestination()
