@@ -1426,6 +1426,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wavePeriod: 1
   _numChickensPerRageLevel: 5
+  _enableDummyWave: 0
 --- !u!4 &1624078243
 Transform:
   m_ObjectHideFlags: 0
@@ -2232,11 +2233,6 @@ PrefabInstance:
     - target: {fileID: 84975188840302264, guid: 03bdea362415c3e4796a688a945820f2,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4474430483179504478, guid: 03bdea362415c3e4796a688a945820f2,
-        type: 3}
-      propertyPath: m_IsTrigger
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8654183492769344203, guid: 03bdea362415c3e4796a688a945820f2,

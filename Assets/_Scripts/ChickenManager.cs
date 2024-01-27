@@ -59,8 +59,7 @@ namespace GGJ24
                     _chickenList.Add(chickenComponent);
                 }
             }
-
-            // Add them to the list
+            _chickenList.Shuffle();
             Debug.Log("Collected " + _chickenList.Count + " chickens.");
             _totalChickens = _chickenList.Count;
         }

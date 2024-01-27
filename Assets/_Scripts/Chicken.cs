@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,8 +18,16 @@ namespace GGJ24
         protected Coroutine _pathRoutine;
         protected delegate IEnumerator GetNewDestination();
         protected GetNewDestination _autoNewDestination;
+        [SerializeField] private Bazooka _bazooka;
 
         private bool _isSleeping = true;
+        private ChickenState _state;
+        private enum ChickenState
+        {
+            Neutral = 0,
+            Hostile = 1,
+            Alert = 2
+        }
 
         protected virtual void Awake()
         {
@@ -31,6 +40,18 @@ namespace GGJ24
         {
             _autoNewDestination = AutoNewDestination;
             if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
+            _bazooka.gameObject.SetActive(false);
+            _state = ChickenState.Neutral;
+        }
+
+        private void OnEnable()
+        {
+            _bazooka.TargetStateChanged += OnTargetStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            _bazooka.TargetStateChanged -= OnTargetStateChanged;
         }
 
         // Update is called once per frame
@@ -44,12 +65,23 @@ namespace GGJ24
             }
         }
 
+        private void OnTargetStateChanged()
+        {
+            switch(_bazooka.State)
+            {
+                case Bazooka.BazookaState.Neutral: _state = ChickenState.Neutral; break;
+                case Bazooka.BazookaState.Alert: _state = ChickenState.Alert; break;
+                case Bazooka.BazookaState.Hostile: _state = ChickenState.Hostile; break;
+            }
+        }
+
         public void WakeUp()
         {
             _agent.enabled = true   ;
             _isSleeping = false;
             _pathRoutine = StartCoroutine(_autoNewDestination());
             transform.parent = null;
+            _bazooka.gameObject.SetActive(true);
 
         }
 
