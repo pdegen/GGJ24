@@ -14,7 +14,6 @@ namespace GGJ24
         [SerializeField] protected ParticleSystem _shootingSystem;
         [SerializeField] protected ParticleSystem _impactSystem;
 
-        [SerializeField] protected Transform _firepoint;
         protected Vector3 _firedirection;
         protected bool _isShooting = false;
         public bool IsShooting { get => _isShooting; private set => _isShooting = value; }
@@ -34,11 +33,6 @@ namespace GGJ24
         private void Awake()
         {
             Gizmos.color = Color.magenta;
-
-            if (_firepoint == null)
-            {
-                _firepoint = transform;
-            }
         }
 
         private void Start()
@@ -54,7 +48,7 @@ namespace GGJ24
 
         protected virtual void Shoot()
         {
-            GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+            GameObject bullet = Instantiate(_bulletPrefab, transform.position, transform.rotation);
             bullet.GetComponent<Rigidbody>().velocity = _bulletSpeed * transform.forward;
         }
 
@@ -71,7 +65,6 @@ namespace GGJ24
                 _cooldownDeltaTime = 0;
             }
             _cooldownDeltaTime += Time.deltaTime;
-            _firedirection = _firepoint.forward; // shitty solution
         }
 
         public void CommenceHostilities()

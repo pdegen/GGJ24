@@ -17,7 +17,6 @@ namespace GGJ24
 
         protected Vector3 _destinationPos;
         protected NavMeshAgent _agent;
-        protected Coroutine _pathRoutine;
         protected delegate IEnumerator GetNewDestination();
         protected GetNewDestination _autoNewDestination;
         [SerializeField] private Bazooka _bazooka;
@@ -54,7 +53,6 @@ namespace GGJ24
         // Start is called before the first frame update
         protected virtual void Start()
         {
-            _autoNewDestination = AutoNewDestination;
             _destinationGizmo.gameObject.SetActive(false);
             //if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
             _bazooka.gameObject.SetActive(false);
@@ -142,9 +140,6 @@ namespace GGJ24
                     _shooting.IsHostile = false;
                     _state = ChickenState.Neutral;
                     _targetDistanceReached = _targetDistanceNeutral;
-                    if (_pathRoutine != null)
-                        StopCoroutine(_pathRoutine);
-                    _pathRoutine = StartCoroutine(_autoNewDestination());
                     break;
                 case Bazooka.BazookaState.Hostile:
                     CommenceHostilities();
@@ -157,8 +152,6 @@ namespace GGJ24
         {
             _targetDistanceReached = _targetDistanceHostile;
             _state = ChickenState.Hostile;
-            if (_pathRoutine != null)
-                StopCoroutine(_pathRoutine);
             if (_agent.enabled)
             {
                 _agent.SetDestination(_bazooka.Target.position);
@@ -176,7 +169,6 @@ namespace GGJ24
             transform.position = new Vector3(transform.position.x, 0, transform.position.z);
             _agent.enabled = true   ;
             IsSleeping = false;
-            _pathRoutine = StartCoroutine(_autoNewDestination());
             _bazooka.gameObject.SetActive(true);
             //_destinationGizmo.gameObject.SetActive(true);
             //if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
@@ -198,6 +190,7 @@ namespace GGJ24
             catch (System.Exception ex)
             {
                 Debug.LogError("Error setting destination: " + ex.Message);
+                transform.position = Vector3.zero;
             }
             //if (_destinationGizmo != null && _destinationGizmoEnabled) _destinationGizmo.position = _destinationPos;
         }
@@ -205,25 +198,6 @@ namespace GGJ24
         protected virtual void TargetReached()
         {
             SetNewDestination();
-        }
-        protected virtual IEnumerator AutoNewDestination()
-        {
-
-            if (IsSleeping || IsMovedByRigidBody) yield break;
-
-            WaitForSeconds wait = new(_pathUpdateSpeed);
-            SetNewDestination();
-            float nextTime = Time.time + _wanderDuration;
-
-            while (_autoNewDestination == AutoNewDestination)
-            {
-                if (Time.time > nextTime)
-                {
-                    SetNewDestination();
-                    nextTime = Time.time + _wanderDuration;
-                }
-                yield return wait;
-            }
         }
 
         public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
