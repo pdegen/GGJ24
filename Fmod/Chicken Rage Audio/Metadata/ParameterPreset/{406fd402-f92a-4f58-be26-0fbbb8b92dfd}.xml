@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{406fd402-f92a-4f58-be26-0fbbb8b92dfd}">
+		<property name="name">
+			<value>Chicken Mood</value>
+		</property>
+		<relationship name="folder">
+			<destination>{19002ee9-3ecb-47d2-9110-aac492da52dc}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{51b80166-1636-438b-abed-b5fe4fa836e6}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{51b80166-1636-438b-abed-b5fe4fa836e6}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>Quiet</value>
+			<value>Angry</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>
