@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public static int EggsCollected = 0;
     private static float _levelRadius;
     public static float LevelRadius { get; private set; }  = 40f;
-    [Header("Multiply speed, random shoot by this factor for every egg collected")] public float RageMultiplier = 1.01f;
+    [Header("Multiply speed, random shoot, bullet magnet by this factor for every egg collected")] public float RageMultiplier = 1.01f;
 
     private void Awake()
     {

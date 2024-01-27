@@ -88,29 +88,37 @@ namespace GGJ24
                 Debug.Log("OOB, resetting");
                 ResetPosition();
             }
-            if (!_agent.enabled) return;
+            if (!_agent.enabled  || !_agent.isOnNavMesh) return;
 
             HandleDistanceCheck();
         }
 
         private void HandleDistanceCheck()
         {
-            if (_agent.remainingDistance < _targetDistanceReached)
+            try
             {
-                switch (_state)
+                if (_agent.remainingDistance < _targetDistanceReached)
                 {
-                    case ChickenState.Neutral:
-                        TargetReached();
-                        break;
-                    case ChickenState.Hostile:
-                        _agent.isStopped = true;
-                        RotateTowardsTarget();
-                        break;
+                    switch (_state)
+                    {
+                        case ChickenState.Neutral:
+                            TargetReached();
+                            break;
+                        case ChickenState.Hostile:
+                            _agent.isStopped = true;
+                            RotateTowardsTarget();
+                            break;
+                    }
+                }
+                else
+                {
+                    _agent.isStopped = false;
                 }
             }
-            else
+            catch (System.Exception ex)
             {
-                _agent.isStopped = false;
+                Debug.LogWarning("Unable to handle distance check, resetting:" + ex);
+                ResetPosition();
             }
         }
 
@@ -190,7 +198,7 @@ namespace GGJ24
 
         protected virtual void SetNewDestination()
         {
-            if (!_agent.enabled || IsMovedByRigidBody)
+            if (!_agent.enabled || IsMovedByRigidBody || !_agent.isOnNavMesh)
             {
                 return;
             }
@@ -234,7 +242,7 @@ namespace GGJ24
             if (NavmeshDisabledRoutine != null) return;
 
             NavmeshDisabledRoutine = StartCoroutine(TemporarilyDisableNavMesh(_agentDisableDuration));
-            _body.AddForce(_recoilForce * transform.TransformDirection(new Vector3(0, 0.8f, -1)), ForceMode.Impulse);
+            _body.AddForce(_recoilForce * transform.TransformDirection(new Vector3(0, 0.4f, -1)), ForceMode.Impulse);
         }
 
         public void CoroutineWrapper()

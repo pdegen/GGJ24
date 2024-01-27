@@ -13,6 +13,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.layer == 12) return; // magnet
         Explode();
         Destroy(gameObject);
     }
