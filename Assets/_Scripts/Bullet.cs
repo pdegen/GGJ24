@@ -10,8 +10,10 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float _explosionForce = 10f;
     [SerializeField] private float _explosionBaseDamage;
     [SerializeField] private float _upwardsModifier = 3f; // Adjust the force applied upwards
+
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.layer == 12) return; // magnet
         Explode();
         Destroy(gameObject);
     }
@@ -19,6 +21,7 @@ public class Bullet : MonoBehaviour
     private void Explode()
     {
         Instantiate(_explosionEffect, transform.position, Quaternion.identity);
+        AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ExplosionSFX, transform.position);
 
         // Get all colliders within the explosion radius
         Collider[] colliders = Physics.OverlapSphere(transform.position, ExplosionRadius);

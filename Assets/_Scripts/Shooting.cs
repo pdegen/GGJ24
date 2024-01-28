@@ -13,8 +13,8 @@ namespace GGJ24
 
         [SerializeField] protected ParticleSystem _shootingSystem;
         [SerializeField] protected ParticleSystem _impactSystem;
+        [SerializeField] private Chicken _chicken;
 
-        [SerializeField] protected Transform _firepoint;
         protected Vector3 _firedirection;
         protected bool _isShooting = false;
         public bool IsShooting { get => _isShooting; private set => _isShooting = value; }
@@ -34,16 +34,28 @@ namespace GGJ24
         private void Awake()
         {
             Gizmos.color = Color.magenta;
-
-            if (_firepoint == null)
-            {
-                _firepoint = transform;
-            }
         }
 
         private void Start()
         {
             InvokeRepeating(nameof(RandomShoot), 2.0f, _randomShootPeriod);
+            _chicken = GetComponentInParent<Chicken>();
+        }
+
+        private void OnEnable()
+        {
+            Egg.CollectedEgg += OnEggCollected;
+        }
+
+        private void OnDisable()
+        {
+            Egg.CollectedEgg -= OnEggCollected;
+        }
+
+        private void OnEggCollected()
+        {
+            _randomShootProbability *= GameManager.Instance.RageMultiplier;
+            _randomShootPeriod = Mathf.Max(1, _randomShootPeriod /= GameManager.Instance.RageMultiplier);
         }
 
         private void RandomShoot()
@@ -54,8 +66,9 @@ namespace GGJ24
 
         protected virtual void Shoot()
         {
-            GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+            GameObject bullet = Instantiate(_bulletPrefab, transform.position, transform.rotation);
             bullet.GetComponent<Rigidbody>().velocity = _bulletSpeed * transform.forward;
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ShootSFX, transform.position);
         }
 
         private void Update()
@@ -68,10 +81,10 @@ namespace GGJ24
             if (_cooldownDeltaTime > _cooldown && CanShoot && !_isShooting)
             {
                 Shoot();
+                _chicken.Recoil();
                 _cooldownDeltaTime = 0;
             }
             _cooldownDeltaTime += Time.deltaTime;
-            _firedirection = _firepoint.forward; // shitty solution
         }
 
         public void CommenceHostilities()

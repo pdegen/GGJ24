@@ -25,9 +25,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1775025441497542166}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.112906784, y: -0.536, z: -0.03}
-  m_LocalScale: {x: -3.2258065, y: -3.2258055, z: -1.1585386}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.0039999792, y: 0.019, z: -0.004006669}
+  m_LocalScale: {x: -3.2258067, y: -3.2258053, z: -1.1585387}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4970869172054119522}
@@ -46,10 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damageAmount: 1
   _weaponRange: 100
-  _bulletSpeed: 15
+  _bulletSpeed: 5
   _shootingSystem: {fileID: 0}
   _impactSystem: {fileID: 0}
-  _firepoint: {fileID: 5861571706455978527}
+  _chicken: {fileID: 0}
   _cooldown: 3
   _bulletPrefab: {fileID: 5632713401504439107, guid: 6ffe2f138d260ce43a4a66e566b26b5c,
     type: 3}
@@ -129,10 +129,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wanderDuration: 0
   _destinationGizmo: {fileID: 2570822196753753695}
-  _maxDistance: 60
-  _pathUpdateSpeed: 5
+  _pathUpdateSpeed: 1
   _rotationSpeed: 10
-  _agentDisableDuration: 7
+  _recoilForce: 8
+  _agentDisableDuration: 6
+  _wakeUpDuration: 1
   _bazooka: {fileID: 9025435668193257961}
   _shooting: {fileID: 5114573725616625717}
   _spawnCenter: {fileID: 0}
@@ -150,7 +151,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
+  m_Speed: 1
   m_Acceleration: 12
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -207,7 +208,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2570822196753753695
 Transform:
   m_ObjectHideFlags: 0
@@ -320,7 +321,7 @@ Transform:
   m_GameObject: {fileID: 8668946218665268324}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.039, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -377,14 +378,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8945908628103349659}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.325, y: 0.503, z: 0.104}
-  m_LocalScale: {x: -0.31, y: -0.8631562, z: -0.31}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.304, y: 0.418, z: 0.195}
+  m_LocalScale: {x: 5.99, y: 5.99, z: 5.99}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5861571706455978527}
   m_Father: {fileID: 5005959157087559261}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1716525128338133758
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -392,7 +393,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8945908628103349659}
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -7496273260040781817, guid: 09ab2d404b6a6a14db4b853a45c5b9e5, type: 3}
 --- !u!23 &6800800431332920991
 MeshRenderer:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="ParameterPreset" id="{819efa0d-0635-4588-9c18-40278d6e77b9}">
 		<property name="name">
-			<value>Eggs</value>
+			<value>Intensity</value>
 		</property>
 		<relationship name="folder">
 			<destination>{19002ee9-3ecb-47d2-9110-aac492da52dc}</destination>
@@ -23,9 +23,6 @@
 			<value>2</value>
 			<value>3</value>
 			<value>4</value>
-		</property>
-		<property name="isGlobal">
-			<value>true</value>
 		</property>
 		<property name="initialValue">
 			<value>0</value>
