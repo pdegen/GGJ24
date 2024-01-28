@@ -103,7 +103,7 @@ namespace GGJ24
 
         private void UpdateEmission()
         {
-            float parameterValue = Mathf.Min(10f, Egg.CollectedEggs / 10f);
+            float parameterValue = Mathf.Min(10f, EggSpawner.CollectedEggs / 10f);
 
             if (_chickenMaterial != null)
             {

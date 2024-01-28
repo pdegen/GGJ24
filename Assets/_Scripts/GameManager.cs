@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     private void OnEggCollected()
     {
-        switch (Egg.CollectedEggs)
+        switch (EggSpawner.CollectedEggs)
         {
             case int n when n < intensityLow:
                 break;

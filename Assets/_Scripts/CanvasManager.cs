@@ -86,7 +86,7 @@ namespace GGJ24
 
         private void UpdateEggsText()
         {
-            _eggsText.text = "Eggs: " + Egg.CollectedEggs;
+            _eggsText.text = "Eggs: " + EggSpawner.CollectedEggs;
         }
     }
 }

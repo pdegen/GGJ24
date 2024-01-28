@@ -10,6 +10,8 @@ public class EggSpawner : MonoBehaviour
     public static EggSpawner Instance { get; private set; }
     [SerializeField] private float _yoffset = 0.5f;
 
+    public static int CollectedEggs = 0;
+
     private void Awake()
     {
         if (Instance == null)

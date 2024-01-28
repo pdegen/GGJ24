@@ -10,7 +10,7 @@ namespace GGJ24
     {
         public static event Action CollectedEgg;
         //public static int TotalEggs = 0;
-        public static int CollectedEggs = 0;
+        //public static int CollectedEggs = 0;
         public string InteractionPrompt { get => "Collect"; }
 
         //private void Awake()
@@ -20,7 +20,6 @@ namespace GGJ24
 
         private void Start()
         {
-            CollectedEggs = 0;
             transform.DOMoveY(transform.position.y + 0.5f, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
         }
 
@@ -33,7 +32,7 @@ namespace GGJ24
         {
             Debug.Log("Collected egg");
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.CollectionSFX, transform.position);
-            CollectedEggs++;
+            EggSpawner.CollectedEggs++;
             CollectedEgg?.Invoke();
             Destroy(gameObject);
             EggSpawner.Instance.SpawnEgg();
