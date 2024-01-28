@@ -8,6 +8,9 @@ namespace GGJ24
     {
 
         //[SerializeField] private GameObject _chickenprefab;
+        [SerializeField] private Material _chickenMaterial;
+        [SerializeField] float _maxEmissionIntensity = 10f;
+
         public static ChickenManager Instance { get; private set; }
         private static int _totalChickens;
         private static int _chickensAwake = 0;
@@ -17,6 +20,7 @@ namespace GGJ24
         [SerializeField] private float _numChickensPerRageLevel = 2;
 
         [SerializeField] private bool _enableDummyWave = false;
+
 
         private void Awake()
         {
@@ -94,9 +98,29 @@ namespace GGJ24
         private void OnEggCollected()
         {
             WakeUpChickens();
+            UpdateEmission();
         }
 
+        private void UpdateEmission()
+        {
+            float parameterValue = Mathf.Min(10f, Egg.CollectedEggs / 10f);
 
+            if (_chickenMaterial != null)
+            {
+                // Calculate the new emission intensity based on the parameter value
+                float newEmissionIntensity = Mathf.Lerp(0f, _maxEmissionIntensity, parameterValue);
+
+                // Update the emission color with the new intensity
+                Color newEmissionColor = Color.red * newEmissionIntensity;
+
+                // Apply the new emission color to the material
+                _chickenMaterial.SetColor("_EmissionColor", newEmissionColor);
+            }
+            else
+            {
+                Debug.LogWarning("Material not found or not initialized.");
+            }
+        }
 
         //public void SpawnChickens()
         //{
