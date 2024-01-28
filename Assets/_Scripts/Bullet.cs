@@ -21,6 +21,7 @@ public class Bullet : MonoBehaviour
     private void Explode()
     {
         Instantiate(_explosionEffect, transform.position, Quaternion.identity);
+        AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ExplosionSFX, transform.position);
 
         // Get all colliders within the explosion radius
         Collider[] colliders = Physics.OverlapSphere(transform.position, ExplosionRadius);

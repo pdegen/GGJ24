@@ -31,6 +31,7 @@ namespace GGJ24
         public void Collect(Collector collector)
         {
             Debug.Log("Collected egg");
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.CollectionSFX, transform.position);
             CollectedEggs++;
             CollectedEgg?.Invoke();
             Destroy(gameObject);

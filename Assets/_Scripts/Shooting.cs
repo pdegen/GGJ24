@@ -68,6 +68,7 @@ namespace GGJ24
         {
             GameObject bullet = Instantiate(_bulletPrefab, transform.position, transform.rotation);
             bullet.GetComponent<Rigidbody>().velocity = _bulletSpeed * transform.forward;
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ShootSFX, transform.position);
         }
 
         private void Update()
