@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{55225a3d-d7b8-4f2d-b10d-c5cdb293171a}">
+		<property name="assetPath">
+			<value>Getting Hit 5.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>1.3653333333333333</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d526eeee-432a-471b-a272-721527b61140}</destination>
+		</relationship>
+	</object>
+</objects>
