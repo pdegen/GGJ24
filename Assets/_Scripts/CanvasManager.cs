@@ -18,6 +18,7 @@ namespace GGJ24
         [SerializeField] private GameObject _gameOverPanel;
         [SerializeField] private GameObject _pausePanel;
         [SerializeField] private GameObject _replayButton;
+        [SerializeField] private GameObject _resumeButton;
         private StarterAssetsInputActions _inputActions;
 
 
@@ -57,10 +58,10 @@ namespace GGJ24
 
         public void ToggleGameOverScreen()
         {
-            _inputActions.Player.Disable();
-            _inputActions.UI.Enable();
             var eventSystem = EventSystem.current;
             eventSystem.SetSelectedGameObject(_replayButton, new BaseEventData(eventSystem));
+            _inputActions.Player.Disable();
+            _inputActions.UI.Enable();
             _gameOverPanel.SetActive(true);
         }
 
@@ -71,8 +72,11 @@ namespace GGJ24
                 _inputActions.UI.Disable();
                 _inputActions.Player.Enable();
                 _pausePanel.SetActive(false);
-            } else
+            }
+            else
             {
+                var eventSystem = EventSystem.current;
+                eventSystem.SetSelectedGameObject(_resumeButton, new BaseEventData(eventSystem));
                 _inputActions.UI.Enable();
                 _inputActions.Player.Disable();
                 _pausePanel.SetActive(true);

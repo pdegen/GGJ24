@@ -6,30 +6,25 @@ namespace GGJ24
 {
     public class Shooting : MonoBehaviour
     {
+        public bool IsHostile { get; set; }
+        public bool CanShoot = true;
 
         [SerializeField] protected int _damageAmount = 1;
         [SerializeField] protected float _weaponRange = 100f;
         [SerializeField] protected float _bulletSpeed = 200f;
-
         [SerializeField] protected ParticleSystem _shootingSystem;
         [SerializeField] protected ParticleSystem _impactSystem;
         [SerializeField] private Chicken _chicken;
 
-        protected Vector3 _firedirection;
-        protected bool _isShooting = false;
-        public bool IsShooting { get => _isShooting; private set => _isShooting = value; }
+        public bool IsShooting { get; private set; }
         [SerializeField] private float _cooldown = 2f;
 
         [SerializeField] private GameObject _bulletPrefab;
-
-        private float _cooldownDeltaTime = 0f;
-        private bool _isHostile = false;
-        public bool IsHostile { get => _isHostile; set => _isHostile = value; }
-        public bool CanShoot = true;
-
         [SerializeField] private float _randomShootPeriod = 5f;
-        [SerializeField, Range(0f,1f)] private float _randomShootProbability = 0.1f;
+        [SerializeField, Range(0f, 1f)] private float _randomShootProbability = 0.1f;
 
+        protected Vector3 _firedirection;
+        private float _cooldownDeltaTime = 0f;
 
         private void Awake()
         {
@@ -78,7 +73,7 @@ namespace GGJ24
                 return;
             }
 
-            if (_cooldownDeltaTime > _cooldown && CanShoot && !_isShooting)
+            if (_cooldownDeltaTime > _cooldown && CanShoot && !IsShooting)
             {
                 Shoot();
                 _chicken.Recoil();

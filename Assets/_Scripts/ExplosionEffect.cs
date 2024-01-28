@@ -2,23 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExplosionEffect : MonoBehaviour
+namespace GGJ24
 {
-    [SerializeField] private float _effectDuration = 0.2f;
-    private float _timer = 0;
-    void Update()
+    public class ExplosionEffect : MonoBehaviour
     {
-        _timer += Time.deltaTime;
-        if (_timer > _effectDuration)
-            Destroy(gameObject);
-    }
+        [SerializeField] private float _effectDuration = 0.2f;
+        private float _timer = 0;
 
-    void OnDrawGizmos()
-    {
-        // Set the color of the gizmo
-        Gizmos.color = Color.red;
+        void Update()
+        {
+            _timer += Time.deltaTime;
+            if (_timer > _effectDuration)
+                Destroy(gameObject);
+        }
 
-        // Draw a wire sphere at the position of the explosion with the specified radius
-        Gizmos.DrawWireSphere(transform.position, Bullet.ExplosionRadius);
+        void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, Bullet.ExplosionRadius);
+        }
     }
 }

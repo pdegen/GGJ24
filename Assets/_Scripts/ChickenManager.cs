@@ -6,20 +6,18 @@ namespace GGJ24
 {
     public class ChickenManager : MonoBehaviour
     {
+        public static ChickenManager Instance { get; private set; }
 
-        //[SerializeField] private GameObject _chickenprefab;
         [SerializeField] private Material _chickenMaterial;
         [SerializeField] float _maxEmissionIntensity = 10f;
-
-        public static ChickenManager Instance { get; private set; }
-        private static int _totalChickens;
-        private static int _chickensAwake = 0;
-
-        private float _waveTimer;
         [SerializeField] private float _wavePeriod = 2f;
         [SerializeField] private float _numChickensPerRageLevel = 2;
-
         [SerializeField] private bool _enableDummyWave = false;
+
+        private static int _totalChickens;
+        private static int _chickensAwake = 0;
+        private float _waveTimer;
+
 
 
         private void Awake()
@@ -52,7 +50,6 @@ namespace GGJ24
         public void GetChickens()
         {
             _chickenList.Clear();
-            // Find all game objects with the specified tag
             GameObject[] chicken = GameObject.FindGameObjectsWithTag("Chicken");
 
             foreach (GameObject enemyObject in chicken)
@@ -70,7 +67,6 @@ namespace GGJ24
 
         public void Update()
         {
-
             if (_enableDummyWave) {
                 _waveTimer += Time.deltaTime;
                 if (_waveTimer > _wavePeriod)
@@ -107,13 +103,8 @@ namespace GGJ24
 
             if (_chickenMaterial != null)
             {
-                // Calculate the new emission intensity based on the parameter value
                 float newEmissionIntensity = Mathf.Lerp(0f, _maxEmissionIntensity, parameterValue);
-
-                // Update the emission color with the new intensity
                 Color newEmissionColor = Color.red * newEmissionIntensity;
-
-                // Apply the new emission color to the material
                 _chickenMaterial.SetColor("_EmissionColor", newEmissionColor);
             }
             else
@@ -121,20 +112,5 @@ namespace GGJ24
                 Debug.LogWarning("Material not found or not initialized.");
             }
         }
-
-        //public void SpawnChickens()
-        //{
-        //    if (_chickenCount > _maxChickens)
-        //        return;
-
-        //    for (int i = 0; i < _spawnBaseCount; ++i)
-        //    {
-        //        float x = Random.Range(0, GameManager.LevelRadius);
-        //        float z = Random.Range(0, GameManager.LevelRadius);
-        //        Vector3 spawnPos = new Vector3(x,0,z);
-        //        Instantiate(_chickenprefab, spawnPos, Quaternion.identity);
-        //        _chickenCount++;
-        //    }
-        //}
     }
 }

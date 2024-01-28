@@ -11,6 +11,11 @@ namespace GGJ24
     [RequireComponent(typeof(NavMeshAgent))]
     public class Chicken : MonoBehaviour
     {
+        public bool IsSleeping { get; private set; } = true;
+        public bool IsMovedByRigidBody { get; private set; } = false;
+
+        private static Vector3 _spawnPoint = Vector3.forward;
+
         [SerializeField] protected float _wanderDuration;
         [SerializeField] protected Transform _destinationGizmo;
         [SerializeField, Min(0.1f)] protected float _pathUpdateSpeed = 0.5f;
@@ -23,26 +28,18 @@ namespace GGJ24
         protected NavMeshAgent _agent;
         protected delegate IEnumerator GetNewDestination();
         protected GetNewDestination _autoNewDestination;
+
         [SerializeField] private Bazooka _bazooka;
         [SerializeField] private Shooting _shooting;
-
-        [SerializeField] private Transform _spawnCenter;
 
         [SerializeField] private float _targetDistanceHostile = 15f;
         private float _targetDistanceReached;
         private readonly float _targetDistanceNeutral = 0.3f;
 
-        public bool IsSleeping = true;
-        public bool IsMovedByRigidBody = false;
         [SerializeField] private ChickenState _state;
         private float _oobRadius;
-
         private Rigidbody _body;
-
-        public Coroutine NavmeshDisabledRoutine;
-
-        private static Vector3 _spawnPoint = Vector3.forward;
-
+        private Coroutine NavmeshDisabledRoutine;
         private EventInstance ambientEventInstance;
 
         private enum ChickenState
@@ -58,7 +55,6 @@ namespace GGJ24
             _targetDistanceReached = _targetDistanceNeutral;
         }
 
-        // Start is called before the first frame update
         protected virtual void Start()
         {
             _bazooka.gameObject.SetActive(false);
@@ -156,17 +152,28 @@ namespace GGJ24
             return transform.position.sqrMagnitude > _oobRadius;
         }
 
-        bool IsAgentOnNavMesh()
-        {
-            NavMeshHit hit;
-            return NavMesh.SamplePosition(transform.position, out hit, 0.1f, NavMesh.AllAreas);
-        }
-
         void RotateTowardsTarget()
         {
             Vector3 direction = (_bazooka.Target.position - transform.position).normalized;
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _rotationSpeed);
+        }
+        public void WakeUp()
+        {
+            transform.parent = null;
+            StartCoroutine(GetReady());
+        }
+
+        private IEnumerator GetReady()
+        {
+            transform.DOLocalJump(transform.position + transform.TransformDirection(new Vector3(0, -0.42f, 2)), 2.5f, 1, _wakeUpDuration);
+            yield return new WaitForSeconds(_wakeUpDuration);
+            _agent.enabled = true;
+            IsSleeping = false;
+            _bazooka.gameObject.SetActive(true);
+            //_destinationGizmo.gameObject.SetActive(true);
+            //if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
+            _shooting.CanShoot = true;
         }
 
         private void OnEggCollected()
@@ -192,7 +199,6 @@ namespace GGJ24
                     CommenceHostilities();
                     break;
             }
-            //Debug.Log("state changed: " + _state);
         }
 
         private void EndHostilities()
@@ -217,24 +223,6 @@ namespace GGJ24
             }
         }
 
-        public void WakeUp()
-        {
-            transform.parent = null;
-            StartCoroutine(GetReady());
-        }
-
-        private IEnumerator GetReady()
-        {
-            transform.DOLocalJump(transform.position + transform.TransformDirection(new Vector3(0, -0.42f, 2)), 2.5f, 1, _wakeUpDuration);
-            yield return new WaitForSeconds(_wakeUpDuration);
-            _agent.enabled = true;
-            IsSleeping = false;
-            _bazooka.gameObject.SetActive(true);
-            //_destinationGizmo.gameObject.SetActive(true);
-            //if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
-            _shooting.CanShoot = true;
-        }
-
         protected virtual void SetNewDestination()
         {
             if (!_agent.enabled || IsMovedByRigidBody || !_agent.isOnNavMesh)
@@ -252,7 +240,6 @@ namespace GGJ24
                 Debug.LogError("Error setting destination, resetting: " + ex.Message);
                 ResetChicken();
             }
-            //if (_destinationGizmo != null && _destinationGizmoEnabled) _destinationGizmo.position = _destinationPos;
         }
 
         private void ResetChicken()
@@ -299,12 +286,10 @@ namespace GGJ24
             _body.isKinematic = false;
             _agent.enabled = false;
             _shooting.CanShoot = false;
-            //_shooting.IsHostile = false;
             yield return new WaitForSeconds(duration);
             _shooting.CanShoot = true;
             _body.velocity = Vector3.zero;
             _body.isKinematic = true;
-            //transform.position = Vector3.zero;
             transform.rotation = Quaternion.identity;
             _agent.enabled = true;
             //Debug.Log("nav mesh enabled");

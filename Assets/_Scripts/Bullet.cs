@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private GameObject _explosionEffect;
     public static float ExplosionRadius = 5f;
+
+    [SerializeField] private GameObject _explosionEffect;
     [SerializeField] private float _explosionForce = 10f;
     [SerializeField] private float _explosionBaseDamage;
     [SerializeField] private float _upwardsModifier = 3f; // Adjust the force applied upwards
@@ -24,7 +25,6 @@ public class Bullet : MonoBehaviour
         Instantiate(_explosionEffect, transform.position, Quaternion.identity);
         AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ExplosionSFX, transform.position);
 
-        // Get all colliders within the explosion radius
         Collider[] colliders = Physics.OverlapSphere(transform.position, ExplosionRadius);
 
         foreach (Collider hit in colliders)
@@ -37,8 +37,6 @@ public class Bullet : MonoBehaviour
 
                 if (hit.TryGetComponent(out Rigidbody rb))
                 {
-                    //Debug.Log("apply force");
-                    // Apply explosion force to the Rigidbody
                     rb.AddExplosionForce(_explosionForce, transform.position, ExplosionRadius, _upwardsModifier, ForceMode.Impulse);
                 }
             }
@@ -49,7 +47,6 @@ public class Bullet : MonoBehaviour
             }
         }
 
-        // Optional: Destroy the object after the explosion
         Destroy(gameObject);
     }
 }
