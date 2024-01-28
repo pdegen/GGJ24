@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     {
         Egg.CollectedEgg += OnEggCollected;
         _inputActions.Player.EscaeAction.performed += TogglePause;
-
+        Cursor.visible = true;
     }
 
     private void OnDisable()
