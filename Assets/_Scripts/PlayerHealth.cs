@@ -3,6 +3,7 @@ using UnityEngine;
 //using MoreMountains.Feedbacks;
 using StarterAssets;
 using System;
+using UnityEngine.Rendering.Universal;
 
 namespace GGJ24
 {
@@ -82,7 +83,8 @@ namespace GGJ24
             TookDamage?.Invoke((int)Health);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.HitSFX, transform.position);
             //_hitRoutine ??= StartCoroutine(HitRoutine());
-            _vignette.SetVignetteIntensity(1-0.6f*Health/InitialHealth);
+            if (Health / InitialHealth > 0.5f) _vignette.SetVignetteIntensity(0f);
+            else _vignette.SetVignetteIntensity(Mathf.Lerp(0f, 0.4f, 1 - Health / InitialHealth));
         }
 
         protected virtual IEnumerator HitRoutine()

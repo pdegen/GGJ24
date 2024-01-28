@@ -107,6 +107,8 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
+        AudioManager.Instance.StopAmbiance();
+        Time.timeScale = 1f;
         DOTween.KillAll();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

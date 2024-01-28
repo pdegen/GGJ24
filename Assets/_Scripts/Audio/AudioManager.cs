@@ -31,6 +31,11 @@ namespace GGJ24
             ambientEventInstance.start();
         }
 
+        public void StopAmbiance()
+        {
+            ambientEventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        }
+
         public void SetAmbianceParameter(string parameterName, int parameterValue)
         {
             ambientEventInstance.setParameterByName(parameterName, parameterValue);

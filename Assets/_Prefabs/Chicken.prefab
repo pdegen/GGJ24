@@ -50,7 +50,7 @@ MonoBehaviour:
   _shootingSystem: {fileID: 0}
   _impactSystem: {fileID: 0}
   _chicken: {fileID: 0}
-  _cooldown: 3
+  _cooldown: 1
   _bulletPrefab: {fileID: 5632713401504439107, guid: 6ffe2f138d260ce43a4a66e566b26b5c,
     type: 3}
   CanShoot: 1
