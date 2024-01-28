@@ -73,6 +73,15 @@ namespace GGJ24
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EscaeAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""c7983112-466f-499c-aca9-87dc8accd590"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -273,6 +282,28 @@ namespace GGJ24
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e029309b-4357-4e2b-a18b-051eef886c7b"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""EscaeAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""73481fa9-a141-4ef9-bdd0-9461bfd23b1f"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""EscaeAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -334,6 +365,7 @@ namespace GGJ24
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
             m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+            m_Player_EscaeAction = m_Player.FindAction("EscaeAction", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -400,6 +432,7 @@ namespace GGJ24
         private readonly InputAction m_Player_Jump;
         private readonly InputAction m_Player_Sprint;
         private readonly InputAction m_Player_Interact;
+        private readonly InputAction m_Player_EscaeAction;
         public struct PlayerActions
         {
             private @StarterAssetsInputActions m_Wrapper;
@@ -409,6 +442,7 @@ namespace GGJ24
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
             public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
             public InputAction @Interact => m_Wrapper.m_Player_Interact;
+            public InputAction @EscaeAction => m_Wrapper.m_Player_EscaeAction;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -433,6 +467,9 @@ namespace GGJ24
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @EscaeAction.started += instance.OnEscaeAction;
+                @EscaeAction.performed += instance.OnEscaeAction;
+                @EscaeAction.canceled += instance.OnEscaeAction;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -452,6 +489,9 @@ namespace GGJ24
                 @Interact.started -= instance.OnInteract;
                 @Interact.performed -= instance.OnInteract;
                 @Interact.canceled -= instance.OnInteract;
+                @EscaeAction.started -= instance.OnEscaeAction;
+                @EscaeAction.performed -= instance.OnEscaeAction;
+                @EscaeAction.canceled -= instance.OnEscaeAction;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -512,6 +552,7 @@ namespace GGJ24
             void OnJump(InputAction.CallbackContext context);
             void OnSprint(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
+            void OnEscaeAction(InputAction.CallbackContext context);
         }
     }
 }

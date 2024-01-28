@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int intensityLow = 2;
     [SerializeField] private int intensityMid = 4;
     [SerializeField] private int intensityHigh = 6;
+    private StarterAssetsInputActions _inputActions;
+
+    private bool isPaused;
 
     private void Awake()
     {
@@ -28,16 +32,22 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("Found more than one Spawner Instance");
         }
         Instance = this;
-    }
+        isPaused = false;
 
+        _inputActions = new StarterAssetsInputActions();
+        _inputActions.Player.Enable();
+    }
     private void OnEnable()
     {
         Egg.CollectedEgg += OnEggCollected;
+        _inputActions.Player.EscaeAction.performed += TogglePause;
+
     }
 
     private void OnDisable()
     {
         Egg.CollectedEgg -= OnEggCollected;
+        _inputActions.Player.EscaeAction.performed -= TogglePause;
     }
 
     public void GameOver()
@@ -70,6 +80,28 @@ public class GameManager : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, LevelRadius);
+    }
+
+    private void TogglePause(InputAction.CallbackContext context)
+    {
+        if (isPaused) UnpauseGame();
+        else PauseGame();
+    }
+
+    public void PauseGame()
+    {
+        if (isPaused) return;
+        Time.timeScale = 0f;
+        isPaused = true;
+        CanvasManager.Instance.TogglePauseScreen();
+    }
+
+    public void UnpauseGame()
+    {
+        if (!isPaused) return;
+        Time.timeScale = 1f;
+        isPaused = false;
+        CanvasManager.Instance.TogglePauseScreen();
     }
 
     public void Restart()

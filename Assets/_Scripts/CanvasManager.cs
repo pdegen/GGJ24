@@ -14,6 +14,7 @@ namespace GGJ24
         [SerializeField] private TMP_Text _eggsText;
         [SerializeField] private PlayerHealth _health;
         [SerializeField] private GameObject _gameOverPanel;
+        [SerializeField] private GameObject _pausePanel;
 
         private void Awake()
         {
@@ -48,6 +49,11 @@ namespace GGJ24
         public void ToggleGameOverScreen()
         {
             _gameOverPanel.SetActive(true);
+        }
+
+        public void TogglePauseScreen()
+        {
+            _pausePanel.SetActive(!_pausePanel.activeSelf);
         }
 
         public void UpdateHealth(int newValue)
