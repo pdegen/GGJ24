@@ -91,11 +91,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Ambiance>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -1939614422
+      Data2: 1193164090
+      Data3: -1321982062
+      Data4: 2109616737
+    Path: event:/Music/Music Manager
   <ExplosionSFX>k__BackingField:
     Guid:
       Data1: 340980372
@@ -117,3 +117,31 @@ MonoBehaviour:
       Data3: -1189399420
       Data4: -779348252
     Path: event:/Egg Collection
+  <HitSFX>k__BackingField:
+    Guid:
+      Data1: 277596748
+      Data2: 1304665662
+      Data3: -630701386
+      Data4: -364839102
+    Path: event:/Getting Hit
+  <VictorySFX>k__BackingField:
+    Guid:
+      Data1: 1623162065
+      Data2: 1235735801
+      Data3: 52175037
+      Data4: 1567390647
+    Path: event:/Victory
+  <GameOverSFX>k__BackingField:
+    Guid:
+      Data1: 1536416744
+      Data2: 1088866904
+      Data3: 1253507203
+      Data4: -445623037
+    Path: event:/Game Over
+  <ChickenMoodSFX>k__BackingField:
+    Guid:
+      Data1: 633433543
+      Data2: 1082917932
+      Data3: -2024019069
+      Data4: -1641996630
+    Path: event:/FFX/Chicken/Chicken Mood
