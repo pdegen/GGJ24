@@ -1,9 +1,11 @@
+using DG.Tweening;
 using GGJ24;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -40,6 +42,8 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        Time.timeScale = 0f;
+        CanvasManager.Instance.ToggleGameOverScreen();
         Debug.Log("Game over");
     }
 
@@ -66,5 +70,16 @@ public class GameManager : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, LevelRadius);
+    }
+
+    public void Restart()
+    {
+        DOTween.KillAll();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 }
