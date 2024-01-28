@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0f;
         CanvasManager.Instance.ToggleGameOverScreen();
+        AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GameOverSFX, transform.position);
         Debug.Log("Game over");
     }
 

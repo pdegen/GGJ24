@@ -5365,8 +5365,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
         type: 3}
+      propertyPath: <HitSFX>k__BackingField.Path
+      value: event:/Getting Hit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
       propertyPath: <Ambiance>k__BackingField.Path
       value: event:/Music/Music Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <VictorySFX>k__BackingField.Path
+      value: event:/Victory
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <GameOverSFX>k__BackingField.Path
+      value: event:/Game Over
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <HitSFX>k__BackingField.Guid.Data1
+      value: 277596748
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <HitSFX>k__BackingField.Guid.Data2
+      value: 1304665662
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <HitSFX>k__BackingField.Guid.Data3
+      value: -630701386
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <HitSFX>k__BackingField.Guid.Data4
+      value: -364839102
       objectReference: {fileID: 0}
     - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
         type: 3}
@@ -5387,6 +5422,46 @@ PrefabInstance:
         type: 3}
       propertyPath: <Ambiance>k__BackingField.Guid.Data4
       value: 2109616737
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <VictorySFX>k__BackingField.Guid.Data1
+      value: 1623162065
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <VictorySFX>k__BackingField.Guid.Data2
+      value: 1235735801
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <VictorySFX>k__BackingField.Guid.Data3
+      value: 52175037
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <VictorySFX>k__BackingField.Guid.Data4
+      value: 1567390647
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <GameOverSFX>k__BackingField.Guid.Data1
+      value: 1536416744
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <GameOverSFX>k__BackingField.Guid.Data2
+      value: 1088866904
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <GameOverSFX>k__BackingField.Guid.Data3
+      value: 1253507203
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <GameOverSFX>k__BackingField.Guid.Data4
+      value: -445623037
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
