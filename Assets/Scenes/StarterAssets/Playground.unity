@@ -616,7 +616,7 @@ PrefabInstance:
     - target: {fileID: 3310966461026332987, guid: b1912e65bb1e14843833794c85e45602,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.77
+      value: 3.68
       objectReference: {fileID: 0}
     - target: {fileID: 3310966461026332987, guid: b1912e65bb1e14843833794c85e45602,
         type: 3}
@@ -1283,6 +1283,16 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 126565829}
+    - target: {fileID: 6974189831936089519, guid: c85e99e522625de439494d9ee654701e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Quit
+      objectReference: {fileID: 0}
+    - target: {fileID: 6974189831936089519, guid: c85e99e522625de439494d9ee654701e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GGJ24.GameManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 8179066903292247114, guid: c85e99e522625de439494d9ee654701e,
         type: 3}
       propertyPath: m_Name
@@ -4848,8 +4858,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _chickenMaterial: {fileID: 2100000, guid: ab4784db64cc92046ad553c95a2a0f9b, type: 2}
-  _maxEmissionIntensity: 150
-  _numEggsUntilMaxEmission: 10
+  _maxEmissionIntensity: 30
+  _numEggsUntilMaxRageEyes: 10
   _wavePeriod: 1
   _numChickensPerRageLevel: 5
   _enableDummyWave: 0
@@ -4930,7 +4940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 217872618c8dcd24c85bf209e7d66abd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  postProcessVolume: {fileID: 1634789806}
+  _postProcessVolume: {fileID: 0}
 --- !u!1001 &1637507391
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6893,6 +6903,16 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 126565829}
+    - target: {fileID: 6974189831936089519, guid: c85e99e522625de439494d9ee654701e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Quit
+      objectReference: {fileID: 0}
+    - target: {fileID: 6974189831936089519, guid: c85e99e522625de439494d9ee654701e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GGJ24.GameManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 8179066903292247114, guid: c85e99e522625de439494d9ee654701e,
         type: 3}
       propertyPath: m_Name

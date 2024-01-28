@@ -152,3 +152,4 @@ MonoBehaviour:
   _explosionBaseDamage: 0
   _upwardsModifier: 3
   _explosionDamage: 50
+  _gravity: 0.2

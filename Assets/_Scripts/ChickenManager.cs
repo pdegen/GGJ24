@@ -9,8 +9,8 @@ namespace GGJ24
         public static ChickenManager Instance { get; private set; }
 
         [SerializeField] private Material _chickenMaterial;
-        [SerializeField] float _maxEmissionIntensity = 10f;
-        [SerializeField] int _numEggsUntilMaxEmission = 10;
+        [SerializeField] float _maxEmissionIntensity = 30f;
+        [SerializeField] int _numEggsUntilMaxRageEyes = 10;
 
         [SerializeField] private float _wavePeriod = 2f;
         [SerializeField] private float _numChickensPerRageLevel = 2;
@@ -47,6 +47,10 @@ namespace GGJ24
         {
             GetChickens();
             _waveTimer = _wavePeriod;
+            if (_chickenMaterial == null)
+            {
+                Debug.LogWarning("Chicken material not found");
+            }
             _chickenMaterial.SetColor("_EmissionColor", Color.black);
         }
 
@@ -98,11 +102,19 @@ namespace GGJ24
         {
             WakeUpChickens();
             UpdateEmission();
+            //UdpateBloom();
         }
+        //private void UdpateBloom()
+        //{
+        //    float parameterValue = Mathf.Min(1f, (float)EggSpawner.CollectedEggs / (float)_numEggsUntilMaxBloom);
+        //    float newBloomIntensity = Mathf.Lerp(0f, _maxBloomIntensity, parameterValue);
+        //    PostProcessController.Instance.SetBloomIntensity(newBloomIntensity);
+        //    Debug.Log("set bloom"  + newBloomIntensity);
+        //}
 
         private void UpdateEmission()
         {
-            float parameterValue = Mathf.Min(1f, (float)EggSpawner.CollectedEggs / (float)_numEggsUntilMaxEmission);
+            float parameterValue = Mathf.Min(1f, (float)EggSpawner.CollectedEggs / (float)_numEggsUntilMaxRageEyes);
 
             if (_chickenMaterial != null)
             {

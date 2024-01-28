@@ -22,7 +22,7 @@ namespace GGJ24
         private int _animIDHit;
         private Coroutine _hitRoutine;
 
-        [SerializeField] private VignetteController _vignette;
+        [SerializeField] private PostProcessController _vignette;
         //[SerializeField] private MMF_Player _hitFeedback;
         private ThirdPersonController _controller;
 

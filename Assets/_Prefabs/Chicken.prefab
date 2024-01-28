@@ -47,7 +47,7 @@ MonoBehaviour:
   CanShoot: 1
   _damageAmount: 1
   _weaponRange: 100
-  _bulletSpeed: 5
+  _bulletSpeed: 8
   _shootingSystem: {fileID: 0}
   _impactSystem: {fileID: 0}
   _chicken: {fileID: 0}
@@ -65,10 +65,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 552862463811992124}
-  - component: {fileID: 6430960868077864367}
   - component: {fileID: 3971071785757614310}
   - component: {fileID: 8958378915651254641}
   - component: {fileID: 1129371843837106901}
+  - component: {fileID: -3878006051029629389}
   m_Layer: 11
   m_Name: Chicken
   m_TagString: Chicken
@@ -93,27 +93,6 @@ Transform:
   - {fileID: 8308805592250342926}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &6430960868077864367
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2282417172288404023}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.34
-  m_Center: {x: 0, y: 0.41, z: 0}
 --- !u!114 &3971071785757614310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,7 +109,7 @@ MonoBehaviour:
   _destinationGizmo: {fileID: 0}
   _pathUpdateSpeed: 1
   _rotationSpeed: 10
-  _recoilForce: 8
+  _recoilForce: 16
   _agentDisableDuration: 6
   _wakeUpDuration: 1
   _bazooka: {fileID: 9025435668193257961}
@@ -147,7 +126,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 1
+  m_Speed: 2
   m_Acceleration: 12
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -186,6 +165,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!136 &-3878006051029629389
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2282417172288404023}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.26
+  m_Height: 1.43
+  m_Direction: 2
+  m_Center: {x: -0.09, y: 0.33, z: 0}
 --- !u!1 &8668946218665268324
 GameObject:
   m_ObjectHideFlags: 0

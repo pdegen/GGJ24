@@ -27,7 +27,7 @@ namespace GGJ24
 
         private void Awake()
         {
-            if (Instance == null)
+            if (Instance != null)
             {
                 Debug.LogWarning("Found more than one Spawner Instance");
             }
@@ -65,13 +65,13 @@ namespace GGJ24
                     break;
 
                 case int n when n >= intensityLow && n < intensityMid:
-                    AudioManager.Instance.SetAmbianceParameter("Intensity", 2);
+                    AudioManager.Instance.SetAmbianceParameter("Intensity", 1);
                     break;
                 case int n when n >= intensityMid && n < intensityHigh:
-                    AudioManager.Instance.SetAmbianceParameter("Intensity", 3);
+                    AudioManager.Instance.SetAmbianceParameter("Intensity", 2);
                     break;
                 case int n when n >= intensityHigh:
-                    AudioManager.Instance.SetAmbianceParameter("Intensity", 4);
+                    AudioManager.Instance.SetAmbianceParameter("Intensity", 3);
                     break;
             }
         }

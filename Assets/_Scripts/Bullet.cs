@@ -12,12 +12,18 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float _explosionBaseDamage;
     [SerializeField] private float _upwardsModifier = 3f; // Adjust the force applied upwards
     [SerializeField] private float _explosionDamage = 50f;
+    [SerializeField,Range(0f,1f)] private float _gravity = 0.01f;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == 12) return; // magnet
         Explode();
         Destroy(gameObject);
+    }
+
+    private void Update()
+    {
+        transform.position -= Vector3.up * _gravity * Time.deltaTime;
     }
 
     private void Explode()
