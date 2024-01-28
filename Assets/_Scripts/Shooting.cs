@@ -91,7 +91,7 @@ namespace GGJ24
         {
             if (IsHostile) return;
             IsHostile = true;
-            _cooldownDeltaTime = 0.5f * _cooldown;
+            _cooldownDeltaTime = 0.1f * _cooldown;
         }
 
         public void StopShooting()

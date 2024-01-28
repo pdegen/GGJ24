@@ -20,6 +20,7 @@ namespace GGJ24
 
         private void Start()
         {
+            CollectedEggs = 0;
             transform.DOMoveY(transform.position.y + 0.5f, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
         }
 

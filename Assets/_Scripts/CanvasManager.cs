@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 namespace GGJ24
 {
@@ -15,6 +17,9 @@ namespace GGJ24
         [SerializeField] private PlayerHealth _health;
         [SerializeField] private GameObject _gameOverPanel;
         [SerializeField] private GameObject _pausePanel;
+        [SerializeField] private GameObject _replayButton;
+        private StarterAssetsInputActions _inputActions;
+
 
         private void Awake()
         {
@@ -23,6 +28,7 @@ namespace GGJ24
                 Debug.LogWarning("Found more than one Spawner Instance");
             }
             Instance = this;
+
         }
 
         private void Start()
@@ -32,6 +38,9 @@ namespace GGJ24
             _healthSlider.maxValue = _health.InitialHealth;
             _healthSlider.minValue = 0;
             _healthSlider.value = _health.InitialHealth;
+
+            _inputActions = new StarterAssetsInputActions();
+            _inputActions.Player.Enable();
         }
 
         private void OnEnable()
@@ -48,12 +57,26 @@ namespace GGJ24
 
         public void ToggleGameOverScreen()
         {
+            _inputActions.Player.Disable();
+            _inputActions.UI.Enable();
+            var eventSystem = EventSystem.current;
+            eventSystem.SetSelectedGameObject(_replayButton, new BaseEventData(eventSystem));
             _gameOverPanel.SetActive(true);
         }
 
         public void TogglePauseScreen()
         {
-            _pausePanel.SetActive(!_pausePanel.activeSelf);
+            if (_pausePanel.activeSelf)
+            {
+                _inputActions.UI.Disable();
+                _inputActions.Player.Enable();
+                _pausePanel.SetActive(false);
+            } else
+            {
+                _inputActions.UI.Enable();
+                _inputActions.Player.Disable();
+                _pausePanel.SetActive(true);
+            }
         }
 
         public void UpdateHealth(int newValue)
