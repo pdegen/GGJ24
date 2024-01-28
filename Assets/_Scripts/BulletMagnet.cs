@@ -1,3 +1,4 @@
+using DG.Tweening;
 using GGJ24;
 using UnityEngine;
 
@@ -43,6 +44,7 @@ public class BulletMagnet : MonoBehaviour
         Vector3 force = direction.normalized * forceMagnitude;
 
         rb.AddForce(force);
+        rb.transform.rotation = Quaternion.LookRotation(rb.velocity.normalized);
     }
 
     private void OnEggCollected()

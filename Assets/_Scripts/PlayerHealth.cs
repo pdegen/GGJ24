@@ -82,7 +82,7 @@ namespace GGJ24
             TookDamage?.Invoke((int)Health);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.HitSFX, transform.position);
             //_hitRoutine ??= StartCoroutine(HitRoutine());
-            _vignette.SetVignetteIntensity(0.8f*Health/InitialHealth);
+            _vignette.SetVignetteIntensity(1-0.6f*Health/InitialHealth);
         }
 
         protected virtual IEnumerator HitRoutine()
