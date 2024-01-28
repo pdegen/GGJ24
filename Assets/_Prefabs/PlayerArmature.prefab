@@ -563,6 +563,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6268709131077780860}
   - component: {fileID: 1175680381506372797}
+  - component: {fileID: 3496027628765835467}
   m_Layer: 6
   m_Name: PlayerTarget
   m_TagString: PlayerTarget
@@ -608,6 +609,23 @@ CapsuleCollider:
   m_Height: 1.97
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3496027628765835467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2291212252818357225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77c1734258d3a6a41929eb2fb1e3c417, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: 1000
+  _hitAnimCooldown: 0
+  _stunDuration: 0
+  _vignette: {fileID: 0}
+  _initialHealth: 1000
 --- !u!1 &2384715685890352025
 GameObject:
   m_ObjectHideFlags: 0
@@ -1316,9 +1334,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveSpeed: 2
-  SprintSpeed: 5.335
+  SprintSpeed: 7
   RotationSmoothTime: 0.12
-  SpeedChangeRate: 10
+  SpeedChangeRate: 12
   LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
   FootstepAudioClips:
   - {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
@@ -1332,7 +1350,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 274649b0e221539409070ebf6c18918b, type: 3}
   - {fileID: 8300000, guid: a3194b8bbc96ef84fab1f98f4b7dae3e, type: 3}
   FootstepAudioVolume: 0.3
-  JumpHeight: 1.2
+  JumpHeight: 1.3
   Gravity: -15
   JumpTimeout: 0.3
   FallTimeout: 0.15
@@ -1964,7 +1982,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9018118222946106801}
-  m_Layer: 6
+  - component: {fileID: 8368238738978137342}
+  m_Layer: 0
   m_Name: BulletMagnet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1980,12 +1999,29 @@ Transform:
   m_GameObject: {fileID: 6293191592127397522}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.016, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 110165364468417721}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8368238738978137342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6293191592127397522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 653d8d46180a28045aed8f6dd103934c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _magnetStrength: 4
+  _attractRadius: 5
+  _attractLayer:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &6317158311162215250
 GameObject:
   m_ObjectHideFlags: 0

@@ -47,6 +47,7 @@ namespace GGJ24
         {
             GetChickens();
             _waveTimer = _wavePeriod;
+            _chickenMaterial.SetColor("_EmissionColor", Color.black);
         }
 
         public void GetChickens()
@@ -101,7 +102,7 @@ namespace GGJ24
 
         private void UpdateEmission()
         {
-            float parameterValue = Mathf.Min(1f, EggSpawner.CollectedEggs / _numEggsUntilMaxEmission);
+            float parameterValue = Mathf.Min(1f, (float)EggSpawner.CollectedEggs / (float)_numEggsUntilMaxEmission);
 
             if (_chickenMaterial != null)
             {
