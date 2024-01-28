@@ -22,13 +22,19 @@ namespace GGJ24
 
         private void Start()
         {
-            //InitializeAmbiance(FMODEvents.Instance.HollowCorridorAmbiance);
+            InitializeAmbiance(FMODEvents.Instance.Ambiance);
         }
 
         private void InitializeAmbiance(EventReference ambientEventReference)
         {
             ambientEventInstance = CreateEventInstance(ambientEventReference);
             ambientEventInstance.start();
+        }
+
+        public void SetAmbianceParameter(string parameterName, int parameterValue)
+        {
+            ambientEventInstance.setParameterByName(parameterName, parameterValue);
+            Debug.Log("Set ambiance intensity to " + parameterValue);
         }
 
         public void PlayOneShot(EventReference sound, Vector3 worldPosition)
