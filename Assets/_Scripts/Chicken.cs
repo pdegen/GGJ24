@@ -40,6 +40,8 @@ namespace GGJ24
 
         public Coroutine NavmeshDisabledRoutine;
 
+        private static Vector3 _spawnPoint = Vector3.forward;
+
         private enum ChickenState
         {
             Neutral = 0,
@@ -66,6 +68,20 @@ namespace GGJ24
             _agent.acceleration *= Random.Range(0.8f, 2f);
             _agent.angularSpeed *= Random.Range(0.8f, 2f);
             _oobRadius = GameManager.LevelRadius * GameManager.LevelRadius;
+
+            if (_spawnPoint == Vector3.forward)
+            {
+                GameObject[] _spawns = GameObject.FindGameObjectsWithTag("Spawn");
+                if (_spawns.Length > 0)
+                {
+                    _spawnPoint = _spawns[0].transform.position;
+                }
+                else
+                {
+                    Debug.LogWarning("No chicken spawn points found");
+                    _spawnPoint = Vector3.zero;
+                }
+            }
         }
 
         private void OnEnable()
@@ -88,7 +104,7 @@ namespace GGJ24
             if (IsOOB())
             {
                 Debug.Log("OOB, resetting");
-                ResetPosition();
+                ResetChicken();
             }
             if (!_agent.enabled  || !_agent.isOnNavMesh) return;
 
@@ -120,7 +136,7 @@ namespace GGJ24
             catch (System.Exception ex)
             {
                 Debug.LogWarning("Unable to handle distance check, resetting:" + ex);
-                ResetPosition();
+                ResetChicken();
             }
         }
 
@@ -152,16 +168,14 @@ namespace GGJ24
             if (IsMovedByRigidBody)
             {
                 if (_state == ChickenState.Hostile)
-                    _state = ChickenState.Neutral;
+                    EndHostilities();
                 return;
             }
 
             switch(_bazooka.State)
             {
                 case Bazooka.BazookaState.Neutral:
-                    _shooting.IsHostile = false;
-                    _state = ChickenState.Neutral;
-                    _targetDistanceReached = _targetDistanceNeutral;
+                    EndHostilities();
                     break;
                 case Bazooka.BazookaState.Hostile:
                     CommenceHostilities();
@@ -170,6 +184,12 @@ namespace GGJ24
             //Debug.Log("state changed: " + _state);
         }
 
+        private void EndHostilities()
+        {
+            _shooting.IsHostile = false;
+            _state = ChickenState.Neutral;
+            _targetDistanceReached = _targetDistanceNeutral;
+        }
         private void CommenceHostilities()
         {
             _targetDistanceReached = _targetDistanceHostile;
@@ -181,7 +201,7 @@ namespace GGJ24
             else
             {
                 Debug.LogWarning("Hostilities failed, resetting");
-                ResetPosition();
+                ResetChicken();
                 _agent.enabled = true;
             }
         }
@@ -219,14 +239,15 @@ namespace GGJ24
             catch (System.Exception ex)
             {
                 Debug.LogError("Error setting destination, resetting: " + ex.Message);
-                ResetPosition();
+                ResetChicken();
             }
             //if (_destinationGizmo != null && _destinationGizmoEnabled) _destinationGizmo.position = _destinationPos;
         }
 
-        private void ResetPosition()
+        private void ResetChicken()
         {
             transform.position = Vector3.zero;
+            EndHostilities();
         }
 
         protected virtual void TargetReached()
