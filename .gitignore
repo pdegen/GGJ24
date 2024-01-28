@@ -74,7 +74,7 @@ crashlytics-build.properties
 # Custom
 /Assets/Polygon*
 /Assets/SH-Test/*
-/Assets/JMO Assets*
+/Assets/JMO Assets/Cartoon FX (legacy)/
 
 ### FMOD
 # Never ignore DLLs in the FMOD subfolder.
