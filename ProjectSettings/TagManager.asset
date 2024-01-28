@@ -8,6 +8,7 @@ TagManager:
   - Chicken
   - PlayerTarget
   - FxTemporaire
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX

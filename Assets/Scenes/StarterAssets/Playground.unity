@@ -381,6 +381,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RageMultiplier: 1.01
+  intensityLow: 2
+  intensityMid: 4
+  intensityHigh: 6
 --- !u!4 &126565830
 Transform:
   m_ObjectHideFlags: 0
@@ -6241,35 +6244,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6519508322857786456, guid: 025ac95bf930eb44ca652950fdcc3b88,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6552879289219083633, guid: 025ac95bf930eb44ca652950fdcc3b88,
         type: 3}
       propertyPath: m_Name
       value: Stall
-      objectReference: {fileID: 0}
-    - target: {fileID: 6552879289219083633, guid: 025ac95bf930eb44ca652950fdcc3b88,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9156979917578166406, guid: 025ac95bf930eb44ca652950fdcc3b88,
-        type: 3}
-      propertyPath: m_Radius
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9156979917578166406, guid: 025ac95bf930eb44ca652950fdcc3b88,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9156979917578166406, guid: 025ac95bf930eb44ca652950fdcc3b88,
-        type: 3}
-      propertyPath: m_BaseOffset
-      value: 0.09
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
