@@ -38,6 +38,11 @@ public class GameManager : MonoBehaviour
         Egg.CollectedEgg -= OnEggCollected;
     }
 
+    public void GameOver()
+    {
+        Debug.Log("Game over");
+    }
+
     private void OnEggCollected()
     {
         switch (Egg.CollectedEggs)

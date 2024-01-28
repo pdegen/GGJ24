@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 namespace GGJ24
 {
@@ -9,7 +10,10 @@ namespace GGJ24
     {
         public static CanvasManager Instance { get; private set; }
 
+        [SerializeField] private Slider _healthSlider;
         [SerializeField] private TMP_Text _eggsText;
+        [SerializeField] private PlayerHealth _health;
+
         private void Awake()
         {
             if (Instance == null)
@@ -22,16 +26,27 @@ namespace GGJ24
         private void Start()
         {
             UpdateEggsText();
+
+            _healthSlider.maxValue = _health.InitialHealth;
+            _healthSlider.minValue = 0;
+            _healthSlider.value = _health.InitialHealth;
         }
 
         private void OnEnable()
         {
             Egg.CollectedEgg += UpdateEggsText;
+            PlayerHealth.TookDamage += UpdateHealth;
         }
 
         private void OnDisable()
         {
             Egg.CollectedEgg -= UpdateEggsText;
+            PlayerHealth.TookDamage -= UpdateHealth;
+        }
+
+        public void UpdateHealth(int newValue)
+        {
+            _healthSlider.value = newValue;
         }
 
         private void UpdateEggsText()

@@ -71,7 +71,7 @@ namespace GGJ24
 
             if (_spawnPoint == Vector3.forward)
             {
-                GameObject[] _spawns = GameObject.FindGameObjectsWithTag("Spawn");
+                GameObject[] _spawns = GameObject.FindGameObjectsWithTag("SpawnPoint");
                 if (_spawns.Length > 0)
                 {
                     _spawnPoint = _spawns[0].transform.position;
