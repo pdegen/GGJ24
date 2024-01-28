@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.AI;
+using DG.Tweening;
 
 namespace GGJ24
 {
@@ -15,6 +16,7 @@ namespace GGJ24
         [SerializeField] private float _rotationSpeed = 10f;
         [SerializeField] private float _recoilForce = 2f;
         [SerializeField] private float _agentDisableDuration = 3f;
+        [SerializeField] private float _wakeUpDuration = 1.2f;
 
         protected Vector3 _destinationPos;
         protected NavMeshAgent _agent;
@@ -187,8 +189,14 @@ namespace GGJ24
         public void WakeUp()
         {
             transform.parent = null;
-            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-            _agent.enabled = true   ;
+            StartCoroutine(GetReady());
+        }
+
+        private IEnumerator GetReady()
+        {
+            transform.DOLocalJump(transform.position + transform.TransformDirection(new Vector3(0, -0.42f, 2)), 2.5f, 1, _wakeUpDuration);
+            yield return new WaitForSeconds(_wakeUpDuration);
+            _agent.enabled = true;
             IsSleeping = false;
             _bazooka.gameObject.SetActive(true);
             //_destinationGizmo.gameObject.SetActive(true);
