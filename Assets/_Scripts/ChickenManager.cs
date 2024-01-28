@@ -10,6 +10,8 @@ namespace GGJ24
 
         [SerializeField] private Material _chickenMaterial;
         [SerializeField] float _maxEmissionIntensity = 10f;
+        [SerializeField] int _numEggsUntilMaxEmission = 10;
+
         [SerializeField] private float _wavePeriod = 2f;
         [SerializeField] private float _numChickensPerRageLevel = 2;
         [SerializeField] private bool _enableDummyWave = false;
@@ -99,7 +101,7 @@ namespace GGJ24
 
         private void UpdateEmission()
         {
-            float parameterValue = Mathf.Min(10f, EggSpawner.CollectedEggs / 10f);
+            float parameterValue = Mathf.Min(1f, EggSpawner.CollectedEggs / _numEggsUntilMaxEmission);
 
             if (_chickenMaterial != null)
             {
