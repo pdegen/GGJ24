@@ -79,7 +79,7 @@ namespace GGJ24
         {
             Health -= deltaHealth;
             TookDamage?.Invoke((int)Health);
-            Debug.Log("took damage" + Health);
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.HitSFX, transform.position);
             //_hitRoutine ??= StartCoroutine(HitRoutine());
         }
 

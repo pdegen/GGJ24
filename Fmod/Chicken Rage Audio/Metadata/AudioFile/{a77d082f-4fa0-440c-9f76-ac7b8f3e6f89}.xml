@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{a77d082f-4fa0-440c-9f76-ac7b8f3e6f89}">
+		<property name="assetPath">
+			<value>Game Over Sound.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>1.9199999999999999</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d526eeee-432a-471b-a272-721527b61140}</destination>
+		</relationship>
+	</object>
+</objects>

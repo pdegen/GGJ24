@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.AI;
 using DG.Tweening;
+using FMOD.Studio;
 
 namespace GGJ24
 {
@@ -41,6 +42,8 @@ namespace GGJ24
         public Coroutine NavmeshDisabledRoutine;
 
         private static Vector3 _spawnPoint = Vector3.forward;
+
+        private EventInstance ambientEventInstance;
 
         private enum ChickenState
         {
@@ -82,6 +85,16 @@ namespace GGJ24
                     _spawnPoint = Vector3.zero;
                 }
             }
+
+            StartCoroutine(InitAudio());
+        }
+
+        private IEnumerator InitAudio()
+        {
+            ambientEventInstance = AudioManager.Instance.CreateEventInstance(FMODEvents.Instance.ChickenMoodSFX);
+            ambientEventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            yield return new WaitForSeconds(Random.Range(0f,10f));
+            ambientEventInstance.start();
         }
 
         private void OnEnable()

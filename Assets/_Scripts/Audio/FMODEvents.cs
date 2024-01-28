@@ -18,6 +18,15 @@ namespace GGJ24
         
         [field: Header("Collection SFX")]
         [field: SerializeField] public EventReference CollectionSFX { get; private set; }
+        [field: Header("Hit SFX")]
+        [field: SerializeField] public EventReference HitSFX { get; private set; }
+        [field: Header("Victory SFX")]
+        [field: SerializeField] public EventReference VictorySFX { get; private set; }
+        [field: Header("Game Over SFX")]
+        [field: SerializeField] public EventReference GameOverSFX { get; private set; }
+
+        [field: Header("Chicken Mood SFX")]
+        [field: SerializeField] public EventReference ChickenMoodSFX { get; private set; }
 
         public static FMODEvents Instance { get; private set; }
 
