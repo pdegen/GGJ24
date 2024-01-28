@@ -61,8 +61,6 @@ namespace GGJ24
         // Start is called before the first frame update
         protected virtual void Start()
         {
-            _destinationGizmo.gameObject.SetActive(false);
-            //if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
             _bazooka.gameObject.SetActive(false);
             _state = ChickenState.Neutral;
             _body = GetComponent<Rigidbody>();
