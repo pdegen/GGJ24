@@ -21,6 +21,7 @@ namespace GGJ24
         private int _animIDHit;
         private Coroutine _hitRoutine;
 
+        [SerializeField] private VignetteController _vignette;
         //[SerializeField] private MMF_Player _hitFeedback;
         private ThirdPersonController _controller;
 
@@ -81,6 +82,7 @@ namespace GGJ24
             TookDamage?.Invoke((int)Health);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.HitSFX, transform.position);
             //_hitRoutine ??= StartCoroutine(HitRoutine());
+            _vignette.SetVignetteIntensity(1-0.6f*Health/InitialHealth);
         }
 
         protected virtual IEnumerator HitRoutine()
