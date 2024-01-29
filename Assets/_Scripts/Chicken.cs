@@ -37,7 +37,7 @@ namespace GGJ24
         private readonly float _targetDistanceNeutral = 0.3f;
 
         [SerializeField] private ChickenState _state;
-        private float _oobRadius;
+        private float _oobRadiusSquared;
         private Rigidbody _body;
         private Coroutine NavmeshDisabledRoutine;
         private EventInstance ambientEventInstance;
@@ -64,7 +64,7 @@ namespace GGJ24
             _agent.speed *= Random.Range(1f, 5f);
             _agent.acceleration *= Random.Range(0.8f, 2f);
             _agent.angularSpeed *= Random.Range(0.8f, 2f);
-            _oobRadius = GameManager.LevelRadius * GameManager.LevelRadius;
+            _oobRadiusSquared = GameManager.LevelRadius * GameManager.LevelRadius;
 
             if (_spawnPoint == Vector3.forward)
             {
@@ -149,7 +149,7 @@ namespace GGJ24
 
         bool IsOOB()
         {
-            return transform.position.sqrMagnitude > _oobRadius;
+            return transform.position.sqrMagnitude > _oobRadiusSquared;
         }
 
         void RotateTowardsTarget()
@@ -158,14 +158,14 @@ namespace GGJ24
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _rotationSpeed);
         }
-        public void WakeUp()
+        public void WakeUpWrapper()
         {
-            transform.parent = null;
-            StartCoroutine(GetReady());
+            StartCoroutine(WakeUp());
         }
 
-        private IEnumerator GetReady()
+        private IEnumerator WakeUp()
         {
+            transform.parent = null;
             transform.DOLocalJump(transform.position + transform.TransformDirection(new Vector3(0, -0.42f, 2)), 2.5f, 1, _wakeUpDuration);
             yield return new WaitForSeconds(_wakeUpDuration);
             _agent.enabled = true;
@@ -272,12 +272,9 @@ namespace GGJ24
             _body.AddForce(_recoilForce * transform.TransformDirection(new Vector3(0, 0.4f, -1)), ForceMode.Impulse);
         }
 
-        public void CoroutineWrapper()
+        public void TemporarilyDisableNavMeshAgentWrapper()
         {
-            if (NavmeshDisabledRoutine == null)
-            {
-                NavmeshDisabledRoutine = StartCoroutine(TemporarilyDisableNavMeshAgent(_agentDisableDuration));
-            }
+            NavmeshDisabledRoutine ??= StartCoroutine(TemporarilyDisableNavMeshAgent(_agentDisableDuration));
         }
         public IEnumerator TemporarilyDisableNavMeshAgent(float duration = 1f)
         {

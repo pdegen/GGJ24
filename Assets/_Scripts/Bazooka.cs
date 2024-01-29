@@ -56,10 +56,8 @@ namespace GGJ24
 
         private void HandleTargeting()
         {
-            _targetIsInCone = IsInCone();
             bool isHostile = State == BazookaState.Hostile;
-
-            _targetAcquried = _targetIsInCone && !IsObstructed();
+            _targetAcquried = IsInCone() && !IsObstructed();
 
             if (!isHostile && _targetAcquried)
             {

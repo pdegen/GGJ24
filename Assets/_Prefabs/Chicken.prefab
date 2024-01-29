@@ -47,7 +47,7 @@ MonoBehaviour:
   CanShoot: 1
   _damageAmount: 1
   _weaponRange: 100
-  _bulletSpeed: 8
+  _bulletSpeed: 10
   _shootingSystem: {fileID: 0}
   _impactSystem: {fileID: 0}
   _chicken: {fileID: 0}

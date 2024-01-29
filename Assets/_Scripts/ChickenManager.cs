@@ -92,7 +92,7 @@ namespace GGJ24
             int c = _chickensAwake;
             for (int i = _chickensAwake; i < Mathf.Min(_totalChickens, c + _numChickensPerRageLevel); i++)
             {
-                _chickenList[i].WakeUp();
+                _chickenList[i].WakeUpWrapper();
                 _chickensAwake++;
                 //Debug.Log("wake up chicken " + i);
             }
