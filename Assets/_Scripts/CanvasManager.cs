@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using DG.Tweening;
+using DG.Tweening.Core.Easing;
 
 namespace GGJ24
 {
@@ -13,7 +15,8 @@ namespace GGJ24
         public static CanvasManager Instance { get; private set; }
 
         [SerializeField] private Slider _healthSlider;
-        [SerializeField] private TMP_Text _eggsText;
+        [SerializeField] private Transform _eggsCollected;
+        private TMP_Text _eggsText;
         [SerializeField] private PlayerHealth _health;
         [SerializeField] private GameObject _gameOverPanel;
         [SerializeField] private GameObject _pausePanel;
@@ -24,12 +27,13 @@ namespace GGJ24
 
         private void Awake()
         {
-            if (Instance == null)
+            if (Instance != null)
             {
-                Debug.LogWarning("Found more than one Spawner Instance");
+                Debug.LogWarning("Found more than one Canvas Manager Instance");
             }
             Instance = this;
 
+            _eggsText = _eggsCollected.GetComponent<TMP_Text>();
         }
 
         private void Start()
@@ -90,6 +94,10 @@ namespace GGJ24
 
         private void UpdateEggsText()
         {
+            if (EggSpawner.CollectedEggs > 0)
+            {
+                _eggsCollected.DOPunchScale(new Vector2(1.1f,1.1f), 0.6f).SetEase(Ease.InOutSine);
+            }
             _eggsText.text = "Eggs: " + EggSpawner.CollectedEggs;
         }
     }

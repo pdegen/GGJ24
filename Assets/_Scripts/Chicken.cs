@@ -21,6 +21,7 @@ namespace GGJ24
         [SerializeField, Min(0.1f)] protected float _pathUpdateSpeed = 0.5f;
         [SerializeField] private float _rotationSpeed = 10f;
         [SerializeField] private float _recoilForce = 2f;
+        [SerializeField] private float _recoilTorque = 2f;
         [SerializeField] private float _agentDisableDuration = 3f;
         [SerializeField] private float _wakeUpDuration = 1.2f;
 
@@ -270,6 +271,8 @@ namespace GGJ24
 
             NavmeshDisabledRoutine = StartCoroutine(TemporarilyDisableNavMeshAgent(_agentDisableDuration));
             _body.AddForce(_recoilForce * transform.TransformDirection(new Vector3(0, 0.4f, -1)), ForceMode.Impulse);
+            float rnd = Random.Range(-1f, 1f);
+            _body.AddTorque(_recoilTorque * new Vector3(rnd, rnd, rnd), ForceMode.Impulse);
         }
 
         public void TemporarilyDisableNavMeshAgentWrapper()
@@ -287,12 +290,18 @@ namespace GGJ24
             _shooting.CanShoot = true;
             _body.velocity = Vector3.zero;
             _body.isKinematic = true;
-            transform.rotation = Quaternion.identity;
+            ResetRotation();
             _agent.enabled = true;
             //Debug.Log("nav mesh enabled");
             NavmeshDisabledRoutine = null;
             IsMovedByRigidBody = false;
             SetNewDestination();
+        }
+
+        private void ResetRotation()
+        {
+            transform.DOLocalJump(transform.position, 1, 1, 0.8f);
+            transform.DORotateQuaternion(Quaternion.identity, 0.8f);
         }
     }
 }
