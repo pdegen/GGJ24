@@ -8,7 +8,7 @@ namespace GGJ24
     {
         public static PostProcessController Instance { get; private set; }
 
-        [SerializeField] private Volume _postProcessVolume;
+        private Volume _postProcessVolume;
         private Vignette _vignette;
         private Bloom _bloom;
 
@@ -19,6 +19,7 @@ namespace GGJ24
                 Debug.LogWarning("Found more than one VignetteController Instance");
             }
             Instance = this;
+            _postProcessVolume = GetComponent<Volume>();
         }
 
         private void Start()

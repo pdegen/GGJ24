@@ -268,7 +268,7 @@ namespace GGJ24
         {
             if (NavmeshDisabledRoutine != null) return;
 
-            NavmeshDisabledRoutine = StartCoroutine(TemporarilyDisableNavMesh(_agentDisableDuration));
+            NavmeshDisabledRoutine = StartCoroutine(TemporarilyDisableNavMeshAgent(_agentDisableDuration));
             _body.AddForce(_recoilForce * transform.TransformDirection(new Vector3(0, 0.4f, -1)), ForceMode.Impulse);
         }
 
@@ -276,10 +276,10 @@ namespace GGJ24
         {
             if (NavmeshDisabledRoutine == null)
             {
-                NavmeshDisabledRoutine = StartCoroutine(TemporarilyDisableNavMesh(_agentDisableDuration));
+                NavmeshDisabledRoutine = StartCoroutine(TemporarilyDisableNavMeshAgent(_agentDisableDuration));
             }
         }
-        public IEnumerator TemporarilyDisableNavMesh(float duration = 1f)
+        public IEnumerator TemporarilyDisableNavMeshAgent(float duration = 1f)
         {
             //Debug.Log("disabling navmesh for " + duration + " s");
             IsMovedByRigidBody = true;

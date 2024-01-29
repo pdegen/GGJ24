@@ -19,7 +19,7 @@ namespace GGJ24
         void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, Bullet.ExplosionRadius);
+            Gizmos.DrawWireSphere(transform.position, Missile.ExplosionRadius);
         }
     }
 }
