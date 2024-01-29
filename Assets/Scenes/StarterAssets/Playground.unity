@@ -9279,6 +9279,21 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 110165364468417721, guid: ecec9076f6d0bb94fb639b0c2f661d30,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 110165364468417721, guid: ecec9076f6d0bb94fb639b0c2f661d30,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 110165364468417721, guid: ecec9076f6d0bb94fb639b0c2f661d30,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 110165364468417721, guid: ecec9076f6d0bb94fb639b0c2f661d30,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.91
       objectReference: {fileID: 0}
@@ -9327,6 +9342,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1175680381506372797, guid: ecec9076f6d0bb94fb639b0c2f661d30,
+        type: 3}
+      propertyPath: m_Height
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2639489082563578185, guid: ecec9076f6d0bb94fb639b0c2f661d30,
+        type: 3}
+      propertyPath: GroundedOffset
+      value: -0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 2639489082563578185, guid: ecec9076f6d0bb94fb639b0c2f661d30,
+        type: 3}
+      propertyPath: GroundedRadius
+      value: 0.14
+      objectReference: {fileID: 0}
     - target: {fileID: 3353277843947874473, guid: ecec9076f6d0bb94fb639b0c2f661d30,
         type: 3}
       propertyPath: m_Camera
@@ -9346,6 +9376,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerArmature
+      objectReference: {fileID: 0}
+    - target: {fileID: 4972077853721697955, guid: ecec9076f6d0bb94fb639b0c2f661d30,
+        type: 3}
+      propertyPath: m_Height
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4972077853721697955, guid: ecec9076f6d0bb94fb639b0c2f661d30,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 7197361079690270256, guid: ecec9076f6d0bb94fb639b0c2f661d30,
+        type: 3}
+      propertyPath: m_Height
+      value: 1.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

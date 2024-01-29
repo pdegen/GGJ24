@@ -13,7 +13,7 @@ namespace GGJ24
 
         private void Awake()
         {
-            if (Instance == null)
+            if (Instance != null)
             {
                 Debug.LogWarning("Found more than one AudioManager Instance11");
             }
