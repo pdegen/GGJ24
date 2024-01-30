@@ -123,7 +123,7 @@ namespace GGJ24
 
             if (_chickenMaterial != null)
             {
-                float newEmissionIntensity = Mathf.Lerp(0f, _maxEmissionIntensity, parameterValue);
+                float newEmissionIntensity = Mathf.Lerp(_maxEmissionIntensity/3f, _maxEmissionIntensity, parameterValue);
                 Color newEmissionColor = Color.red * newEmissionIntensity;
                 _chickenMaterial.SetColor("_EmissionColor", newEmissionColor);
             }

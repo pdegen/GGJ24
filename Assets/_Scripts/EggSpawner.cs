@@ -33,7 +33,8 @@ namespace GGJ24
         Vector3 GetRandomPointOnNavMesh()
         {
             NavMeshHit hit;
-            Vector3 randomPoint = new Vector3(Random.Range(-GameManager.LevelRadius, GameManager.LevelRadius), 0, Random.Range(-GameManager.LevelRadius, GameManager.LevelRadius));
+            float r = GameManager.Instance.LevelRadius;
+            Vector3 randomPoint = new Vector3(Random.Range(-r, r), 0, Random.Range(-r, r));
 
             if (NavMesh.SamplePosition(randomPoint, out hit, 10f, NavMesh.AllAreas))
             {

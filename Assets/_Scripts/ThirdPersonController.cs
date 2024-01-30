@@ -1,7 +1,7 @@
 ﻿using System; 
 using UnityEngine;
 using System.Collections;
-using static UnityEditor.FilePathAttribute;
+//using static UnityEditor.FilePathAttribute;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -109,6 +109,7 @@ namespace StarterAssets
         private int _animIDDodgeLeft;
         private int _animIDDodgeRight;
         private int _animIDDie;
+        private int _animIDDance;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -121,11 +122,15 @@ namespace StarterAssets
 
         private const float _threshold = 0.01f;
 
+        // Custom
+        public static event Action<float> TriggerIFRame;
+        public static event Action<bool> Dancing;
+
         private bool _hasAnimator;
         private bool _canMove = true;
         private bool _isDodging = false;
         private Coroutine _disableMoveRoutine;
-        public static event Action<float> TriggerIFRame;
+        public bool IsDancing { get; private set; } = false;
 
         private bool IsCurrentDeviceMouse
         {
@@ -175,13 +180,23 @@ namespace StarterAssets
         {
             _inputActions.Player.Enable();
             //_inputActions.Player.Dodge.performed += Dodge;
+            _inputActions.Player.Interact.performed += Dance;
             PlayerHealth.PlayerDeath += Die;
         }
 
         private void OnDisable()
         {
+            _inputActions.Player.Interact.performed -= Dance;
             //_inputActions.Player.Dodge.performed -= Dodge;
             PlayerHealth.PlayerDeath -= Die;
+        }
+
+        private void Dance(InputAction.CallbackContext context)
+        {
+            _speed = 0;
+            IsDancing = true;
+            _animator.SetTrigger(_animIDDance);
+            Dancing?.Invoke(true);
         }
 
         private void Die()
@@ -253,6 +268,12 @@ namespace StarterAssets
 
         private void Update()
         {
+            if (IsDancing && _speed > 0) //_animator.IsInTransition(0))
+            {
+                IsDancing = false;
+                Dancing?.Invoke(false);
+            }
+
             JumpAndGravity();
             GroundedCheck();
             Move();
@@ -273,6 +294,7 @@ namespace StarterAssets
             _animIDDodgeLeft = Animator.StringToHash("DodgeLeft");
             _animIDDodgeRight = Animator.StringToHash("DodgeRight");
             _animIDDie = Animator.StringToHash("Die");
+            _animIDDance = Animator.StringToHash("Dance");
         }
 
         private void GroundedCheck()

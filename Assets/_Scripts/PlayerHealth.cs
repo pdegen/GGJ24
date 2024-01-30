@@ -98,8 +98,8 @@ namespace GGJ24
             TookDamage?.Invoke((int)Health);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.HitSFX, transform.position);
             //_hitRoutine ??= StartCoroutine(HitRoutine());
-            if (Health / InitialHealth > 0.5f) _vignette.SetVignetteIntensity(0f);
-            else _vignette.SetVignetteIntensity(Mathf.Lerp(0f, 0.4f, 1 - Health / InitialHealth));
+            if (Health / InitialHealth > 0.33f) _vignette.SetVignetteIntensity(0f);
+            else _vignette.SetVignetteIntensity(Mathf.Lerp(0f, 0.5f, 1 - Health / InitialHealth));
         }
 
         public void TriggerInvincibility(float duration)

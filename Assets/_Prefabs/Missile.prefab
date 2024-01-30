@@ -158,6 +158,9 @@ MonoBehaviour:
   _explosionDamage: 50
   _gravity: 0.2
   _decalSpawnPoint: {fileID: 6884545070965289209}
+  _dodgeNumberPrefab: {fileID: 2496076631707994463, guid: 63b66d9b41fc0404bb623b36f868b301,
+    type: 3}
+  _dodgeProbabilityBuff: 0.9
 --- !u!1 &6122786717507606920
 GameObject:
   m_ObjectHideFlags: 0

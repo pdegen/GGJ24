@@ -13,7 +13,7 @@ namespace GGJ24
     {
         public static GameManager Instance { get; private set; }
 
-        public static float LevelRadius { get; private set; } = 40f;
+        public float LevelRadius { get; set; } = 60f;
         public static int HighScore = 0;
 
         [Header("Multiply speed, random shoot, bullet magnet by this factor for every egg collected")]

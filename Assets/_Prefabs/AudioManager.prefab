@@ -159,3 +159,10 @@ MonoBehaviour:
       Data3: 191531966
       Data4: -858085750
     Path: event:/Player_Land
+  <WhooshSFX>k__BackingField:
+    Guid:
+      Data1: 636766864
+      Data2: 1247899185
+      Data3: 233364408
+      Data4: -392791865
+    Path: event:/Whoosh

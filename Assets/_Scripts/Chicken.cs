@@ -25,6 +25,9 @@ namespace GGJ24
         [SerializeField] private float _agentDisableDuration = 3f;
         [SerializeField] private float _wakeUpDuration = 1.2f;
 
+        [SerializeField] private MeshRenderer _chickenMeshRenderer;
+        [SerializeField] private Material _emissionMaterial;
+
         protected Vector3 _destinationPos;
         protected NavMeshAgent _agent;
         protected delegate IEnumerator GetNewDestination();
@@ -65,7 +68,7 @@ namespace GGJ24
             _agent.speed *= Random.Range(1f, 5f);
             _agent.acceleration *= Random.Range(0.8f, 2f);
             _agent.angularSpeed *= Random.Range(0.8f, 2f);
-            _oobRadiusSquared = GameManager.LevelRadius * GameManager.LevelRadius;
+            _oobRadiusSquared = GameManager.Instance.LevelRadius * GameManager.Instance.LevelRadius;
 
             if (_spawnPoint == Vector3.forward)
             {
@@ -86,6 +89,7 @@ namespace GGJ24
 
         private IEnumerator InitAudio()
         {
+            // TO DO: Angry chicken sounds
             ambientEventInstance = AudioManager.Instance.CreateEventInstance(FMODEvents.Instance.ChickenMoodSFX);
             ambientEventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             yield return new WaitForSeconds(Random.Range(0f,10f));
@@ -111,7 +115,7 @@ namespace GGJ24
             if (IsSleeping || IsMovedByRigidBody) return;
             if (IsOOB())
             {
-                Debug.Log("OOB, resetting");
+                //Debug.Log("OOB, resetting");
                 ResetChicken();
             }
             if (!_agent.enabled  || !_agent.isOnNavMesh) return;
@@ -166,6 +170,7 @@ namespace GGJ24
 
         private IEnumerator WakeUp()
         {
+            _chickenMeshRenderer.material = _emissionMaterial;
             transform.parent = null;
             transform.DOLocalJump(transform.position + transform.TransformDirection(new Vector3(0, -0.42f, 2)), 2.5f, 1, _wakeUpDuration);
             yield return new WaitForSeconds(_wakeUpDuration);
@@ -233,7 +238,7 @@ namespace GGJ24
 
             try
             {
-                _destinationPos = RandomNavSphere(Vector3.zero, GameManager.LevelRadius, -1);
+                _destinationPos = RandomNavSphere(Vector3.zero, GameManager.Instance.LevelRadius, -1);
                 _agent.SetDestination(_destinationPos);
             }
             catch (System.Exception ex)

@@ -31,6 +31,8 @@ namespace GGJ24
         [field: SerializeField] public EventReference PlayerStepFX { get; private set; }
         [field: Header("Player Land SFX")]
         [field: SerializeField] public EventReference PlayerLandSFX { get; private set; }
+        [field: Header("Whoosh SFX")]
+        [field: SerializeField] public EventReference WhooshSFX { get; private set; }
         public static FMODEvents Instance { get; private set; }
 
         private void Awake()

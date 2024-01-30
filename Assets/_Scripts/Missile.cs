@@ -1,6 +1,9 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DamageNumbersPro;
+using System;
 
 namespace GGJ24
 {
@@ -16,13 +19,46 @@ namespace GGJ24
         [SerializeField] private float _explosionDamage = 50f;
         [SerializeField, Range(0f, 1f)] private float _gravity = 0.01f;
         [SerializeField] private Transform _decalSpawnPoint;
+        [SerializeField] private DamageNumber _dodgeNumberPrefab;
+        // TO DO: Limit max decals?
 
         // Check if missile hits default layer to rotate decal
         private float _raycastDistance = 1.5f;
 
+        [SerializeField, Range(0f,1f)] private float _dodgeProbabilityBuff;
+        private static float _dodgeProbability = 0f;
+
+        private void Start ()
+        {
+            Destroy(gameObject, 20f);
+        }
+
+        private void OnEnable()
+        {
+            ThirdPersonController.Dancing += ToggleDodgeProbability;
+        }
+
+        private void OnDisable()
+        {
+            ThirdPersonController.Dancing -= ToggleDodgeProbability;
+        }
+
+        private void ToggleDodgeProbability(bool increaseDodge)
+        {
+            _dodgeProbability = increaseDodge ? _dodgeProbabilityBuff : 0f;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.layer == 12) return; // magnet
+
+            if (other.gameObject.layer == 6 && UnityEngine.Random.Range(0f, 1f) < _dodgeProbability)
+            {
+                _dodgeNumberPrefab.Spawn(0.4f*other.transform.up + other.transform.position, "Dodged!");
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WhooshSFX, transform.position);
+                return;
+            }
+
             Explode();
             Destroy(gameObject);
         }
