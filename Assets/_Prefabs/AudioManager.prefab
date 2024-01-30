@@ -145,3 +145,17 @@ MonoBehaviour:
       Data3: -2024019069
       Data4: -1641996630
     Path: event:/FFX/Chicken/Chicken Mood
+  <PlayerStepFX>k__BackingField:
+    Guid:
+      Data1: -1876765994
+      Data2: 1145808110
+      Data3: -358993270
+      Data4: 2138165254
+    Path: event:/Steps
+  <PlayerLandSFX>k__BackingField:
+    Guid:
+      Data1: -643418989
+      Data2: 1243980306
+      Data3: 191531966
+      Data4: -858085750
+    Path: event:/Player_Land

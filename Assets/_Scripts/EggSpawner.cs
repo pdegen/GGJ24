@@ -9,7 +9,7 @@ namespace GGJ24
     public class EggSpawner : MonoBehaviour
     {
         public static EggSpawner Instance { get; private set; }
-        public static int CollectedEggs = 0;
+        public static int CollectedEggs;
 
         [SerializeField] private float _yoffset = 0.5f;
         [SerializeField] private GameObject _eggPrefab;
@@ -21,6 +21,7 @@ namespace GGJ24
                 Debug.LogWarning("Found more than one Spawner Instance");
             }
             Instance = this;
+            CollectedEggs = 0;
         }
 
         public void SpawnEgg()

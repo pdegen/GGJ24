@@ -12,7 +12,9 @@ namespace GGJ24
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
+
         public static float LevelRadius { get; private set; } = 40f;
+        public static int HighScore = 0;
 
         [Header("Multiply speed, random shoot, bullet magnet by this factor for every egg collected")]
         public float RageMultiplier = 1.01f;
@@ -49,12 +51,37 @@ namespace GGJ24
             _inputActions.Player.EscaeAction.performed -= TogglePause;
         }
 
-        public void GameOver()
+        public void EndGame()
         {
+            if (EggSpawner.CollectedEggs > HighScore)
+            {
+                StartCoroutine(NewHighScore());
+            }
+            else
+            {
+                StartCoroutine(GameOver());
+            }
+
+        }
+
+        private IEnumerator NewHighScore()
+        {
+            yield return new WaitForSeconds(4.5f);
+            CanvasManager.Instance.ToggleGameOverScreen();
+            AudioManager.Instance.StopAmbiance();
+            Time.timeScale = 0f;
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.VictorySFX, transform.position);
+            HighScore = EggSpawner.CollectedEggs;
+        }
+
+        private IEnumerator GameOver()
+        {
+            yield return new WaitForSeconds(4.5f);
+            CanvasManager.Instance.ToggleGameOverScreen();
+            AudioManager.Instance.StopAmbiance();
             Time.timeScale = 0f;
             CanvasManager.Instance.ToggleGameOverScreen();
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GameOverSFX, transform.position);
-            Debug.Log("Game over");
         }
 
         private void OnEggCollected()

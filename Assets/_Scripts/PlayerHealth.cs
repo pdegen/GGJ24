@@ -11,6 +11,7 @@ namespace GGJ24
     {
         public Vector3 Position { get => transform.position; private set => transform.position = value; }
         public static event Action<int> TookDamage;
+        public static event Action PlayerDeath;
 
         [SerializeField] private float _health;
         [SerializeField, Min(0)] private float _hitAnimCooldown = 2f;
@@ -25,6 +26,8 @@ namespace GGJ24
         [SerializeField] private PostProcessController _vignette;
         //[SerializeField] private MMF_Player _hitFeedback;
         private ThirdPersonController _controller;
+        private bool _isInvincible = false;
+        private Coroutine _invincibilityRoutine;
 
         public float Health
         {
@@ -72,6 +75,16 @@ namespace GGJ24
             //_hasHitFeedback = _hitFeedback != null;
         }
 
+        private void OnEnable()
+        {
+            ThirdPersonController.TriggerIFRame += TriggerInvincibility;
+        }
+
+        private void OnDisable()
+        {
+            ThirdPersonController.TriggerIFRame -= TriggerInvincibility;
+        }
+
         protected virtual void AssignAnimationIDs()
         {
             _animIDHit = Animator.StringToHash("Hit");
@@ -79,12 +92,28 @@ namespace GGJ24
 
         public virtual void TakeDamage(float deltaHealth)
         {
+            if (_isInvincible) return;
+
             Health -= deltaHealth;
             TookDamage?.Invoke((int)Health);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.HitSFX, transform.position);
             //_hitRoutine ??= StartCoroutine(HitRoutine());
             if (Health / InitialHealth > 0.5f) _vignette.SetVignetteIntensity(0f);
             else _vignette.SetVignetteIntensity(Mathf.Lerp(0f, 0.4f, 1 - Health / InitialHealth));
+        }
+
+        public void TriggerInvincibility(float duration)
+        {
+            if (_invincibilityRoutine != null) return;
+            _invincibilityRoutine = StartCoroutine(Invincibility(duration));
+        }
+
+        private IEnumerator Invincibility(float duration)
+        {
+            _isInvincible = true;
+            yield return new WaitForSeconds(duration);
+            _isInvincible = false;
+            _invincibilityRoutine = null;
         }
 
         protected virtual IEnumerator HitRoutine()
@@ -103,8 +132,8 @@ namespace GGJ24
 
         protected virtual void Die()
         {
-            Debug.Log("Entity has died.");
-            GameManager.Instance.GameOver();
+            PlayerDeath?.Invoke();
+            GameManager.Instance.EndGame();
         }
     }
 }

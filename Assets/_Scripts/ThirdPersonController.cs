@@ -1,7 +1,12 @@
-﻿ using UnityEngine;
-#if ENABLE_INPUT_SYSTEM 
+﻿using System; 
+using UnityEngine;
+using System.Collections;
+using static UnityEditor.FilePathAttribute;
+#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
+using GGJ24;
+using DG.Tweening;
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
@@ -75,6 +80,10 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        [SerializeField] private float _dodgeDistance;
+        [SerializeField] private float _dodgeDuration;
+        [SerializeField] private float _dodgeIFrameDuration;
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -97,9 +106,13 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+        private int _animIDDodgeLeft;
+        private int _animIDDodgeRight;
+        private int _animIDDie;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
+        private StarterAssetsInputActions _inputActions;
 #endif
         private Animator _animator;
         private CharacterController _controller;
@@ -109,6 +122,10 @@ namespace StarterAssets
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
+        private bool _canMove = true;
+        private bool _isDodging = false;
+        private Coroutine _disableMoveRoutine;
+        public static event Action<float> TriggerIFRame;
 
         private bool IsCurrentDeviceMouse
         {
@@ -130,6 +147,7 @@ namespace StarterAssets
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
+            _inputActions = new StarterAssetsInputActions();
         }
 
         private void Start()
@@ -144,18 +162,97 @@ namespace StarterAssets
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
-
             AssignAnimationIDs();
 
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            _hasAnimator = TryGetComponent(out _animator);
+        }
+
+        private void OnEnable()
+        {
+            _inputActions.Player.Enable();
+            //_inputActions.Player.Dodge.performed += Dodge;
+            PlayerHealth.PlayerDeath += Die;
+        }
+
+        private void OnDisable()
+        {
+            //_inputActions.Player.Dodge.performed -= Dodge;
+            PlayerHealth.PlayerDeath -= Die;
+        }
+
+        private void Die()
+        {
+            _canMove = false;
+            _animator.SetTrigger(_animIDDie);
+        }
+
+        private void Dodge(InputAction.CallbackContext context)
+        {
+            if (!_canMove || _isDodging) return;
+
+            _disableMoveRoutine = StartCoroutine(TemporarilyDisableMove(_dodgeDuration));
+            TriggerIFRame?.Invoke(_dodgeIFrameDuration);
+
+            if (_input.move.x > 0)
+            {
+                //StartCoroutine(DodgeTeleport(true, _dodgeDuration)); # trigger this in aimation event
+                _animator.SetTrigger(_animIDDodgeRight);
+            }
+            else
+            {
+                // StartCoroutine(DodgeTeleport(false, _dodgeDuration));
+                _animator.SetTrigger(_animIDDodgeLeft);
+            }
+        }
+        private void DodgeTeleportWrapper(int dodgeDirection) // Animation events don't accept bool params
+        {
+            bool isRightDodge = dodgeDirection == 0;
+            StartCoroutine(DodgeTeleport(isRightDodge));
+        }
+        private IEnumerator DodgeTeleport(bool isRightDodge)
+        {
+            Vector3 newPos;
+            float yrotation;
+            if (isRightDodge)
+            {
+                newPos = transform.position + transform.TransformDirection(_dodgeDistance * Vector3.right);
+                yrotation = 90;
+            }
+            else
+            {
+                newPos = transform.position - transform.TransformDirection(_dodgeDistance * Vector3.right);
+                yrotation = -90;
+            }
+            _isDodging = true;
+            _controller.enabled = false;
+            transform.DOMove(newPos, _dodgeDuration);
+            yield return new WaitForSeconds(_dodgeDuration);
+            //Quaternion rotation = Quaternion.Euler(0f, yrotation, 0f);
+            //transform.rotation *= rotation;
+            _isDodging = false;
+            _controller.enabled = true;
+        }
+        private void Teleport(Vector3 newPos)
+        {
+            _controller.enabled = false;
+            transform.position = newPos;
+            _controller.enabled = true;
+        }
+
+        private IEnumerator TemporarilyDisableMove(float duration)
+        {
+            _canMove = false;
+            yield return new WaitForSeconds(duration);
+            _canMove = true;
+            _disableMoveRoutine = null;
         }
 
         private void Update()
         {
-            _hasAnimator = TryGetComponent(out _animator);
-
             JumpAndGravity();
             GroundedCheck();
             Move();
@@ -173,6 +270,9 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            _animIDDodgeLeft = Animator.StringToHash("DodgeLeft");
+            _animIDDodgeRight = Animator.StringToHash("DodgeRight");
+            _animIDDie = Animator.StringToHash("Die");
         }
 
         private void GroundedCheck()
@@ -184,7 +284,7 @@ namespace StarterAssets
                 QueryTriggerInteraction.Ignore);
 
             // update animator if using character
-            if (_hasAnimator)
+            if (_hasAnimator && _canMove)
             {
                 _animator.SetBool(_animIDGrounded, Grounded);
             }
@@ -213,6 +313,8 @@ namespace StarterAssets
 
         private void Move()
         {
+            if (!_canMove) return;
+
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
@@ -375,8 +477,9 @@ namespace StarterAssets
             {
                 if (FootstepAudioClips.Length > 0)
                 {
-                    var index = Random.Range(0, FootstepAudioClips.Length);
-                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                    //var index = UnityEngine.Random.Range(0, FootstepAudioClips.Length);
+                    //AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                    AudioManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerStepFX, transform.position);
                 }
             }
         }
@@ -385,7 +488,8 @@ namespace StarterAssets
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                //AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerLandSFX, transform.position);
             }
         }
     }
