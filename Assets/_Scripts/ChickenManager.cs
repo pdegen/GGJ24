@@ -98,6 +98,11 @@ namespace GGJ24
             }
         }
 
+        public void WakeUpNearbyChickens()
+        {
+            // TO DO
+        }
+
         private void OnEggCollected()
         {
             WakeUpChickens();
