@@ -105,10 +105,10 @@ namespace GGJ24
         public void TriggerInvincibility(float duration)
         {
             if (_invincibilityRoutine != null) return;
-            _invincibilityRoutine = StartCoroutine(Invincibility(duration));
+            _invincibilityRoutine = StartCoroutine(InvincibilityRoutine(duration));
         }
 
-        private IEnumerator Invincibility(float duration)
+        private IEnumerator InvincibilityRoutine(float duration)
         {
             _isInvincible = true;
             yield return new WaitForSeconds(duration);

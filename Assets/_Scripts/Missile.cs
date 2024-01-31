@@ -23,9 +23,7 @@ namespace GGJ24
         // TO DO: Limit max decals?
 
         // Check if missile hits default layer to rotate decal
-        private float _raycastDistance = 1.5f;
-
-        [SerializeField, Range(0f,1f)] private float _dodgeProbabilityBuff;
+        private readonly float _raycastDistance = 1.5f;
         private static float _dodgeProbability = 0f;
 
         private void Start ()
@@ -43,9 +41,9 @@ namespace GGJ24
             ThirdPersonController.Dancing -= ToggleDodgeProbability;
         }
 
-        private void ToggleDodgeProbability(bool increaseDodge)
+        private static void ToggleDodgeProbability(bool increaseDodge)
         {
-            _dodgeProbability = increaseDodge ? _dodgeProbabilityBuff : 0f;
+            _dodgeProbability = increaseDodge ? GameParamsLoader.DodgeChance : 0f;
         }
 
         private void OnTriggerEnter(Collider other)

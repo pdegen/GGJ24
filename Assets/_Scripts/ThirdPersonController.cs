@@ -106,10 +106,9 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
-        private int _animIDDodgeLeft;
-        private int _animIDDodgeRight;
         private int _animIDDie;
         private int _animIDDance;
+        private int _animIDCancelDance;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -128,9 +127,10 @@ namespace StarterAssets
 
         private bool _hasAnimator;
         private bool _canMove = true;
-        private bool _isDodging = false;
         private Coroutine _disableMoveRoutine;
         public bool IsDancing { get; private set; } = false;
+        private float _danceTimer = 0;
+        private float _minDanceTime = 3f;
 
         private bool IsCurrentDeviceMouse
         {
@@ -193,69 +193,30 @@ namespace StarterAssets
 
         private void Dance(InputAction.CallbackContext context)
         {
+            if (!Grounded) return;
+
+            StartCoroutine(TemporarilyDisableMove(_minDanceTime));
             _speed = 0;
             IsDancing = true;
             _animator.SetTrigger(_animIDDance);
             Dancing?.Invoke(true);
         }
 
+        private void CheckCancelDance()
+        {
+            _danceTimer += Time.deltaTime;
+            if (_input.move.sqrMagnitude < 0.5 || _danceTimer < _minDanceTime) { return; }
+            IsDancing = false;
+            Dancing?.Invoke(false);
+            _animator.SetTrigger(_animIDCancelDance);
+            _danceTimer = 0;
+        }
+
         private void Die()
         {
+            _hasAnimator = false;
             _canMove = false;
             _animator.SetTrigger(_animIDDie);
-        }
-
-        private void Dodge(InputAction.CallbackContext context)
-        {
-            if (!_canMove || _isDodging) return;
-
-            _disableMoveRoutine = StartCoroutine(TemporarilyDisableMove(_dodgeDuration));
-            TriggerIFRame?.Invoke(_dodgeIFrameDuration);
-
-            if (_input.move.x > 0)
-            {
-                //StartCoroutine(DodgeTeleport(true, _dodgeDuration)); # trigger this in aimation event
-                _animator.SetTrigger(_animIDDodgeRight);
-            }
-            else
-            {
-                // StartCoroutine(DodgeTeleport(false, _dodgeDuration));
-                _animator.SetTrigger(_animIDDodgeLeft);
-            }
-        }
-        private void DodgeTeleportWrapper(int dodgeDirection) // Animation events don't accept bool params
-        {
-            bool isRightDodge = dodgeDirection == 0;
-            StartCoroutine(DodgeTeleport(isRightDodge));
-        }
-        private IEnumerator DodgeTeleport(bool isRightDodge)
-        {
-            Vector3 newPos;
-            float yrotation;
-            if (isRightDodge)
-            {
-                newPos = transform.position + transform.TransformDirection(_dodgeDistance * Vector3.right);
-                yrotation = 90;
-            }
-            else
-            {
-                newPos = transform.position - transform.TransformDirection(_dodgeDistance * Vector3.right);
-                yrotation = -90;
-            }
-            _isDodging = true;
-            _controller.enabled = false;
-            transform.DOMove(newPos, _dodgeDuration);
-            yield return new WaitForSeconds(_dodgeDuration);
-            //Quaternion rotation = Quaternion.Euler(0f, yrotation, 0f);
-            //transform.rotation *= rotation;
-            _isDodging = false;
-            _controller.enabled = true;
-        }
-        private void Teleport(Vector3 newPos)
-        {
-            _controller.enabled = false;
-            transform.position = newPos;
-            _controller.enabled = true;
         }
 
         private IEnumerator TemporarilyDisableMove(float duration)
@@ -268,10 +229,10 @@ namespace StarterAssets
 
         private void Update()
         {
-            if (IsDancing && _speed > 0) //_animator.IsInTransition(0))
+            if (IsDancing) 
             {
-                IsDancing = false;
-                Dancing?.Invoke(false);
+                CheckCancelDance();
+                return;
             }
 
             JumpAndGravity();
@@ -291,10 +252,9 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-            _animIDDodgeLeft = Animator.StringToHash("DodgeLeft");
-            _animIDDodgeRight = Animator.StringToHash("DodgeRight");
             _animIDDie = Animator.StringToHash("Die");
             _animIDDance = Animator.StringToHash("Dance");
+            _animIDCancelDance = Animator.StringToHash("CancelDance");
         }
 
         private void GroundedCheck()
