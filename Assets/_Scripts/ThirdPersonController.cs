@@ -108,6 +108,7 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         private int _animIDDie;
         private int _animIDDance;
+        private int _animIDDanceIndex;
         private int _animIDCancelDance;
 
 #if ENABLE_INPUT_SYSTEM 
@@ -179,7 +180,6 @@ namespace StarterAssets
         private void OnEnable()
         {
             _inputActions.Player.Enable();
-            //_inputActions.Player.Dodge.performed += Dodge;
             _inputActions.Player.Interact.performed += Dance;
             PlayerHealth.PlayerDeath += Die;
         }
@@ -187,17 +187,18 @@ namespace StarterAssets
         private void OnDisable()
         {
             _inputActions.Player.Interact.performed -= Dance;
-            //_inputActions.Player.Dodge.performed -= Dodge;
             PlayerHealth.PlayerDeath -= Die;
         }
 
         private void Dance(InputAction.CallbackContext context)
         {
             if (!Grounded) return;
-
+            // TO DO: CHANGE CINEMACHINE FOLLOW TARGET
             StartCoroutine(TemporarilyDisableMove(_minDanceTime));
             _speed = 0;
             IsDancing = true;
+            int randomIndex = UnityEngine.Random.Range(0, 4); // remember to update when adding new animations...
+            _animator.SetInteger(_animIDDanceIndex, randomIndex);
             _animator.SetTrigger(_animIDDance);
             Dancing?.Invoke(true);
         }
@@ -254,6 +255,7 @@ namespace StarterAssets
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
             _animIDDie = Animator.StringToHash("Die");
             _animIDDance = Animator.StringToHash("Dance");
+            _animIDDanceIndex = Animator.StringToHash("DanceIndex");
             _animIDCancelDance = Animator.StringToHash("CancelDance");
         }
 
