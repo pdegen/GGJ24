@@ -11,6 +11,7 @@ namespace GGJ24
         public static EggSpawner Instance { get; private set; }
         public static int CollectedEggs;
 
+        [SerializeField] private float _eggSpawnRadius = 40f;
         [SerializeField] private float _yoffset = 0.5f;
         [SerializeField] private GameObject _eggPrefab;
 
@@ -33,8 +34,9 @@ namespace GGJ24
         Vector3 GetRandomPointOnNavMesh()
         {
             NavMeshHit hit;
-            float r = GameManager.Instance.LevelRadius;
-            Vector3 randomPoint = new Vector3(Random.Range(-r, r), 0, Random.Range(-r, r));
+            float theta = Random.Range(0,2*Mathf.PI);
+            float r = Random.Range(0, _eggSpawnRadius);
+            Vector3 randomPoint = new Vector3(r*Mathf.Cos(theta), 0, r * Mathf.Sin(theta));
 
             if (NavMesh.SamplePosition(randomPoint, out hit, 10f, NavMesh.AllAreas))
             {
@@ -42,6 +44,12 @@ namespace GGJ24
             }
 
             return transform.position;
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, _eggSpawnRadius);
         }
     }
 }

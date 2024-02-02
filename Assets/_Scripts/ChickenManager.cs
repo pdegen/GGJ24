@@ -8,8 +8,9 @@ namespace GGJ24
     {
         public static ChickenManager Instance { get; private set; }
 
-        [SerializeField] private Material _chickenMaterial;
+        [SerializeField] private Material _chickenEmissionMaterial;
         [SerializeField] float _maxEmissionIntensity = 30f;
+        [SerializeField] float _startEmissionIntensity = 2f;
         [SerializeField] int _numEggsUntilMaxRageEyes = 10;
 
         [SerializeField] private float _wavePeriod = 2f;
@@ -47,11 +48,11 @@ namespace GGJ24
         {
             GetChickens();
             _waveTimer = _wavePeriod;
-            if (_chickenMaterial == null)
+            if (_chickenEmissionMaterial == null)
             {
-                Debug.LogWarning("Chicken material not found");
+                Debug.LogWarning("Chicken emission material not found");
             }
-            _chickenMaterial.SetColor("_EmissionColor", Color.black);
+            _chickenEmissionMaterial.SetColor("_EmissionColor", Color.red);
         }
 
         public void GetChickens()
@@ -121,11 +122,11 @@ namespace GGJ24
         {
             float parameterValue = Mathf.Min(1f, (float)EggSpawner.CollectedEggs / (float)_numEggsUntilMaxRageEyes);
 
-            if (_chickenMaterial != null)
+            if (_chickenEmissionMaterial != null)
             {
-                float newEmissionIntensity = Mathf.Lerp(_maxEmissionIntensity/3f, _maxEmissionIntensity, parameterValue);
+                float newEmissionIntensity = Mathf.Lerp(_startEmissionIntensity, _maxEmissionIntensity, parameterValue);
                 Color newEmissionColor = Color.red * newEmissionIntensity;
-                _chickenMaterial.SetColor("_EmissionColor", newEmissionColor);
+                _chickenEmissionMaterial.SetColor("_EmissionColor", newEmissionColor);
             }
             else
             {

@@ -27,6 +27,7 @@ namespace GGJ24
         //[SerializeField] private MMF_Player _hitFeedback;
         private ThirdPersonController _controller;
         private bool _isInvincible = false;
+        public static bool IsDead { get; private set; }
         private Coroutine _invincibilityRoutine;
 
         public float Health
@@ -62,6 +63,7 @@ namespace GGJ24
         protected virtual void Awake()
         {
             _health = _initialHealth;
+            IsDead = false;
         }
 
         private void Start()
@@ -92,7 +94,7 @@ namespace GGJ24
 
         public virtual void TakeDamage(float deltaHealth)
         {
-            if (_isInvincible) return;
+            if (_isInvincible || IsDead) return;
 
             Health -= deltaHealth;
             TookDamage?.Invoke((int)Health);
@@ -133,6 +135,7 @@ namespace GGJ24
         protected virtual void Die()
         {
             PlayerDeath?.Invoke();
+            IsDead = true;
             GameManager.Instance.EndGame();
         }
     }
