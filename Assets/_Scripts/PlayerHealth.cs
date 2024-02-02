@@ -16,7 +16,7 @@ namespace GGJ24
         [SerializeField] private float _health;
         [SerializeField, Min(0)] private float _hitAnimCooldown = 2f;
         [SerializeField, Min(0)] private float _stunDuration = 1f;
-        private Animator _animator;
+        [SerializeField] private Animator _animator;
         private bool _hasAnimator;
         private bool _hasController;
         private bool _hasHitFeedback;
@@ -66,7 +66,7 @@ namespace GGJ24
 
         private void Start()
         {
-            _hasAnimator = TryGetComponent(out _animator);
+            _hasAnimator = _animator != null;
             if (_hasAnimator)
             {
                 AssignAnimationIDs();
@@ -87,7 +87,7 @@ namespace GGJ24
 
         protected virtual void AssignAnimationIDs()
         {
-            _animIDHit = Animator.StringToHash("Hit");
+            _animIDHit = Animator.StringToHash("GettingHit");
         }
 
         public virtual void TakeDamage(float deltaHealth)
@@ -97,7 +97,7 @@ namespace GGJ24
             Health -= deltaHealth;
             TookDamage?.Invoke((int)Health);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.HitSFX, transform.position);
-            //_hitRoutine ??= StartCoroutine(HitRoutine());
+            _hitRoutine ??= StartCoroutine(HitRoutine());
             if (Health / InitialHealth > 0.33f) _vignette.SetVignetteIntensity(0f);
             else _vignette.SetVignetteIntensity(Mathf.Lerp(0f, 0.5f, 1 - Health / InitialHealth));
         }
@@ -120,7 +120,7 @@ namespace GGJ24
         {
             //if (_hasHitFeedback) _hitFeedback.PlayFeedbacks();
             //if (_hasController) _controller.Stun(_stunDuration);
-            if (_hasAnimator) _animator.SetTrigger(_animIDHit);
+            if (_hasAnimator && !ThirdPersonController.IsDancing) _animator.SetTrigger(_animIDHit);
             yield return new WaitForSeconds(_hitAnimCooldown);
             _hitRoutine = null;
         }

@@ -80,10 +80,6 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
-        [SerializeField] private float _dodgeDistance;
-        [SerializeField] private float _dodgeDuration;
-        [SerializeField] private float _dodgeIFrameDuration;
-
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -122,14 +118,16 @@ namespace StarterAssets
 
         private const float _threshold = 0.01f;
 
-        // Custom
+      
         public static event Action<float> TriggerIFRame;
         public static event Action<bool> Dancing;
 
+        [Header("Custom")]
         private bool _hasAnimator;
         private bool _canMove = true;
         private Coroutine _disableMoveRoutine;
-        public bool IsDancing { get; private set; } = false;
+        public static bool IsDancing { get; private set; } = false;
+        public static float DodgeProbability { get; private set; }
         private float _danceTimer = 0;
         private float _minDanceTime = 3f;
 
@@ -181,36 +179,46 @@ namespace StarterAssets
         {
             _inputActions.Player.Enable();
             _inputActions.Player.Interact.performed += Dance;
+            _inputActions.Player.Jump.performed += CancelDanceManually;
             PlayerHealth.PlayerDeath += Die;
         }
 
         private void OnDisable()
         {
             _inputActions.Player.Interact.performed -= Dance;
+            _inputActions.Player.Jump.performed -= CancelDanceManually;
             PlayerHealth.PlayerDeath -= Die;
         }
 
         private void Dance(InputAction.CallbackContext context)
         {
-            if (!Grounded) return;
+            if (!Grounded || !_canMove) return;
             // TO DO: CHANGE CINEMACHINE FOLLOW TARGET
-            StartCoroutine(TemporarilyDisableMove(_minDanceTime));
+            _disableMoveRoutine = StartCoroutine(TemporarilyDisableMove(_minDanceTime));
             _speed = 0;
             IsDancing = true;
             int randomIndex = UnityEngine.Random.Range(0, 4); // remember to update when adding new animations...
             _animator.SetInteger(_animIDDanceIndex, randomIndex);
             _animator.SetTrigger(_animIDDance);
             Dancing?.Invoke(true);
+            DodgeProbability = GameParamsLoader.DodgeChance;
         }
 
-        private void CheckCancelDance()
+        private void CancelDanceManually(InputAction.CallbackContext context)
         {
-            _danceTimer += Time.deltaTime;
-            if (_input.move.sqrMagnitude < 0.5 || _danceTimer < _minDanceTime) { return; }
+            CancelDance();
+        }
+
+        private void CancelDance()
+        {
+            if (!IsDancing) return;
             IsDancing = false;
             Dancing?.Invoke(false);
             _animator.SetTrigger(_animIDCancelDance);
             _danceTimer = 0;
+            DodgeProbability = 0f;
+            _disableMoveRoutine = null;
+            _canMove = true;
         }
 
         private void Die()
@@ -232,8 +240,9 @@ namespace StarterAssets
         {
             if (IsDancing) 
             {
-                CheckCancelDance();
-                return;
+                _danceTimer += Time.deltaTime;
+                if (_input.move.sqrMagnitude > 0.5 && _danceTimer > _minDanceTime) { CancelDance(); }
+                else return;
             }
 
             JumpAndGravity();

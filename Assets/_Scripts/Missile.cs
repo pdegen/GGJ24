@@ -24,33 +24,17 @@ namespace GGJ24
 
         // Check if missile hits default layer to rotate decal
         private readonly float _raycastDistance = 1.5f;
-        private static float _dodgeProbability = 0f;
 
         private void Start ()
         {
             Destroy(gameObject, 20f);
         }
 
-        private void OnEnable()
-        {
-            ThirdPersonController.Dancing += ToggleDodgeProbability;
-        }
-
-        private void OnDisable()
-        {
-            ThirdPersonController.Dancing -= ToggleDodgeProbability;
-        }
-
-        private static void ToggleDodgeProbability(bool increaseDodge)
-        {
-            _dodgeProbability = increaseDodge ? GameParamsLoader.DodgeChance : 0f;
-        }
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.layer == 12) return; // magnet
 
-            if (other.gameObject.layer == 6 && UnityEngine.Random.Range(0f, 1f) < _dodgeProbability)
+            if (other.gameObject.layer == 6 && UnityEngine.Random.Range(0f, 1f) < ThirdPersonController.DodgeProbability)
             {
                 _dodgeNumberPrefab.Spawn(0.4f*other.transform.up + other.transform.position, "Dodged!");
                 AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WhooshSFX, transform.position);

@@ -4266,7 +4266,7 @@ PrefabInstance:
     - target: {fileID: 7710460997223498843, guid: 094a49a2ac81fd940a64b5858e9b89f4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.688
+      value: 2.127
       objectReference: {fileID: 0}
     - target: {fileID: 7710460997223498843, guid: 094a49a2ac81fd940a64b5858e9b89f4,
         type: 3}
@@ -5722,6 +5722,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8718778828885884488, guid: e5f4daf24146ee040b5a2d7a73b30aa0,
     type: 3}
   m_PrefabInstance: {fileID: 2509764790173645382}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1759659734 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8193714772926735009, guid: ecec9076f6d0bb94fb639b0c2f661d30,
+    type: 3}
+  m_PrefabInstance: {fileID: 8158495002778996271}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1764214107
 GameObject:
@@ -10128,6 +10134,11 @@ PrefabInstance:
       propertyPath: m_UIInputModule
       value: 
       objectReference: {fileID: 1666049967}
+    - target: {fileID: 3496027628765835467, guid: ecec9076f6d0bb94fb639b0c2f661d30,
+        type: 3}
+      propertyPath: _animator
+      value: 
+      objectReference: {fileID: 1759659734}
     - target: {fileID: 3496027628765835467, guid: ecec9076f6d0bb94fb639b0c2f661d30,
         type: 3}
       propertyPath: _vignette
