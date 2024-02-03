@@ -8,5 +8,6 @@ namespace GGJ24
     public class GameParams : ScriptableObject
     {
         [Range(0f, 1f)] public float _dodgeChance;
+        public int _eggsCollectedToUnlockDodge;
     }
 }

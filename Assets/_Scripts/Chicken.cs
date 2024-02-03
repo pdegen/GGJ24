@@ -45,6 +45,7 @@ namespace GGJ24
         private Rigidbody _body;
         private Coroutine NavmeshDisabledRoutine;
         private EventInstance ambientEventInstance;
+        private bool _rageSoundsActive;
 
         private enum ChickenState
         {
@@ -57,6 +58,7 @@ namespace GGJ24
             _agent = GetComponent<NavMeshAgent>();
             _agent.enabled = false;
             _targetDistanceReached = _targetDistanceNeutral;
+            _rageSoundsActive = false;
         }
 
         protected virtual void Start()
@@ -93,6 +95,7 @@ namespace GGJ24
             ambientEventInstance = AudioManager.Instance.CreateEventInstance(FMODEvents.Instance.ChickenMoodSFX);
             ambientEventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             yield return new WaitForSeconds(Random.Range(0f,10f));
+            ambientEventInstance.setParameterByName("Chicken Mood", 0);
             ambientEventInstance.start();
         }
 
@@ -179,6 +182,7 @@ namespace GGJ24
             _bazooka.gameObject.SetActive(true);
             _shooting.CanShoot = true;
             SetNewDestination();
+            StartCoroutine(ActivateAngryChickenSounds(5f));
         }
 
         private void OnEggCollected()
@@ -219,6 +223,7 @@ namespace GGJ24
             if (_agent.enabled)
             {
                 _agent.SetDestination(_bazooka.Target.position);
+                StartCoroutine(ActivateAngryChickenSounds(5f));
             }
             else
             {
@@ -306,6 +311,16 @@ namespace GGJ24
         {
             transform.DOLocalJump(transform.position, 1, 1, 0.8f);
             transform.DORotateQuaternion(Quaternion.identity, 0.8f);
+        }
+
+        private IEnumerator ActivateAngryChickenSounds(float duration)
+        {
+            if (_rageSoundsActive) yield break;
+            _rageSoundsActive = true;
+            ambientEventInstance.setParameterByName("Chicken Mood", 2);
+            yield return new WaitForSeconds(duration);
+            ambientEventInstance.setParameterByName("Chicken Mood", 0);
+            _rageSoundsActive = false;
         }
     }
 }

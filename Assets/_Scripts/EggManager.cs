@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -9,6 +9,8 @@ namespace GGJ24
     public class EggManager : MonoBehaviour
     {
         public static EggManager Instance { get; private set; }
+
+        public static Action DodgeUnlocked;
         public static int CollectedEggs { get; set; }
 
         [SerializeField] private float _eggSpawnRadius = 40f;
@@ -25,6 +27,25 @@ namespace GGJ24
             CollectedEggs = 0;
         }
 
+        private void OnEnable()
+        {
+            Egg.CollectedEgg += UnlockDodge;
+        }
+
+        private void OnDisable()
+        {
+            Egg.CollectedEgg -= UnlockDodge;
+        }
+
+        private void UnlockDodge()
+        {
+            if (CollectedEggs == GameParamsLoader.EggsCollectedToUnlockDodge)
+            {
+                DodgeUnlocked?.Invoke();
+                Egg.CollectedEgg -= UnlockDodge;
+            }
+        }
+
         public void SpawnEgg()
         {
             if (CollectedEggs < 2) return;
@@ -34,8 +55,8 @@ namespace GGJ24
 
         Vector3 GetRandomPointOnNavMesh()
         {
-            float theta = Random.Range(0, 2 * Mathf.PI);
-            float r = Random.Range(0, _eggSpawnRadius);
+            float theta = UnityEngine.Random.Range(0, 2 * Mathf.PI);
+            float r = UnityEngine.Random.Range(0, _eggSpawnRadius);
             Vector3 randomPoint = new Vector3(r*Mathf.Cos(theta), 0, r * Mathf.Sin(theta));
 
             if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 10f, NavMesh.AllAreas))

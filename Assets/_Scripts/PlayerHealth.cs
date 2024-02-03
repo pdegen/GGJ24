@@ -13,13 +13,13 @@ namespace GGJ24
         public static event Action<int> TookDamage;
         public static event Action PlayerDeath;
 
-        [SerializeField] private float _health;
         [SerializeField, Min(0)] private float _hitAnimCooldown = 2f;
         [SerializeField, Min(0)] private float _stunDuration = 1f;
         [SerializeField] private Animator _animator;
         private bool _hasAnimator;
         private bool _hasController;
         private bool _hasHitFeedback;
+        private int _animIDDie;
         private int _animIDHit;
         private Coroutine _hitRoutine;
 
@@ -50,6 +50,7 @@ namespace GGJ24
             get { return _health > 0; }
         }
 
+        [SerializeField] private float _health;
         [SerializeField, Range(0, 1000)] private float _initialHealth;
         public float InitialHealth
         {
@@ -89,6 +90,7 @@ namespace GGJ24
 
         protected virtual void AssignAnimationIDs()
         {
+            _animIDDie = Animator.StringToHash("Die");
             _animIDHit = Animator.StringToHash("GettingHit");
         }
 
@@ -99,9 +101,12 @@ namespace GGJ24
             Health -= deltaHealth;
             TookDamage?.Invoke((int)Health);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.HitSFX, transform.position);
-            _hitRoutine ??= StartCoroutine(HitRoutine());
-            if (Health / InitialHealth > 0.33f) _vignette.SetVignetteIntensity(0f);
-            else _vignette.SetVignetteIntensity(Mathf.Lerp(0f, 0.5f, 1 - Health / InitialHealth));
+            if (Health > 0)
+            {
+                _hitRoutine ??= StartCoroutine(HitRoutine());
+                if (Health / InitialHealth > 0.33f) _vignette.SetVignetteIntensity(0f);
+                else _vignette.SetVignetteIntensity(Mathf.Lerp(0f, 0.5f, 1 - Health / InitialHealth));
+            }
         }
 
         public void TriggerInvincibility(float duration)
@@ -136,6 +141,7 @@ namespace GGJ24
         {
             PlayerDeath?.Invoke();
             IsDead = true;
+            _animator.SetTrigger(_animIDDie);
             GameManager.Instance.EndGame();
         }
     }

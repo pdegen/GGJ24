@@ -6,8 +6,6 @@ using System.Collections;
 using UnityEngine.InputSystem;
 #endif
 using GGJ24;
-using DG.Tweening;
-using FMOD;
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
@@ -103,7 +101,6 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
-        private int _animIDDie;
         private int _animIDDance;
         private int _animIDDanceIndex;
         private int _animIDCancelDance;
@@ -194,7 +191,7 @@ namespace StarterAssets
 
         private void Dance(InputAction.CallbackContext context)
         {
-            if (!Grounded || !_canMove) return;
+            if (!Grounded || !_canMove || transform.position.y < GameParamsLoader.WaterLevel || GameParamsLoader.EggsCollectedToUnlockDodge > EggManager.CollectedEggs) return;
             // TO DO: CHANGE CINEMACHINE FOLLOW TARGET
             _disableMoveRoutine = StartCoroutine(TemporarilyDisableMove(_minDanceTime));
             CurrentSpeed = 0;
@@ -227,7 +224,6 @@ namespace StarterAssets
         {
             _hasAnimator = false;
             _canMove = false;
-            _animator.SetTrigger(_animIDDie);
         }
 
         private IEnumerator TemporarilyDisableMove(float duration)
@@ -264,7 +260,6 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-            _animIDDie = Animator.StringToHash("Die");
             _animIDDance = Animator.StringToHash("Dance");
             _animIDDanceIndex = Animator.StringToHash("DanceIndex");
             _animIDCancelDance = Animator.StringToHash("CancelDance");

@@ -14,8 +14,7 @@ Material:
   m_ValidKeywords:
   - _NORMALMAP
   - _SIMPLE_LIGHTING
-  m_InvalidKeywords:
-  - _ENVIRONMENTREFLECTIONS_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -143,15 +142,15 @@ Material:
     - _VertexColorShadingChannel: 0
     - _VertexColorWindChannel: 0
     - _VertexDarkening: 0.1
-    - _WindAmbientStrength: 0.2
-    - _WindGustFreq: 4
-    - _WindGustSpeed: 4
-    - _WindGustStrength: 0.217
+    - _WindAmbientStrength: 0.112
+    - _WindGustFreq: 3.65
+    - _WindGustSpeed: 3.5
+    - _WindGustStrength: 0.044
     - _WindGustTint: 0.1
     - _WindObjectRand: 0.5
     - _WindRandStrength: 0.5
     - _WindSpeed: 3
-    - _WindSwinging: 0.228
+    - _WindSwinging: 0.169
     - _WindVertexRand: 0.6
     - _WorkflowMode: 1
     - _ZWrite: 1

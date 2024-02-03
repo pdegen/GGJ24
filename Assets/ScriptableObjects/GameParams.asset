@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: GameParams
   m_EditorClassIdentifier: 
   _dodgeChance: 1
+  _eggsCollectedToUnlockDodge: 3
