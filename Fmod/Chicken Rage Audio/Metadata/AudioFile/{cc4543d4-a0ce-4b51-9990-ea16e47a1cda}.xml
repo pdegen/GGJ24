@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{cc4543d4-a0ce-4b51-9990-ea16e47a1cda}">
+		<property name="assetPath">
+			<value>SPLASH_Subtle_02_mono.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>1.1390249433106576</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d526eeee-432a-471b-a272-721527b61140}</destination>
+		</relationship>
+	</object>
+</objects>

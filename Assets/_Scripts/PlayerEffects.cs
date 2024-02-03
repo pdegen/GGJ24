@@ -1,4 +1,5 @@
 using DG.Tweening;
+using GGJ24;
 using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,8 +9,6 @@ public class PlayerEffects : MonoBehaviour
 {
     private ThirdPersonController _playerController;
     [SerializeField] private GameObject _waterRippleEffect;
-    [SerializeField] private Transform _pond;
-    private float _waterLevel;
     [SerializeField] private GameObject _waterSplashEffect;
     private bool _isInWater;
     [SerializeField] private float _ripplePeriod = 0.16f;
@@ -23,7 +22,6 @@ public class PlayerEffects : MonoBehaviour
     private void Start()
     {
         _playerController = GetComponentInParent<ThirdPersonController>();
-        _waterLevel = _pond.position.y;
     }
 
     private void Update()
@@ -33,15 +31,16 @@ public class PlayerEffects : MonoBehaviour
 
     private void HandleWater()
     {
-        if (!_isInWater && _playerController.transform.position.y < _waterLevel)
+        if (!_isInWater && _playerController.transform.position.y < GameParamsLoader.WaterLevel)
         {
             _isInWater = true;
-            GameObject splash = Instantiate(_waterSplashEffect, new Vector3(_playerController.transform.position.x, _waterLevel, _playerController.transform.position.z), Quaternion.identity);
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.SplashSFX, transform.position);
+            GameObject splash = Instantiate(_waterSplashEffect, new Vector3(_playerController.transform.position.x, GameParamsLoader.WaterLevel, _playerController.transform.position.z), Quaternion.identity);
             Destroy(splash, 3f);
         }
         else if (_isInWater)
         {
-            if (_playerController.transform.position.y > _waterLevel)
+            if (_playerController.transform.position.y > GameParamsLoader.WaterLevel)
             {
                 _isInWater = false;
                 return;
@@ -53,7 +52,7 @@ public class PlayerEffects : MonoBehaviour
 
             if (_ripplePeriod / _playerController.CurrentSpeed < _rippleTimer)
             {
-                GameObject ripple = Instantiate(_waterRippleEffect, new Vector3(_playerController.transform.position.x, _waterLevel, _playerController.transform.position.z), Quaternion.identity);
+                GameObject ripple = Instantiate(_waterRippleEffect, new Vector3(_playerController.transform.position.x, GameParamsLoader.WaterLevel, _playerController.transform.position.z), Quaternion.identity);
                 _rippleTimer = 0;
                 Destroy(ripple, 2f);
             }

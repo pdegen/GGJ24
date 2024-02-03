@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 #endif
 using GGJ24;
 using DG.Tweening;
+using FMOD;
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
@@ -130,6 +131,7 @@ namespace StarterAssets
         public static float DodgeProbability { get; private set; }
         private float _danceTimer = 0;
         private float _minDanceTime = 3f;
+        [SerializeField, Range(0f,1f)] private float _waterSpeedModifier = 0.66f;
 
         private bool IsCurrentDeviceMouse
         {
@@ -197,7 +199,7 @@ namespace StarterAssets
             _disableMoveRoutine = StartCoroutine(TemporarilyDisableMove(_minDanceTime));
             CurrentSpeed = 0;
             IsDancing = true;
-            int randomIndex = UnityEngine.Random.Range(0, 4); // remember to update when adding new animations...
+            int randomIndex = UnityEngine.Random.Range(0, 3); // remember to update when adding new animations...
             _animator.SetInteger(_animIDDanceIndex, randomIndex);
             _animator.SetTrigger(_animIDDance);
             Dancing?.Invoke(true);
@@ -310,6 +312,7 @@ namespace StarterAssets
 
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            targetSpeed = transform.position.y > GameParamsLoader.WaterLevel ? targetSpeed : targetSpeed * _waterSpeedModifier;
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -468,17 +471,17 @@ namespace StarterAssets
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                if (FootstepAudioClips.Length > 0)
-                {
-                    //var index = UnityEngine.Random.Range(0, FootstepAudioClips.Length);
-                    //AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                if (GameParamsLoader.WaterLevel > transform.position.y)
+                    AudioManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerWaterStepFX, transform.position);
+                else
                     AudioManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerStepFX, transform.position);
-                }
             }
         }
 
         private void OnLand(AnimationEvent animationEvent)
         {
+            if (GameParamsLoader.WaterLevel > transform.position.y) return;
+
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
                 //AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);

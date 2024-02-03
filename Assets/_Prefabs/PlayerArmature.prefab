@@ -1785,10 +1785,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waterRippleEffect: {fileID: 7747201256579168942, guid: 63656e13f1f71ae49900cb61fa7cd47e,
     type: 3}
-  _pond: {fileID: 0}
   _waterSplashEffect: {fileID: 1402041941817024963, guid: 6b76a0875a63f5b49b9e65317f0605c2,
     type: 3}
-  _ripplePeriod: 0.12
+  _ripplePeriod: 0.5
 --- !u!1 &5579569453913843785
 GameObject:
   m_ObjectHideFlags: 0

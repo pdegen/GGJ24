@@ -116,28 +116,28 @@ MonoBehaviour:
       Data2: 1247845989
       Data3: -1189399420
       Data4: -779348252
-    Path: event:/Egg Collection
+    Path: event:/FFX/Egg Collection
   <HitSFX>k__BackingField:
     Guid:
       Data1: 277596748
       Data2: 1304665662
       Data3: -630701386
       Data4: -364839102
-    Path: event:/Getting Hit
+    Path: event:/FFX/Getting Hit
   <VictorySFX>k__BackingField:
     Guid:
       Data1: 1623162065
       Data2: 1235735801
       Data3: 52175037
       Data4: 1567390647
-    Path: event:/Victory
+    Path: event:/FFX/Victory
   <GameOverSFX>k__BackingField:
     Guid:
       Data1: 1536416744
       Data2: 1088866904
       Data3: 1253507203
       Data4: -445623037
-    Path: event:/Game Over
+    Path: event:/FFX/Game Over
   <ChickenMoodSFX>k__BackingField:
     Guid:
       Data1: 633433543
@@ -147,22 +147,36 @@ MonoBehaviour:
     Path: event:/FFX/Chicken/Chicken Mood
   <PlayerStepFX>k__BackingField:
     Guid:
-      Data1: -1876765994
-      Data2: 1145808110
-      Data3: -358993270
-      Data4: 2138165254
-    Path: event:/Steps
+      Data1: -1255244934
+      Data2: 1117887536
+      Data3: 2139696051
+      Data4: -116961781
+    Path: event:/FFX/PlayerStep
+  <PlayerWaterStepFX>k__BackingField:
+    Guid:
+      Data1: -1841849200
+      Data2: 1284723703
+      Data3: 45239732
+      Data4: -993303256
+    Path: event:/FFX/PlayerWaterStep
   <PlayerLandSFX>k__BackingField:
     Guid:
       Data1: -643418989
       Data2: 1243980306
       Data3: 191531966
       Data4: -858085750
-    Path: event:/Player_Land
+    Path: event:/FFX/Player_Land
   <WhooshSFX>k__BackingField:
     Guid:
       Data1: 636766864
       Data2: 1247899185
       Data3: 233364408
       Data4: -392791865
-    Path: event:/Whoosh
+    Path: event:/FFX/Whoosh
+  <SplashSFX>k__BackingField:
+    Guid:
+      Data1: 637172584
+      Data2: 1160467033
+      Data3: -1752818775
+      Data4: -552675018
+    Path: event:/FFX/SPLASH_Water_Pool_Jump_01_RR3_mono

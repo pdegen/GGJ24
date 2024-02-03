@@ -1680,6 +1680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _params: {fileID: 11400000, guid: 0847f3c249912f14fb05d7ef16d5adab, type: 2}
+  _waterObject: {fileID: 1479445206}
 --- !u!1 &781685503
 GameObject:
   m_ObjectHideFlags: 0
@@ -6554,16 +6555,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2183293768385999817, guid: ecec9076f6d0bb94fb639b0c2f661d30,
-        type: 3}
-      propertyPath: _pond
-      value: 
-      objectReference: {fileID: 1479445206}
-    - target: {fileID: 2183293768385999817, guid: ecec9076f6d0bb94fb639b0c2f661d30,
-        type: 3}
-      propertyPath: _ripplePeriod
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3353277843947874473, guid: ecec9076f6d0bb94fb639b0c2f661d30,
         type: 3}

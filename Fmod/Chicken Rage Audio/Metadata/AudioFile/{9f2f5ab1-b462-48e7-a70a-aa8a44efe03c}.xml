@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{9f2f5ab1-b462-48e7-a70a-aa8a44efe03c}">
+		<property name="assetPath">
+			<value>SPLASH_Water_Pool_Jump_01_RR3_mono.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>1.8193877551020408</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d526eeee-432a-471b-a272-721527b61140}</destination>
+		</relationship>
+	</object>
+</objects>
