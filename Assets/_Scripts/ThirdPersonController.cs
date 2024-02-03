@@ -85,7 +85,7 @@ namespace StarterAssets
         private float _cinemachineTargetPitch;
 
         // player
-        private float _speed;
+        public float CurrentSpeed { get; private set;}
         private float _animationBlend;
         private float _targetRotation = 0.0f;
         private float _rotationVelocity;
@@ -195,7 +195,7 @@ namespace StarterAssets
             if (!Grounded || !_canMove) return;
             // TO DO: CHANGE CINEMACHINE FOLLOW TARGET
             _disableMoveRoutine = StartCoroutine(TemporarilyDisableMove(_minDanceTime));
-            _speed = 0;
+            CurrentSpeed = 0;
             IsDancing = true;
             int randomIndex = UnityEngine.Random.Range(0, 4); // remember to update when adding new animations...
             _animator.SetInteger(_animIDDanceIndex, randomIndex);
@@ -329,15 +329,15 @@ namespace StarterAssets
             {
                 // creates curved result rather than a linear one giving a more organic speed change
                 // note T in Lerp is clamped, so we don't need to clamp our speed
-                _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
+                CurrentSpeed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
                     Time.deltaTime * SpeedChangeRate);
 
                 // round speed to 3 decimal places
-                _speed = Mathf.Round(_speed * 1000f) / 1000f;
+                CurrentSpeed = Mathf.Round(CurrentSpeed * 1000f) / 1000f;
             }
             else
             {
-                _speed = targetSpeed;
+                CurrentSpeed = targetSpeed;
             }
 
             _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
@@ -363,7 +363,7 @@ namespace StarterAssets
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
             // move the player
-            _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
+            _controller.Move(targetDirection.normalized * (CurrentSpeed * Time.deltaTime) +
                              new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
             // update animator if using character
