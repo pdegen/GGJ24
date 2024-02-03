@@ -6,10 +6,10 @@ using UnityEngine.AI;
 
 namespace GGJ24
 {
-    public class EggSpawner : MonoBehaviour
+    public class EggManager : MonoBehaviour
     {
-        public static EggSpawner Instance { get; private set; }
-        public static int CollectedEggs;
+        public static EggManager Instance { get; private set; }
+        public static int CollectedEggs { get; set; }
 
         [SerializeField] private float _eggSpawnRadius = 40f;
         [SerializeField] private float _yoffset = 0.5f;
@@ -27,18 +27,18 @@ namespace GGJ24
 
         public void SpawnEgg()
         {
+            if (CollectedEggs < 2) return;
             Vector3 spawnPos = GetRandomPointOnNavMesh() + new Vector3(0, _yoffset, 0);
             Instantiate(_eggPrefab, spawnPos, Quaternion.identity);
         }
 
         Vector3 GetRandomPointOnNavMesh()
         {
-            NavMeshHit hit;
-            float theta = Random.Range(0,2*Mathf.PI);
+            float theta = Random.Range(0, 2 * Mathf.PI);
             float r = Random.Range(0, _eggSpawnRadius);
             Vector3 randomPoint = new Vector3(r*Mathf.Cos(theta), 0, r * Mathf.Sin(theta));
 
-            if (NavMesh.SamplePosition(randomPoint, out hit, 10f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 10f, NavMesh.AllAreas))
             {
                 return hit.position;
             }

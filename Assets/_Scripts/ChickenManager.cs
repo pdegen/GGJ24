@@ -13,14 +13,12 @@ namespace GGJ24
         [SerializeField] float _startEmissionIntensity = 2f;
         [SerializeField] int _numEggsUntilMaxRageEyes = 10;
 
-        [SerializeField] private float _wavePeriod = 2f;
-        [SerializeField] private float _numChickensPerRageLevel = 2;
+        [SerializeField] private int _numChickensPerEggCollected = 2;
         [SerializeField] private bool _enableDummyWave = false;
 
         private static int _totalChickens;
-        private static int _chickensAwake = 0;
-        private float _waveTimer;
-
+        private float _nearbyChickenSearchRadius = 4f;
+        private int _chickensAwake;
 
 
         private void Awake()
@@ -30,16 +28,17 @@ namespace GGJ24
                 Debug.LogWarning("Found more than one Spawner Instance");
             }
             Instance = this;
+            _chickensAwake = 0;
         }
 
         private void OnEnable()
         {
-            Egg.CollectedEgg += OnEggCollected;
+            Egg.CollectedEggAtPosition += OnEggCollected;
         }
 
         private void OnDisable()
         {
-            Egg.CollectedEgg -= OnEggCollected;
+            Egg.CollectedEggAtPosition -= OnEggCollected;
         }
 
         private readonly List<Chicken> _chickenList = new List<Chicken>();
@@ -47,7 +46,6 @@ namespace GGJ24
         private void Start()
         {
             GetChickens();
-            _waveTimer = _wavePeriod;
             if (_chickenEmissionMaterial == null)
             {
                 Debug.LogWarning("Chicken emission material not found");
@@ -73,40 +71,55 @@ namespace GGJ24
             _totalChickens = _chickenList.Count;
         }
 
-        public void Update()
-        {
-            if (_enableDummyWave) {
-                _waveTimer += Time.deltaTime;
-                if (_waveTimer > _wavePeriod)
-                {
-                    WakeUpChickens();
-                    _waveTimer = 0;
-                }
-            }
-
-        }
-
-        public void WakeUpChickens()
+        public void WakeUpChickens(Vector3 position)
         {
             if (_chickensAwake >= _totalChickens) return;
 
-            int c = _chickensAwake;
-            for (int i = _chickensAwake; i < Mathf.Min(_totalChickens, c + _numChickensPerRageLevel); i++)
+            int nearbyChickensWokenUp = WakeUpNearbyChickens(position);
+
+            if (nearbyChickensWokenUp < _numChickensPerEggCollected)
             {
-                _chickenList[i].WakeUpWrapper();
-                _chickensAwake++;
-                //Debug.Log("wake up chicken " + i);
+                WakeUpRandomChickens(_numChickensPerEggCollected - nearbyChickensWokenUp);
             }
         }
 
-        public void WakeUpNearbyChickens()
+        // Returns number of nearby chickens woken up
+        public int WakeUpNearbyChickens(Vector3 position)
         {
-            // TO DO
+            int wokenUp = 0;
+            Collider[] colliders = Physics.OverlapSphere(position, _nearbyChickenSearchRadius);
+            foreach (Collider hit in colliders)
+            {
+                if (hit.TryGetComponent(out Chicken chicken))
+                {
+                    if (chicken.IsSleeping) { chicken.WakeUpWrapper(); }
+                    wokenUp++;
+                    _chickensAwake++;
+                    chicken.TemporarilyDisableNavMeshAgentWrapper();
+                    if (wokenUp >= _numChickensPerEggCollected) break;
+                }
+            }
+            return wokenUp;
         }
 
-        private void OnEggCollected()
+        public void WakeUpRandomChickens(int n)
         {
-            WakeUpChickens();
+            int wokenUp = 0;
+            for (int i = 0; i < _totalChickens; i++)
+            {
+                if (_chickenList[i].IsSleeping)
+                {
+                    wokenUp++;
+                    _chickensAwake++;
+                    _chickenList[i].WakeUpWrapper();
+                }
+                if (wokenUp == n) return;
+            }
+        }
+
+        private void OnEggCollected(Vector3 position)
+        {
+            WakeUpChickens(position);
             UpdateEmission();
             //UdpateBloom();
         }
@@ -120,7 +133,7 @@ namespace GGJ24
 
         private void UpdateEmission()
         {
-            float parameterValue = Mathf.Min(1f, (float)EggSpawner.CollectedEggs / (float)_numEggsUntilMaxRageEyes);
+            float parameterValue = Mathf.Min(1f, (float)EggManager.CollectedEggs / (float)_numEggsUntilMaxRageEyes);
 
             if (_chickenEmissionMaterial != null)
             {

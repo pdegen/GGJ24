@@ -71,8 +71,8 @@ namespace GGJ24
             _inputActions.UI.Enable();
             _gameOverPanel.SetActive(true);
             _eggsCollected.gameObject.SetActive(false);
-            _endGameText.text = (EggSpawner.CollectedEggs > GameManager.HighScore) || (EggSpawner.CollectedEggs > 0 && GameManager.HighScore == 0) ? "NEW HIGH SCORE!" : "GAME OVER!";
-            _scoreText.text = "EGGS: " + EggSpawner.CollectedEggs.ToString() + "\nPREVIOUS HIGH SCORE: " + GameManager.HighScore;
+            _endGameText.text = (EggManager.CollectedEggs > GameManager.HighScore) || (EggManager.CollectedEggs > 0 && GameManager.HighScore == 0) ? "NEW HIGH SCORE!" : "GAME OVER!";
+            _scoreText.text = "EGGS: " + EggManager.CollectedEggs.ToString() + "\nPREVIOUS HIGH SCORE: " + GameManager.HighScore;
         }
 
         public void TogglePauseScreen()
@@ -100,11 +100,11 @@ namespace GGJ24
 
         private void UpdateEggsText()
         {
-            if (EggSpawner.CollectedEggs > 0)
+            if (EggManager.CollectedEggs > 0)
             {
                 _eggsCollected.DOPunchScale(new Vector2(1.1f,1.1f), 0.6f).SetEase(Ease.InOutSine);
             }
-            _eggsText.text = "EGGS: " + EggSpawner.CollectedEggs;
+            _eggsText.text = "EGGS: " + EggManager.CollectedEggs;
         }
     }
 }

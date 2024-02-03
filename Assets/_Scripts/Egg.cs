@@ -9,6 +9,7 @@ namespace GGJ24
     public class Egg : MonoBehaviour, ICollecetable
     {
         public static event Action CollectedEgg;
+        public static event Action<Vector3> CollectedEggAtPosition;
         public string InteractionPrompt { get => "Collect"; }
 
 
@@ -25,9 +26,10 @@ namespace GGJ24
         public void Collect(Collector collector)
         {
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.CollectionSFX, transform.position);
-            EggSpawner.CollectedEggs++;
+            EggManager.CollectedEggs++;
             CollectedEgg?.Invoke();
-            EggSpawner.Instance.SpawnEgg();
+            CollectedEggAtPosition?.Invoke(transform.position);
+            EggManager.Instance.SpawnEgg();
             Destroy(gameObject);
         }
     }

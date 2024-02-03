@@ -53,7 +53,7 @@ namespace GGJ24
 
         public void EndGame()
         {
-            if (EggSpawner.CollectedEggs > HighScore)
+            if (EggManager.CollectedEggs > HighScore)
             {
                 StartCoroutine(NewHighScore());
             }
@@ -71,7 +71,7 @@ namespace GGJ24
             AudioManager.Instance.StopAmbiance();
             Time.timeScale = 0f;
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.VictorySFX, transform.position);
-            HighScore = EggSpawner.CollectedEggs;
+            HighScore = EggManager.CollectedEggs;
         }
 
         private IEnumerator GameOver()
@@ -86,7 +86,7 @@ namespace GGJ24
 
         private void OnEggCollected()
         {
-            switch (EggSpawner.CollectedEggs)
+            switch (EggManager.CollectedEggs)
             {
                 case int n when n < intensityLow:
                     break;
