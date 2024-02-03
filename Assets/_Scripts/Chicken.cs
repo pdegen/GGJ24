@@ -177,9 +177,8 @@ namespace GGJ24
             _agent.enabled = true;
             IsSleeping = false;
             _bazooka.gameObject.SetActive(true);
-            //_destinationGizmo.gameObject.SetActive(true);
-            //if (_destinationGizmo != null) _destinationGizmo.transform.parent = null;
             _shooting.CanShoot = true;
+            SetNewDestination();
         }
 
         private void OnEggCollected()

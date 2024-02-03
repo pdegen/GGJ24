@@ -95,7 +95,6 @@ namespace GGJ24
                     if (chicken.IsSleeping) { chicken.WakeUpWrapper(); }
                     wokenUp++;
                     _chickensAwake++;
-                    chicken.TemporarilyDisableNavMeshAgentWrapper();
                     if (wokenUp >= _numChickensPerEggCollected) break;
                 }
             }
