@@ -73,8 +73,7 @@ crashlytics-build.properties
 
 # Custom
 /Assets/Polygon*
-/Assets/JMO Assets/Cartoon FX (legacy)/
-#/Assets/Plugins/*
+/Assets/JMO Assets/
 Assets/ExternalAssets/
 Assets/Plugins/
 Assets/Visual Design*/
