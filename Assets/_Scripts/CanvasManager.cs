@@ -6,7 +6,6 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using DG.Tweening;
-using DG.Tweening.Core.Easing;
 
 namespace GGJ24
 {

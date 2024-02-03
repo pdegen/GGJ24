@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DamageNumbersPro;
 using System;
+using MoreMountains;
+using MoreMountains.Feedbacks;
 
 namespace GGJ24
 {
@@ -20,6 +22,8 @@ namespace GGJ24
         [SerializeField, Range(0f, 1f)] private float _gravity = 0.01f;
         [SerializeField] private Transform _decalSpawnPoint;
         [SerializeField] private DamageNumber _dodgeNumberPrefab;
+        [SerializeField] private MMFeedbacks _explosionFeedback;
+
         // TO DO: Limit max decals?
 
         // Check if missile hits default layer to rotate decal or water layer to splash
@@ -54,6 +58,7 @@ namespace GGJ24
         {
             Instantiate(_explosionEffect, transform.position, Quaternion.identity);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ExplosionSFX, transform.position);
+            _explosionFeedback?.PlayFeedbacks();
 
             // Water
             if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit waterHit, _raycastDistance, layerMask: 1 << 4))

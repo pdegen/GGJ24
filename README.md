@@ -20,5 +20,5 @@ Additional assets:
 
 - **VFX:** [Cartoon FX Remaster Free](https://assetstore.unity.com/packages/vfx/particles/cartoon-fx-remaster-free-109565) by Jean Moreno
 - **Character animations:** [Mixamo.com](https://www.mixamo.com)
-- **Grass shader:** [Staggart Creations](https://assetstore.unity.com/publishers/15580)
+- **Grass and water shaders:** [Staggart Creations](https://assetstore.unity.com/publishers/15580)
 - **Tweening library:** [DOTween](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676) by Demigiant
