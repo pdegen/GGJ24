@@ -237,7 +237,7 @@ MonoBehaviour:
     m_Bits: 64
   _ignoreLayers:
     serializedVersion: 2
-    m_Bits: 1876
+    m_Bits: 8190
   _coneAngle: 70
   _coneRangeSquared: 200
   _targetLostDelay: 3

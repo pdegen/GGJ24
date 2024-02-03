@@ -24,6 +24,9 @@ namespace GGJ24
         private float _coneRange;
         private bool _targetIsInCone = false;
         private bool _targetAcquried = false;
+        private float _minHostileDuration = 3f;
+        private float _hostileTimer = 0f;
+        private bool _isHostile = false;
 
         [SerializeField] private BazookaState _state;
         public BazookaState State { get => _state; private set => _state = value; }
@@ -56,18 +59,20 @@ namespace GGJ24
 
         private void HandleTargeting()
         {
-            bool isHostile = State == BazookaState.Hostile;
+            _isHostile = State == BazookaState.Hostile;
+            _targetIsInCone = IsInCone();
             _targetAcquried = IsInCone() && !IsObstructed();
 
-            if (!isHostile && _targetAcquried)
+            if (!_isHostile && _targetAcquried)
             {
                 ChangeToHostile();
             }
 
-            if (isHostile && !_targetAcquried)
+            if (_isHostile && !_targetAcquried)
             {
-                RetrunToNeutral();
-                return;
+                _hostileTimer += Time.deltaTime;
+                if (_hostileTimer > _minHostileDuration)
+                    RetrunToNeutral();
             }
         }
 
@@ -83,6 +88,7 @@ namespace GGJ24
             State = BazookaState.Neutral;
             TargetStateChanged?.Invoke();
             _shooting.IsHostile = false;
+            _hostileTimer = 0f;
             //Debug.Log("return to neutral");
         }
 
@@ -117,12 +123,9 @@ namespace GGJ24
             Gizmos.color = Color.yellow;
             DrawConeGizmo();
 
-            if (_targetIsInCone)
-            {
-                // Draw the raycast gizmo
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(_firePoint.transform.position, Target.position);
-            }
+            // Draw targeting gizmo
+            Gizmos.color = _isHostile ? Color.red : _targetAcquried ? Color.cyan : Color.green;
+            Gizmos.DrawLine(_firePoint.transform.position, Target.position);
         }
 
         void DrawConeGizmo()

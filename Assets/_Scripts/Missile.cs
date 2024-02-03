@@ -22,7 +22,7 @@ namespace GGJ24
         [SerializeField] private DamageNumber _dodgeNumberPrefab;
         // TO DO: Limit max decals?
 
-        // Check if missile hits default layer to rotate decal
+        // Check if missile hits default layer to rotate decal or water layer to splash
         private readonly float _raycastDistance = 1.5f;
 
         private void Start ()
@@ -54,6 +54,15 @@ namespace GGJ24
         {
             Instantiate(_explosionEffect, transform.position, Quaternion.identity);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ExplosionSFX, transform.position);
+
+            // Water
+            if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit waterHit, _raycastDistance, layerMask: 1 << 4))
+            {
+                if (waterHit.collider.TryGetComponent(out WaterEffects waterEffects))
+                {
+                    waterEffects.SpawnBigSplash(transform.position);
+                }
+            }
 
             // Decal
             if (Physics.Raycast(_decalSpawnPoint.position, _decalSpawnPoint.transform.forward, out RaycastHit decalhit, _raycastDistance, layerMask: 1 << 0))
@@ -89,6 +98,14 @@ namespace GGJ24
             }
 
             Destroy(gameObject);
+        }
+
+        void OnDrawGizmos()
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawRay(transform.position, -Vector3.up * _raycastDistance);
+            Gizmos.color = Color.black;
+            Gizmos.DrawRay(_decalSpawnPoint.position, _decalSpawnPoint.transform.forward * _raycastDistance);
         }
     }
 }
