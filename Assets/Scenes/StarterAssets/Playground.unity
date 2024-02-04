@@ -394,9 +394,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <LevelRadius>k__BackingField: 60
   RageMultiplier: 1.01
-  intensityLow: 3
-  intensityMid: 6
-  intensityHigh: 9
 --- !u!4 &126565830
 Transform:
   m_ObjectHideFlags: 0
@@ -7505,6 +7502,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6800820977374710410, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: _intensityLow
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6800820977374710410, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: _intensityMid
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6800820977374710410, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: _intensityHigh
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

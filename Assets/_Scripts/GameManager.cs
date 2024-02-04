@@ -21,11 +21,6 @@ namespace GGJ24
         [Header("Multiply speed, random shoot, bullet magnet by this factor for every egg collected")]
         public float RageMultiplier = 1.01f;
 
-        [Header("How many eggs to collect before changing music intensity")]
-        [SerializeField] private int intensityLow = 2;
-        [SerializeField] private int intensityMid = 4;
-        [SerializeField] private int intensityHigh = 6;
-
         public float RemainingTime { get; set; }
 
         private StarterAssetsInputActions _inputActions;
@@ -52,13 +47,11 @@ namespace GGJ24
         }
         private void OnEnable()
         {
-            Egg.CollectedEgg += OnEggCollected;
             _inputActions.Player.EscaeAction.performed += TogglePause;
         }
 
         private void OnDisable()
         {
-            Egg.CollectedEgg -= OnEggCollected;
             _inputActions.Player.EscaeAction.performed -= TogglePause;
         }
 
@@ -67,7 +60,7 @@ namespace GGJ24
             if (_gameHasEnded) { return; }
             if (RemainingTime < 0)
             {
-                StartCoroutine(GameOver(0));
+                EndGame(0);
                 return;
             }
 
@@ -78,7 +71,7 @@ namespace GGJ24
             RemainingTime -= Time.deltaTime;
         }
 
-        public void EndGame()
+        public void EndGame(float duration = 4.5f)
         {
             _gameHasEnded = true;
             if (EggManager.CollectedEggs > HighScore)
@@ -87,14 +80,13 @@ namespace GGJ24
             }
             else
             {
-                StartCoroutine(GameOver());
+                StartCoroutine(GameOver(duration));
             }
 
         }
 
         private IEnumerator NewHighScore()
         {
-            _gameHasEnded = true;
             yield return new WaitForSeconds(4.5f);
             CanvasManager.Instance.ToggleGameOverScreen();
             AudioManager.Instance.StopAmbiance();
@@ -105,32 +97,12 @@ namespace GGJ24
 
         private IEnumerator GameOver(float duration = 4.5f)
         {
-            _gameHasEnded = true;
             yield return new WaitForSeconds(duration);
             CanvasManager.Instance.ToggleGameOverScreen();
             AudioManager.Instance.StopAmbiance();
             Time.timeScale = 0f;
             CanvasManager.Instance.ToggleGameOverScreen();
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GameOverSFX, transform.position);
-        }
-
-        private void OnEggCollected()
-        {
-            switch (EggManager.CollectedEggs)
-            {
-                case int n when n < intensityLow:
-                    break;
-
-                case int n when n >= intensityLow && n < intensityMid:
-                    AudioManager.Instance.SetAmbianceParameter("Intensity", 1);
-                    break;
-                case int n when n >= intensityMid && n < intensityHigh:
-                    AudioManager.Instance.SetAmbianceParameter("Intensity", 2);
-                    break;
-                case int n when n >= intensityHigh:
-                    AudioManager.Instance.SetAmbianceParameter("Intensity", 3);
-                    break;
-            }
         }
 
         private void OnDrawGizmos()
