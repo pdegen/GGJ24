@@ -70,7 +70,6 @@ namespace GGJ24
         public void SetAmbianceParameter(string parameterName, int parameterValue)
         {
             ambientEventInstance.setParameterByName(parameterName, parameterValue);
-            Debug.Log("Set ambiance intensity to " + parameterValue);
         }
 
         public void PlayOneShot(EventReference sound, Vector3 worldPosition)

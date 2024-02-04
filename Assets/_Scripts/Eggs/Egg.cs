@@ -15,19 +15,20 @@ namespace GGJ24
         [SerializeField] private DamageNumber _timeBonusNumber;
 
 
-        private void Start()
+        protected virtual void Start()
         {
             transform.DOMoveY(transform.position.y + 0.5f, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             transform.DOKill();
         }
 
         public void Collect(Collector collector)
         {
-            _timeBonusNumber.Spawn(transform.position, GameParamsLoader.BasicEggTimeBonus);
+            //_timeBonusNumber.Spawn(transform.position, GameParamsLoader.BasicEggTimeBonus);
+            CanvasManager.Instance.AddTimeBonus(GameParamsLoader.BasicEggTimeBonus);
             GameManager.Instance.RemainingTime += GameParamsLoader.BasicEggTimeBonus;
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.CollectionSFX, transform.position);
             EggManager.CollectedEggs++;

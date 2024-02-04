@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace GGJ24
 {
@@ -19,6 +20,20 @@ namespace GGJ24
                 list[k] = list[n];
                 list[n] = value;
             }
+        }
+    }
+
+    public static class Vector3Extensions
+    {
+        public static Vector3 RandomNavSphere(this Vector3 origin, float dist, int layermask)
+        {
+            Vector3 randDirection = Random.insideUnitSphere * dist;
+
+            randDirection += origin;
+
+            NavMesh.SamplePosition(randDirection, out NavMeshHit navHit, dist, layermask);
+
+            return navHit.position;
         }
     }
 }

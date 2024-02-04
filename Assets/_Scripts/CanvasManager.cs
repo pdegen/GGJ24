@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 using System;
+using DamageNumbersPro;
 
 namespace GGJ24
 {
@@ -26,6 +27,7 @@ namespace GGJ24
         [SerializeField] private GameObject _resumeButton;
         [SerializeField] private GameObject _dodgeControlOverlay;
         [SerializeField] private GameObject _dodgeUnlockedText;
+        [SerializeField] private DamageNumber _timeBonusNumber;
 
         private TMP_Text _eggsText;
         private StarterAssetsInputActions _inputActions;
@@ -75,6 +77,12 @@ namespace GGJ24
             float minutes = Mathf.FloorToInt(time / 60);
             float seconds = Mathf.FloorToInt(time % 60);
             _timerText.text = "TIME\n" + string.Format($"{minutes:00}:{seconds:00}");
+        }
+
+        public void AddTimeBonus(float t)
+        {
+            DamageNumber timeNumber = _timeBonusNumber.Spawn(Vector3.zero, t);
+            timeNumber.SetAnchoredPosition(_timerText.rectTransform, new Vector2(0, 0));
         }
 
         private void OnDodgeUnlocked()

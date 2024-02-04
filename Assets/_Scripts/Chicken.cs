@@ -242,7 +242,7 @@ namespace GGJ24
 
             try
             {
-                _destinationPos = RandomNavSphere(Vector3.zero, GameManager.Instance.LevelRadius, -1);
+                _destinationPos = Vector3.zero.RandomNavSphere(GameManager.Instance.LevelRadius, -1);
                 _agent.SetDestination(_destinationPos);
             }
             catch (System.Exception ex)
@@ -261,17 +261,6 @@ namespace GGJ24
         protected virtual void TargetReached()
         {
             SetNewDestination();
-        }
-
-        public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
-        {
-            Vector3 randDirection = Random.insideUnitSphere * dist;
-
-            randDirection += origin;
-
-            NavMesh.SamplePosition(randDirection, out NavMeshHit navHit, dist, layermask);
-
-            return navHit.position;
         }
 
         public void Recoil()

@@ -16,6 +16,9 @@ namespace GGJ24
         [SerializeField] private float _eggSpawnRadius = 40f;
         [SerializeField] private float _yoffset = 0.5f;
         [SerializeField] private GameObject _eggPrefab;
+        [SerializeField] private GameObject _movingEggPrefab;
+        [SerializeField, Range(0f,1f)] private float _movingEggChance = 0.3f;
+        [SerializeField] private int _movingEggSpawnMinEggCollected = 4;
 
         private void Awake()
         {
@@ -49,22 +52,16 @@ namespace GGJ24
         public void SpawnEgg()
         {
             if (CollectedEggs < 2) return;
-            Vector3 spawnPos = GetRandomPointOnNavMesh() + new Vector3(0, _yoffset, 0);
-            Instantiate(_eggPrefab, spawnPos, Quaternion.identity);
-        }
 
-        Vector3 GetRandomPointOnNavMesh()
-        {
-            float theta = UnityEngine.Random.Range(0, 2 * Mathf.PI);
-            float r = UnityEngine.Random.Range(0, _eggSpawnRadius);
-            Vector3 randomPoint = new Vector3(r*Mathf.Cos(theta), 0, r * Mathf.Sin(theta));
+            GameObject eggPrefab = _eggPrefab;
 
-            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 10f, NavMesh.AllAreas))
+            if (CollectedEggs > _movingEggSpawnMinEggCollected && UnityEngine.Random.Range(0f,1f) < _movingEggChance)
             {
-                return hit.position;
+                eggPrefab = _movingEggPrefab;
             }
 
-            return transform.position;
+            Vector3 spawnPos = Vector3.zero.RandomNavSphere(_eggSpawnRadius, - 1) + new Vector3(0, _yoffset, 0);
+            Instantiate(eggPrefab, spawnPos, Quaternion.identity);
         }
 
         private void OnDrawGizmos()

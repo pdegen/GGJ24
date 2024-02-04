@@ -81,11 +81,13 @@ namespace GGJ24
         private void OnEnable()
         {
             ThirdPersonController.TriggerIFRame += TriggerInvincibility;
+            GameManager.GameEnded += Die;
         }
 
         private void OnDisable()
         {
             ThirdPersonController.TriggerIFRame -= TriggerInvincibility;
+            GameManager.GameEnded -= Die;
         }
 
         protected virtual void AssignAnimationIDs()
@@ -139,6 +141,7 @@ namespace GGJ24
 
         protected virtual void Die()
         {
+            if (IsDead) return;
             PlayerDeath?.Invoke();
             IsDead = true;
             _animator.SetTrigger(_animIDDie);

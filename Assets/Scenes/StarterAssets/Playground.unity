@@ -1698,6 +1698,8 @@ MonoBehaviour:
   _resumeButton: {fileID: 1095535747}
   _dodgeControlOverlay: {fileID: 1577711682}
   _dodgeUnlockedText: {fileID: 861456891}
+  _timeBonusNumber: {fileID: 2851078590081057998, guid: e3b77d3f9457d384ea24bdfc3e08e937,
+    type: 3}
 --- !u!1001 &627379775
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3348,6 +3350,10 @@ MonoBehaviour:
   _yoffset: 1
   _eggPrefab: {fileID: 5989354468080146817, guid: 33099ffe1df7e1044a341c029b32e2da,
     type: 3}
+  _movingEggPrefab: {fileID: 1417012065199234598, guid: a88f29ffa2aba3a4bb26f363b448a600,
+    type: 3}
+  _movingEggChance: 0.3
+  _movingEggSpawnMinEggCollected: 4
 --- !u!4 &1072129728
 Transform:
   m_ObjectHideFlags: 0

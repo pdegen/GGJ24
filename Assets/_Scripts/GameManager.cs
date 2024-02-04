@@ -15,6 +15,8 @@ namespace GGJ24
     {
         public static GameManager Instance { get; private set; }
 
+        public static Action GameEnded;
+
         [field: SerializeField] public float LevelRadius { get; set; } = 60f;
         public static int HighScore = 0;
 
@@ -60,6 +62,7 @@ namespace GGJ24
             if (_gameHasEnded) { return; }
             if (RemainingTime < 0)
             {
+                RemainingTime = 0;
                 EndGame(0);
                 return;
             }
@@ -74,6 +77,7 @@ namespace GGJ24
         public void EndGame(float duration = 4.5f)
         {
             _gameHasEnded = true;
+            GameEnded?.Invoke();
             if (EggManager.CollectedEggs > HighScore)
             {
                 StartCoroutine(NewHighScore());
