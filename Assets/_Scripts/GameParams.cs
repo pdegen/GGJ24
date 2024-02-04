@@ -25,6 +25,7 @@ namespace GGJ24
 
         [Tooltip("How many eggs to collect before unlocking dance/dodge ability")]
         public int EggsCollectedToUnlockDodge;
+        public int EggsCollectedToUnlockDoubleJump;
 
         [Tooltip("Dodge missile probability while dancing")]
         [Range(0f, 1f)] public float DodgeChance;

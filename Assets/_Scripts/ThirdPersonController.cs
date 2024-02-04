@@ -123,6 +123,7 @@ namespace StarterAssets
         [Header("Custom")]
         private bool _hasAnimator;
         private bool _canMove = true;
+        private bool _canJump = true;
         private Coroutine _disableMoveRoutine;
         public static bool IsDancing { get; private set; } = false;
         public static float DodgeProbability { get; private set; }
@@ -191,7 +192,7 @@ namespace StarterAssets
 
         private void Dance(InputAction.CallbackContext context)
         {
-            if (!Grounded || !_canMove || transform.position.y < GameParamsLoader.WaterLevel || GameParamsLoader.EggsCollectedToUnlockDodge > EggManager.CollectedEggs) return;
+            if (!Grounded || !_canMove || transform.position.y < GameParamsLoader.WaterLevel || !AbilityManager.CanDodge) return;
             // TO DO: CHANGE CINEMACHINE FOLLOW TARGET
             _disableMoveRoutine = StartCoroutine(TemporarilyDisableMove(_minDanceTime));
             CurrentSpeed = 0;
@@ -374,17 +375,15 @@ namespace StarterAssets
 
         private void JumpAndGravity()
         {
-            if (Grounded)
+            if (Grounded) // still grounded for a few frames even after starting jump
             {
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
 
-                // update animator if using character
-                if (_hasAnimator)
-                {
-                    _animator.SetBool(_animIDJump, false);
-                    _animator.SetBool(_animIDFreeFall, false);
-                }
+                // update animator
+                _animator.SetBool(_animIDJump, false);
+                _animator.SetBool(_animIDFreeFall, false);
+                //_animator.SetBool(_animIDFall, false);
 
                 // stop our velocity dropping infinitely when grounded
                 if (_verticalVelocity < 0.0f)
@@ -392,24 +391,21 @@ namespace StarterAssets
                     _verticalVelocity = -2f;
                 }
 
+                _canJump = true;
                 // Jump
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
-                {
-                    // the square root of H * -2 * G = how much velocity needed to reach desired height
-                    _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-
-                    // update animator if using character
-                    if (_hasAnimator)
-                    {
-                        _animator.SetBool(_animIDJump, true);
-                    }
-                }
+                Jump();
 
                 // jump timeout
                 if (_jumpTimeoutDelta >= 0.0f)
                 {
                     _jumpTimeoutDelta -= Time.deltaTime;
                 }
+            }
+            else if (_canJump && _input.jump && AbilityManager.CanDoubleJump)
+            {
+                //_animator.SetTrigger(_animIDFlip);
+                Jump(1.5f);
+                _canJump = false;
             }
             else
             {
@@ -423,11 +419,7 @@ namespace StarterAssets
                 }
                 else
                 {
-                    // update animator if using character
-                    if (_hasAnimator)
-                    {
-                        _animator.SetBool(_animIDFreeFall, true);
-                    }
+                    _animator.SetBool(_animIDFreeFall, true);
                 }
 
                 // if we are not grounded, do not jump
@@ -438,6 +430,24 @@ namespace StarterAssets
             if (_verticalVelocity < _terminalVelocity)
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
+            }
+        }
+
+        private void Jump(float jumpHeightModifier = 1)
+        {
+            if (_input.jump)
+            {
+                // Lock movement speed when jumping
+                //if (Grounded) _priorTargetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+                _input.jump = false;
+
+                // the square root of H * -2 * G = how much velocity needed to reach desired height
+                _verticalVelocity = Mathf.Sqrt(jumpHeightModifier * JumpHeight * -2f * Gravity);
+
+                if (_hasAnimator)
+                {
+                    _animator.SetBool(_animIDJump, true);
+                }
             }
         }
 

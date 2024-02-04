@@ -20,6 +20,7 @@ namespace GGJ24
         public static float GoldenEggHealAmount { get; private set; }
         public static float DodgeChance { get; private set; }
         public static int EggsCollectedToUnlockDodge { get; private set; }
+        public static int EggsCollectedToUnlockDoubleJump { get; private set; }
         public static float WaterLevel { get; private set; }
         [SerializeField] private Transform _waterObject;
 
@@ -40,6 +41,7 @@ namespace GGJ24
             StartTime = _params.StartTime;
             DodgeChance = _params.DodgeChance;
             EggsCollectedToUnlockDodge = _params.EggsCollectedToUnlockDodge;
+            EggsCollectedToUnlockDoubleJump = _params.EggsCollectedToUnlockDoubleJump;
         }
 
         private void Start()

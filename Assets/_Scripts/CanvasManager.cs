@@ -26,7 +26,7 @@ namespace GGJ24
         [SerializeField] private GameObject _replayButton;
         [SerializeField] private GameObject _resumeButton;
         [SerializeField] private GameObject _dodgeControlOverlay;
-        [SerializeField] private GameObject _dodgeUnlockedText;
+        [SerializeField] private TMP_Text _unlockedNotificationText;
         [SerializeField] private DamageNumber _timeBonusNumber;
 
         private TMP_Text _eggsText;
@@ -60,14 +60,14 @@ namespace GGJ24
         private void OnEnable()
         {
             Egg.CollectedEgg += UpdateEggsText;
-            EggManager.DodgeUnlocked += OnDodgeUnlocked;
+            AbilityManager.AbilityUnlocked += OnAbilityUnlocked;
             PlayerHealth.TookDamage += UpdateHealth;
         }
 
         private void OnDisable()
         {
             Egg.CollectedEgg -= UpdateEggsText;
-            EggManager.DodgeUnlocked -= OnDodgeUnlocked;
+            AbilityManager.AbilityUnlocked -= OnAbilityUnlocked;
             PlayerHealth.TookDamage -= UpdateHealth;
         }
 
@@ -85,19 +85,25 @@ namespace GGJ24
             timeNumber.SetAnchoredPosition(_timerText.rectTransform, new Vector2(0, 0));
         }
 
-        private void OnDodgeUnlocked()
+        private void OnAbilityUnlocked(string text)
         {
-            StartCoroutine(DodgeUnlockRoutine());
-            EggManager.DodgeUnlocked -= OnDodgeUnlocked;
+            StartCoroutine(ShowNotificationRoutine(text));
         }
 
-        private IEnumerator DodgeUnlockRoutine()
+        private IEnumerator ShowNotificationRoutine(string text)
         {
-            _dodgeControlOverlay.SetActive(true);
-            _dodgeUnlockedText.SetActive(true);
-            _dodgeUnlockedText.transform.DOScale(2.5f * transform.localScale, 0.4f);
+            // TO DO: refactor this
+            switch (text)
+            {
+                case "DODGE UNLOCKED!":
+                    _dodgeControlOverlay.SetActive(true);
+                    break;
+            }
+            _unlockedNotificationText.gameObject.SetActive(true);
+            _unlockedNotificationText.text = text;
+            _unlockedNotificationText.transform.DOScale(2f * transform.localScale, 0.4f);
             yield return new WaitForSeconds(2f);
-            _dodgeUnlockedText.GetComponent<TMP_Text>().DOFade(0, 0.3f);
+            _unlockedNotificationText.GetComponent<TMP_Text>().DOFade(0, 0.3f);
         }
 
         public void ToggleGameOverScreen()

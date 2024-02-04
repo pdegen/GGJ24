@@ -36,25 +36,6 @@ namespace GGJ24
             CollectedEggs = 0;
         }
 
-        private void OnEnable()
-        {
-            Egg.CollectedEgg += UnlockDodge;
-        }
-
-        private void OnDisable()
-        {
-            Egg.CollectedEgg -= UnlockDodge;
-        }
-
-        private void UnlockDodge()
-        {
-            if (CollectedEggs == GameParamsLoader.EggsCollectedToUnlockDodge)
-            {
-                DodgeUnlocked?.Invoke();
-                Egg.CollectedEgg -= UnlockDodge;
-            }
-        }
-
         public void SpawnEgg()
         {
             if (CollectedEggs < 2) return;
