@@ -63,7 +63,7 @@ namespace GGJ24
             if (RemainingTime < 0)
             {
                 RemainingTime = 0;
-                EndGame(0);
+                EndGame();
                 return;
             }
 
@@ -74,7 +74,7 @@ namespace GGJ24
             RemainingTime -= Time.deltaTime;
         }
 
-        public void EndGame(float duration = 4.5f)
+        public void EndGame()
         {
             _gameHasEnded = true;
             GameEnded?.Invoke();
@@ -84,7 +84,7 @@ namespace GGJ24
             }
             else
             {
-                StartCoroutine(GameOver(duration));
+                StartCoroutine(GameOver());
             }
 
         }
@@ -99,9 +99,9 @@ namespace GGJ24
             HighScore = EggManager.CollectedEggs;
         }
 
-        private IEnumerator GameOver(float duration = 4.5f)
+        private IEnumerator GameOver()
         {
-            yield return new WaitForSeconds(duration);
+            yield return new WaitForSeconds(4.5f);
             CanvasManager.Instance.ToggleGameOverScreen();
             AudioManager.Instance.StopAmbiance();
             Time.timeScale = 0f;

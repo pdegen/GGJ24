@@ -16,9 +16,15 @@ namespace GGJ24
         [SerializeField] private float _eggSpawnRadius = 40f;
         [SerializeField] private float _yoffset = 0.5f;
         [SerializeField] private GameObject _eggPrefab;
+
         [SerializeField] private GameObject _movingEggPrefab;
-        [SerializeField, Range(0f,1f)] private float _movingEggChance = 0.3f;
         [SerializeField] private int _movingEggSpawnMinEggCollected = 4;
+
+        [SerializeField] private GameObject _jumpingEggPrefab;
+        [SerializeField] private int _jumpingEggSpawnMinEggCollected = 6;
+
+        [SerializeField] private GameObject _goldenEggPrefab;
+        [SerializeField] private int _goldenEggSpawnMinEggCollected = 10;
 
         private void Awake()
         {
@@ -53,15 +59,27 @@ namespace GGJ24
         {
             if (CollectedEggs < 2) return;
 
-            GameObject eggPrefab = _eggPrefab;
+            GameObject prefab;
 
-            if (CollectedEggs > _movingEggSpawnMinEggCollected && UnityEngine.Random.Range(0f,1f) < _movingEggChance)
+            if (CollectedEggs > _movingEggSpawnMinEggCollected && UnityEngine.Random.Range(0f,1f) < GameParamsLoader.MovingEggSpawnChance)
             {
-                eggPrefab = _movingEggPrefab;
+                prefab = _movingEggPrefab;
+            }
+            else if (CollectedEggs > _jumpingEggSpawnMinEggCollected && UnityEngine.Random.Range(0f, 1f) < GameParamsLoader.JumpingEggSpawnChance)
+            {
+                prefab = _jumpingEggPrefab;
+            }
+            else if (CollectedEggs > _goldenEggSpawnMinEggCollected && UnityEngine.Random.Range(0f, 1f) < GameParamsLoader.GoldenEggSpawnChance)
+            {
+                prefab = _jumpingEggPrefab;
+            }
+            else
+            {
+                prefab = _eggPrefab;
             }
 
-            Vector3 spawnPos = Vector3.zero.RandomNavSphere(_eggSpawnRadius, - 1) + new Vector3(0, _yoffset, 0);
-            Instantiate(eggPrefab, spawnPos, Quaternion.identity);
+            Vector3 spawnPos = Vector3.zero.RandomNavSphere(_eggSpawnRadius, -1) + new Vector3(0, _yoffset, 0);
+            Instantiate(prefab, spawnPos, Quaternion.identity);
         }
 
         private void OnDrawGizmos()

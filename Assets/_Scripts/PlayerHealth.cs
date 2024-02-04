@@ -36,7 +36,7 @@ namespace GGJ24
             set
             {
                 bool wasJustAlive = IsAlive;
-                _health = Mathf.Max(value, 0);
+                _health = Mathf.Min(InitialHealth, Mathf.Max(value, 0));
 
                 if (_health <= 0 && wasJustAlive)
                 {
@@ -82,12 +82,14 @@ namespace GGJ24
         {
             ThirdPersonController.TriggerIFRame += TriggerInvincibility;
             GameManager.GameEnded += Die;
+            GoldenEgg.HealPlayer += Heal;
         }
 
         private void OnDisable()
         {
             ThirdPersonController.TriggerIFRame -= TriggerInvincibility;
             GameManager.GameEnded -= Die;
+            GoldenEgg.HealPlayer -= Heal;
         }
 
         protected virtual void AssignAnimationIDs()

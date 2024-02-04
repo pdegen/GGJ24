@@ -12,6 +12,12 @@ namespace GGJ24
 
         public static float StartTime { get; private set; }
         public static float BasicEggTimeBonus { get; private set; }
+        public static float MovingEggSpawnChance { get; private set; }
+        public static float JumpingEggSpawnChance { get; private set; }
+        public static float GoldenEggSpawnChance { get; private set; }
+        public static float GoldenEggTimeBonus { get; private set; }
+        public static float GoldenEggLifetime { get; private set; }
+        public static float GoldenEggHealAmount { get; private set; }
         public static float DodgeChance { get; private set; }
         public static int EggsCollectedToUnlockDodge { get; private set; }
         public static float WaterLevel { get; private set; }
@@ -19,8 +25,19 @@ namespace GGJ24
 
         void Awake()
         {
-            StartTime = _params.StartTime;
+            // EGGS
             BasicEggTimeBonus = _params.BasicEggTimeBonus;
+
+            MovingEggSpawnChance = _params.MovingEggSpawnChance;
+            JumpingEggSpawnChance = _params.JumpingEggSpawnChance;
+            GoldenEggSpawnChance = _params.GoldenEggSpawnChance;
+
+            GoldenEggTimeBonus = _params.GoldenEggTimeBonus;
+            GoldenEggLifetime = _params.GoldenEggLifetime;
+            GoldenEggHealAmount = _params.GoldenEggHealAmount;
+
+            // MISC
+            StartTime = _params.StartTime;
             DodgeChance = _params.DodgeChance;
             EggsCollectedToUnlockDodge = _params.EggsCollectedToUnlockDodge;
         }

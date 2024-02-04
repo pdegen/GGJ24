@@ -25,7 +25,7 @@ namespace GGJ24
             transform.DOKill();
         }
 
-        public void Collect(Collector collector)
+        public virtual void Collect(Collector collector)
         {
             //_timeBonusNumber.Spawn(transform.position, GameParamsLoader.BasicEggTimeBonus);
             CanvasManager.Instance.AddTimeBonus(GameParamsLoader.BasicEggTimeBonus);

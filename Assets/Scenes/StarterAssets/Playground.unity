@@ -3354,6 +3354,9 @@ MonoBehaviour:
     type: 3}
   _movingEggChance: 0.3
   _movingEggSpawnMinEggCollected: 4
+  _jumpingEggPrefab: {fileID: 0}
+  _jumpingEggChance: 0.3
+  _jumpingEggSpawnMinEggCollected: 6
 --- !u!4 &1072129728
 Transform:
   m_ObjectHideFlags: 0

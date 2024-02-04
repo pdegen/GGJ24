@@ -10,8 +10,16 @@ namespace GGJ24
         [Tooltip("Available time at the start of the game")]
         public float StartTime;
 
-        [Header("Egg Time Bonuses")]
+        [Header("Egg Params")]
         public float BasicEggTimeBonus;
+
+        [Range(0f, 1f)] public float MovingEggSpawnChance;
+        [Range(0f, 1f)] public float JumpingEggSpawnChance;
+        [Range(0f, 1f)] public float GoldenEggSpawnChance;
+
+        public float GoldenEggTimeBonus = 10f;
+        public float GoldenEggHealAmount = 200f;
+        public float GoldenEggLifetime = 10f;
 
         [Header("Misc.")]
 
