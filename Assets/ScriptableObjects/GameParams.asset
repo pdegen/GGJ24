@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3704b9e5e6e50f74696327aa2df07b08, type: 3}
   m_Name: GameParams
   m_EditorClassIdentifier: 
-  StartTime: 30
-  BasicEggTimeBonus: 5
+  StartTime: 35
+  BasicEggTimeBonus: 7
   MovingEggSpawnChance: 0.358
   JumpingEggSpawnChance: 0.355
   GoldenEggSpawnChance: 0.107

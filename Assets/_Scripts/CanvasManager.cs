@@ -116,11 +116,15 @@ namespace GGJ24
                     _dodgeControlOverlay.SetActive(true);
                     break;
             }
+            _unlockedNotificationText.GetComponent<TMP_Text>().alpha = 1f;
             _unlockedNotificationText.gameObject.SetActive(true);
             _unlockedNotificationText.text = text;
-            _unlockedNotificationText.transform.DOScale(2f * transform.localScale, 0.4f);
+            Vector3 priorScale = _unlockedNotificationText.transform.localScale;
+            _unlockedNotificationText.transform.DOScale(1.7f * priorScale, 0.4f);
             yield return new WaitForSeconds(2f);
             _unlockedNotificationText.GetComponent<TMP_Text>().DOFade(0, 0.3f);
+            yield return new WaitForSeconds(0.3f);
+            _unlockedNotificationText.transform.localScale = priorScale;
         }
 
         public void ToggleGameOverScreen()

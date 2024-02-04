@@ -15,16 +15,17 @@ namespace GGJ24
 
         [SerializeField] private float _eggSpawnRadius = 40f;
         [SerializeField] private float _yoffset = 0.5f;
-        [SerializeField] private GameObject _eggPrefab;
 
-        [SerializeField] private GameObject _movingEggPrefab;
         [SerializeField] private int _movingEggSpawnMinEggCollected = 4;
-
-        [SerializeField] private GameObject _jumpingEggPrefab;
         [SerializeField] private int _jumpingEggSpawnMinEggCollected = 6;
-
-        [SerializeField] private GameObject _goldenEggPrefab;
         [SerializeField] private int _goldenEggSpawnMinEggCollected = 10;
+
+        // Don't forget null check in awake
+        [SerializeField] private GameObject _eggPrefab;
+        [SerializeField] private GameObject _movingEggPrefab;
+        [SerializeField] private GameObject _jumpingEggPrefab;
+        [SerializeField] private GameObject _goldenEggPrefab;
+
 
         private void Awake()
         {
@@ -34,6 +35,11 @@ namespace GGJ24
             }
             Instance = this;
             CollectedEggs = 0;
+
+            if (_eggPrefab == null) Debug.LogError("Missing egg prefab");
+            if (_movingEggPrefab == null) Debug.LogError("Missing egg prefab");
+            if (_jumpingEggPrefab == null) Debug.LogError("Missing egg prefab");
+            if (_goldenEggPrefab == null) Debug.LogError("Missing egg prefab");
         }
 
         public void SpawnEgg()

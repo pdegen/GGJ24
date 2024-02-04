@@ -104,6 +104,7 @@ namespace StarterAssets
         private int _animIDDance;
         private int _animIDDanceIndex;
         private int _animIDCancelDance;
+        private int _animIDFrontFlip;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -264,6 +265,7 @@ namespace StarterAssets
             _animIDDance = Animator.StringToHash("Dance");
             _animIDDanceIndex = Animator.StringToHash("DanceIndex");
             _animIDCancelDance = Animator.StringToHash("CancelDance");
+            _animIDFrontFlip = Animator.StringToHash("FrontFlip");
         }
 
         private void GroundedCheck()
@@ -403,7 +405,7 @@ namespace StarterAssets
             }
             else if (_canJump && _input.jump && AbilityManager.CanDoubleJump)
             {
-                //_animator.SetTrigger(_animIDFlip);
+                _animator.SetTrigger(_animIDFrontFlip);
                 Jump(1.5f);
                 _canJump = false;
             }

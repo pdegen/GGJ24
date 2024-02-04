@@ -19,7 +19,10 @@ namespace GGJ24
         private void Update()
         {
             _timer -= Time.deltaTime;
-            if (_timer <= 0 ) { Destroy(gameObject); }
+            if (_timer <= 0 ) { 
+                Destroy(gameObject);
+                EggManager.Instance.SpawnEgg();
+            }
         }
 
         public static Action<float> HealPlayer;
