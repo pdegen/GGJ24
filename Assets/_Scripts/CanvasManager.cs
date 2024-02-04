@@ -15,8 +15,15 @@ namespace GGJ24
     {
         public static CanvasManager Instance { get; private set; }
 
+        [Header("Ingame UI")]
         [SerializeField] private Slider _healthSlider;
         [SerializeField] private Transform _eggsCollected;
+        [SerializeField] private GameObject _controlOverlay;
+        [SerializeField] private GameObject _dodgeControlOverlay;
+        [SerializeField] private TMP_Text _unlockedNotificationText;
+        [SerializeField] private DamageNumber _timeBonusNumber;
+
+        [Header("Menus UI")]
         [SerializeField] private TMP_Text _endGameText;
         [SerializeField] private TMP_Text _scoreText;
         [SerializeField] private TMP_Text _timerText;
@@ -25,12 +32,11 @@ namespace GGJ24
         [SerializeField] private GameObject _pausePanel;
         [SerializeField] private GameObject _replayButton;
         [SerializeField] private GameObject _resumeButton;
-        [SerializeField] private GameObject _dodgeControlOverlay;
-        [SerializeField] private TMP_Text _unlockedNotificationText;
-        [SerializeField] private DamageNumber _timeBonusNumber;
+
 
         private TMP_Text _eggsText;
         private StarterAssetsInputActions _inputActions;
+        private GameObject _currentSelectedObject;
 
 
         private void Awake()
@@ -73,10 +79,21 @@ namespace GGJ24
 
         private void Update()
         {
+            // Update timer
             float time = GameManager.Instance.RemainingTime;
             float minutes = Mathf.FloorToInt(time / 60);
             float seconds = Mathf.FloorToInt(time % 60);
             _timerText.text = "TIME\n" + string.Format($"{minutes:00}:{seconds:00}");
+
+            // Tweening button scale doesn't work if it's part of vertical layout group? alternative: tween color
+            // Check if selection changed
+            //if (Time.timeScale > 0) return;
+            //var eventSystem = EventSystem.current;
+            //GameObject selected = eventSystem.currentSelectedGameObject;
+            //if (_currentSelectedObject != selected)
+            //{
+            //    OnSelectionChanged();
+            //}
         }
 
         public void AddTimeBonus(float t)
@@ -108,6 +125,7 @@ namespace GGJ24
 
         public void ToggleGameOverScreen()
         {
+            ToggleGameUI(false);
             var eventSystem = EventSystem.current;
             eventSystem.SetSelectedGameObject(_replayButton, new BaseEventData(eventSystem));
             _inputActions.Player.Disable();
@@ -125,6 +143,7 @@ namespace GGJ24
                 _inputActions.UI.Disable();
                 _inputActions.Player.Enable();
                 _pausePanel.SetActive(false);
+                ToggleGameUI(true);
             }
             else
             {
@@ -133,7 +152,15 @@ namespace GGJ24
                 _inputActions.UI.Enable();
                 _inputActions.Player.Disable();
                 _pausePanel.SetActive(true);
+                ToggleGameUI(false);
             }
+        }
+
+        private void ToggleGameUI(bool showUI)
+        {
+            _timerText.gameObject.SetActive(showUI);
+            _eggsCollected.gameObject.SetActive(showUI);
+            _controlOverlay.SetActive(showUI);
         }
 
         public void UpdateHealth(int newValue)
@@ -148,6 +175,18 @@ namespace GGJ24
                 _eggsCollected.DOPunchScale(new Vector2(1.1f,1.1f), 0.6f).SetEase(Ease.InOutSine);
             }
             _eggsText.text = "EGGS: " + EggManager.CollectedEggs;
+        }
+
+        private void OnSelectionChanged()
+        {
+            if (_currentSelectedObject != null)
+            {
+                _currentSelectedObject.transform.DOKill();
+            }
+
+            var eventSystem = EventSystem.current;
+            _currentSelectedObject = eventSystem.currentSelectedGameObject;
+            _currentSelectedObject.transform.DOScale(15f* _currentSelectedObject.transform.localScale.x, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
         }
     }
 }

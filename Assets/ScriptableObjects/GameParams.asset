@@ -14,5 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StartTime: 30
   BasicEggTimeBonus: 5
-  EggsCollectedToUnlockDodge: 3
+  MovingEggSpawnChance: 0.358
+  JumpingEggSpawnChance: 0.355
+  GoldenEggSpawnChance: 0.107
+  GoldenEggTimeBonus: 20
+  GoldenEggHealAmount: 200
+  GoldenEggLifetime: 15
+  EggsCollectedToUnlockDodge: 6
+  EggsCollectedToUnlockDoubleJump: 3
   DodgeChance: 1
