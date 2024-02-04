@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using DamageNumbersPro;
 
 namespace GGJ24
 {
@@ -11,6 +12,7 @@ namespace GGJ24
         public static event Action CollectedEgg;
         public static event Action<Vector3> CollectedEggAtPosition;
         public string InteractionPrompt { get => "Collect"; }
+        [SerializeField] private DamageNumber _timeBonusNumber;
 
 
         private void Start()
@@ -25,6 +27,8 @@ namespace GGJ24
 
         public void Collect(Collector collector)
         {
+            _timeBonusNumber.Spawn(transform.position, GameParamsLoader.BasicEggTimeBonus);
+            GameManager.Instance.RemainingTime += GameParamsLoader.BasicEggTimeBonus;
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.CollectionSFX, transform.position);
             EggManager.CollectedEggs++;
             CollectedEgg?.Invoke();

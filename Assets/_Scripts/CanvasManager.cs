@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using System;
 
 namespace GGJ24
 {
@@ -17,6 +18,7 @@ namespace GGJ24
         [SerializeField] private Transform _eggsCollected;
         [SerializeField] private TMP_Text _endGameText;
         [SerializeField] private TMP_Text _scoreText;
+        [SerializeField] private TMP_Text _timerText;
         [SerializeField] private PlayerHealth _health;
         [SerializeField] private GameObject _gameOverPanel;
         [SerializeField] private GameObject _pausePanel;
@@ -65,6 +67,14 @@ namespace GGJ24
             Egg.CollectedEgg -= UpdateEggsText;
             EggManager.DodgeUnlocked -= OnDodgeUnlocked;
             PlayerHealth.TookDamage -= UpdateHealth;
+        }
+
+        private void Update()
+        {
+            float time = GameManager.Instance.RemainingTime;
+            float minutes = Mathf.FloorToInt(time / 60);
+            float seconds = Mathf.FloorToInt(time % 60);
+            _timerText.text = "TIME\n" + string.Format($"{minutes:00}:{seconds:00}");
         }
 
         private void OnDodgeUnlocked()

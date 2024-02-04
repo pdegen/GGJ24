@@ -6,6 +6,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using System.Threading;
+using StarterAssets;
 
 namespace GGJ24
 {
@@ -24,8 +26,11 @@ namespace GGJ24
         [SerializeField] private int intensityMid = 4;
         [SerializeField] private int intensityHigh = 6;
 
+        public float RemainingTime { get; set; }
+
         private StarterAssetsInputActions _inputActions;
-        private bool isPaused;
+        private bool _isPaused;
+        private bool _gameHasEnded;
 
         private void Awake()
         {
@@ -34,10 +39,16 @@ namespace GGJ24
                 Debug.LogWarning("Found more than one Spawner Instance");
             }
             Instance = this;
-            isPaused = false;
+            _isPaused = false;
+            _gameHasEnded = false;
 
             _inputActions = new StarterAssetsInputActions();
             _inputActions.Player.Enable();
+        }
+
+        private void Start()
+        {
+            RemainingTime = GameParamsLoader.StartTime;
         }
         private void OnEnable()
         {
@@ -51,8 +62,25 @@ namespace GGJ24
             _inputActions.Player.EscaeAction.performed -= TogglePause;
         }
 
+        private void Update()
+        {
+            if (_gameHasEnded) { return; }
+            if (RemainingTime < 0)
+            {
+                StartCoroutine(GameOver(0));
+                return;
+            }
+
+            if (ThirdPersonController.IsDancing)
+            {
+                return;
+            }
+            RemainingTime -= Time.deltaTime;
+        }
+
         public void EndGame()
         {
+            _gameHasEnded = true;
             if (EggManager.CollectedEggs > HighScore)
             {
                 StartCoroutine(NewHighScore());
@@ -66,6 +94,7 @@ namespace GGJ24
 
         private IEnumerator NewHighScore()
         {
+            _gameHasEnded = true;
             yield return new WaitForSeconds(4.5f);
             CanvasManager.Instance.ToggleGameOverScreen();
             AudioManager.Instance.StopAmbiance();
@@ -74,9 +103,10 @@ namespace GGJ24
             HighScore = EggManager.CollectedEggs;
         }
 
-        private IEnumerator GameOver()
+        private IEnumerator GameOver(float duration = 4.5f)
         {
-            yield return new WaitForSeconds(4.5f);
+            _gameHasEnded = true;
+            yield return new WaitForSeconds(duration);
             CanvasManager.Instance.ToggleGameOverScreen();
             AudioManager.Instance.StopAmbiance();
             Time.timeScale = 0f;
@@ -111,23 +141,23 @@ namespace GGJ24
 
         private void TogglePause(InputAction.CallbackContext context)
         {
-            if (isPaused) UnpauseGame();
+            if (_isPaused) UnpauseGame();
             else PauseGame();
         }
 
         public void PauseGame()
         {
-            if (isPaused) return;
+            if (_isPaused) return;
             Time.timeScale = 0f;
-            isPaused = true;
+            _isPaused = true;
             CanvasManager.Instance.TogglePauseScreen();
         }
 
         public void UnpauseGame()
         {
-            if (!isPaused) return;
+            if (!_isPaused) return;
             Time.timeScale = 1f;
-            isPaused = false;
+            _isPaused = false;
             CanvasManager.Instance.TogglePauseScreen();
         }
 
