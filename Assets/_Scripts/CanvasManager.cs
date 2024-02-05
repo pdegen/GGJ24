@@ -31,6 +31,7 @@ namespace GGJ24
         [SerializeField] private PlayerHealth _health;
         [SerializeField] private GameObject _gameOverPanel;
         [SerializeField] private GameObject _pausePanel;
+        [SerializeField] private TMP_Text _pausePanelText;
         [SerializeField] private GameObject _replayButton;
         [SerializeField] private GameObject _resumeButton;
 
@@ -39,6 +40,10 @@ namespace GGJ24
         private StarterAssetsInputActions _inputActions;
         private GameObject _currentSelectedObject;
 
+        [Header("Button tweens")]
+        [SerializeField] private Color _selectedButtonColor;
+        private Vector3 _buttonBaseScale;
+        private Color _buttonBaseColor;
 
         private void Awake()
         {
@@ -63,6 +68,9 @@ namespace GGJ24
             _inputActions.Player.Enable();
             _dodgeControlOverlay.SetActive(false);
             _dashControlOverlay.SetActive(false);
+
+            _buttonBaseColor = _resumeButton.GetComponent<Image>().color;
+            _buttonBaseScale = _resumeButton.transform.localScale;
         }
 
         private void OnEnable()
@@ -87,15 +95,14 @@ namespace GGJ24
             float seconds = Mathf.FloorToInt(time % 60);
             _timerText.text = "TIME\n" + string.Format($"{minutes:00}:{seconds:00}");
 
-            // Tweening button scale doesn't work if it's part of vertical layout group? alternative: tween color
             // Check if selection changed
-            //if (Time.timeScale > 0) return;
-            //var eventSystem = EventSystem.current;
-            //GameObject selected = eventSystem.currentSelectedGameObject;
-            //if (_currentSelectedObject != selected)
-            //{
-            //    OnSelectionChanged();
-            //}
+            if (Time.timeScale > 0) return;
+            var eventSystem = EventSystem.current;
+            GameObject selected = eventSystem.currentSelectedGameObject;
+            if (_currentSelectedObject != selected)
+            {
+                OnSelectionChanged();
+            }
         }
 
         public void AddTimeBonus(float t)
@@ -158,6 +165,7 @@ namespace GGJ24
             {
                 var eventSystem = EventSystem.current;
                 eventSystem.SetSelectedGameObject(_resumeButton, new BaseEventData(eventSystem));
+                _pausePanelText.text = $"EGGS: {EggManager.CollectedEggs}\nHIGH SCORE: {GameManager.HighScore}";
                 _inputActions.UI.Enable();
                 _inputActions.Player.Disable();
                 _pausePanel.SetActive(true);
@@ -191,11 +199,16 @@ namespace GGJ24
             if (_currentSelectedObject != null)
             {
                 _currentSelectedObject.transform.DOKill();
+                _currentSelectedObject.transform.localScale = _buttonBaseScale;
+                _currentSelectedObject.GetComponent<Image>().DOKill();
+                _currentSelectedObject.GetComponent<Image>().color = _buttonBaseColor;
             }
 
             var eventSystem = EventSystem.current;
             _currentSelectedObject = eventSystem.currentSelectedGameObject;
-            _currentSelectedObject.transform.DOScale(15f* _currentSelectedObject.transform.localScale.x, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+
+            _currentSelectedObject.transform.DOScale(1.1f* _currentSelectedObject.transform.localScale.x, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
+           _currentSelectedObject.GetComponent<Image>().DOColor(_selectedButtonColor, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
         }
     }
 }

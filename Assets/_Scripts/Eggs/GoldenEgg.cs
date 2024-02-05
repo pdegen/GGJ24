@@ -1,25 +1,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GGJ24
 {
     public class GoldenEgg : Egg
     {
-        [SerializeField] private float _eggLifeTime = 10f;
+        private float _eggLifeTime;
+        [SerializeField] private Material _radialTimerMaterial;
+        private float _timer;
 
-        private float _timer = 0f;
-
-        private void Awake()
-        {
-            _timer = _eggLifeTime;
-        }
+        // For now limit to one golden egg at a time because we have only one material for the radial timer
+        public static bool GoldenEggExists;
 
         protected override void Start()
         {
             base.Start();
+            _eggLifeTime = GameParamsLoader.GoldenEggLifetime;
+            _timer = _eggLifeTime;
             _timeBonus = GameParamsLoader.GoldenEggTimeBonus;
+            GoldenEggExists = true;
+            _radialTimerMaterial.SetFloat("_FillPercent", 1);
         }
 
         private void Update()
@@ -28,7 +31,10 @@ namespace GGJ24
             if (_timer <= 0 ) { 
                 Destroy(gameObject);
                 EggManager.Instance.SpawnEgg();
+                GoldenEggExists = false;
             }
+
+            _radialTimerMaterial.SetFloat("_FillPercent", _timer / _eggLifeTime);
         }
 
         public static Action<float> HealPlayer;
@@ -36,6 +42,7 @@ namespace GGJ24
         {
             base.Collect(collector);
             HealPlayer?.Invoke(GameParamsLoader.GoldenEggHealAmount);
+            GoldenEggExists = false;
         }
     }
 }

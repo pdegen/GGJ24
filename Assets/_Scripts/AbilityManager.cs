@@ -7,9 +7,17 @@ public class AbilityManager : MonoBehaviour
 {
     public static Action<string> AbilityUnlocked;
 
-    public static bool CanDodge = false;
-    public static bool CanDash = false;
-    public static bool CanDoubleJump = false;
+    public static bool CanDodge;
+    public static bool CanDash;
+    public static bool CanDoubleJump;
+
+
+    private void Awake()
+    {
+        CanDodge = false;
+        CanDash = false;
+        CanDoubleJump = false;
+    }
 
     private void OnEnable()
     {

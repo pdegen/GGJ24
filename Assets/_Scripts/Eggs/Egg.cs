@@ -16,8 +16,13 @@ namespace GGJ24
 
         protected virtual void Start()
         {
-            transform.DOMoveY(transform.position.y + 0.5f, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
             _timeBonus = GameParamsLoader.BasicEggTimeBonus;
+            InitEggMovement();
+        }
+
+        protected virtual void InitEggMovement()
+        {
+            transform.DOMoveY(transform.position.y + 0.5f, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
         }
 
         protected virtual void OnDisable()

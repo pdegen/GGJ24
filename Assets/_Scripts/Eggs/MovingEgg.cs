@@ -19,6 +19,11 @@ namespace GGJ24
 
         protected override void Start()
         {
+            base.Start();
+        }
+
+        protected override void InitEggMovement()
+        {
             _agent.SetDestination(Vector3.zero.RandomNavSphere(GameManager.Instance.LevelRadius, -1));
         }
 

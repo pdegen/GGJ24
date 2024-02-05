@@ -52,7 +52,7 @@ namespace GGJ24
             {
                 prefab = _jumpingEggPrefab;
             }
-            else if (CollectedEggs > GameParamsLoader.GoldenEggSpawnMinEggCollected && UnityEngine.Random.Range(0f, 1f) < GameParamsLoader.GoldenEggSpawnChance)
+            else if (CollectedEggs > GameParamsLoader.GoldenEggSpawnMinEggCollected && UnityEngine.Random.Range(0f, 1f) < GameParamsLoader.GoldenEggSpawnChance && !GoldenEgg.GoldenEggExists)
             {
                 prefab = _goldenEggPrefab;
             }
