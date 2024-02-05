@@ -16,10 +16,6 @@ namespace GGJ24
         [SerializeField] private float _eggSpawnRadius = 40f;
         [SerializeField] private float _yoffset = 0.5f;
 
-        [SerializeField] private int _movingEggSpawnMinEggCollected = 4;
-        [SerializeField] private int _jumpingEggSpawnMinEggCollected = 6;
-        [SerializeField] private int _goldenEggSpawnMinEggCollected = 10;
-
         // Don't forget null check in awake
         [SerializeField] private GameObject _eggPrefab;
         [SerializeField] private GameObject _movingEggPrefab;
@@ -48,17 +44,17 @@ namespace GGJ24
 
             GameObject prefab;
 
-            if (CollectedEggs > _movingEggSpawnMinEggCollected && UnityEngine.Random.Range(0f,1f) < GameParamsLoader.MovingEggSpawnChance)
+            if (CollectedEggs > GameParamsLoader.MovingEggSpawnMinEggCollected && UnityEngine.Random.Range(0f,1f) < GameParamsLoader.MovingEggSpawnChance)
             {
                 prefab = _movingEggPrefab;
             }
-            else if (CollectedEggs > _jumpingEggSpawnMinEggCollected && UnityEngine.Random.Range(0f, 1f) < GameParamsLoader.JumpingEggSpawnChance)
+            else if (CollectedEggs > GameParamsLoader.JumpingEggSpawnMinEggCollected && UnityEngine.Random.Range(0f, 1f) < GameParamsLoader.JumpingEggSpawnChance)
             {
                 prefab = _jumpingEggPrefab;
             }
-            else if (CollectedEggs > _goldenEggSpawnMinEggCollected && UnityEngine.Random.Range(0f, 1f) < GameParamsLoader.GoldenEggSpawnChance)
+            else if (CollectedEggs > GameParamsLoader.GoldenEggSpawnMinEggCollected && UnityEngine.Random.Range(0f, 1f) < GameParamsLoader.GoldenEggSpawnChance)
             {
-                prefab = _jumpingEggPrefab;
+                prefab = _goldenEggPrefab;
             }
             else
             {

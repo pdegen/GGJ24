@@ -17,15 +17,20 @@ namespace GGJ24
         [Range(0f, 1f)] public float JumpingEggSpawnChance;
         [Range(0f, 1f)] public float GoldenEggSpawnChance;
 
+        public int MovingEggSpawnMinEggCollected;
+        public int JumpingEggSpawnMinEggCollected;
+        public int GoldenEggSpawnMinEggCollected;
+
         public float GoldenEggTimeBonus = 10f;
         public float GoldenEggHealAmount = 200f;
         public float GoldenEggLifetime = 10f;
 
         [Header("Misc.")]
 
-        [Tooltip("How many eggs to collect before unlocking dance/dodge ability")]
-        public int EggsCollectedToUnlockDodge;
+        [Tooltip("How many eggs to collect before unlocking new ability")]
         public int EggsCollectedToUnlockDoubleJump;
+        public int EggsCollectedToUnlockDash;
+        public int EggsCollectedToUnlockDodge;
 
         [Tooltip("Dodge missile probability while dancing")]
         [Range(0f, 1f)] public float DodgeChance;

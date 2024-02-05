@@ -7,7 +7,6 @@ namespace GGJ24
 {
     public class GoldenEgg : Egg
     {
-        [SerializeField] private float _healAmount = 200f;
         [SerializeField] private float _eggLifeTime = 10f;
 
         private float _timer = 0f;
@@ -16,6 +15,13 @@ namespace GGJ24
         {
             _timer = _eggLifeTime;
         }
+
+        protected override void Start()
+        {
+            base.Start();
+            _timeBonus = GameParamsLoader.GoldenEggTimeBonus;
+        }
+
         private void Update()
         {
             _timer -= Time.deltaTime;
@@ -29,7 +35,7 @@ namespace GGJ24
         public override void Collect(Collector collector)
         {
             base.Collect(collector);
-            HealPlayer?.Invoke(_healAmount);
+            HealPlayer?.Invoke(GameParamsLoader.GoldenEggHealAmount);
         }
     }
 }

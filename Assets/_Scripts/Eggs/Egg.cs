@@ -12,12 +12,12 @@ namespace GGJ24
         public static event Action CollectedEgg;
         public static event Action<Vector3> CollectedEggAtPosition;
         public string InteractionPrompt { get => "Collect"; }
-        [SerializeField] private DamageNumber _timeBonusNumber;
-
+        protected float _timeBonus;
 
         protected virtual void Start()
         {
             transform.DOMoveY(transform.position.y + 0.5f, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+            _timeBonus = GameParamsLoader.BasicEggTimeBonus;
         }
 
         protected virtual void OnDisable()
@@ -27,9 +27,8 @@ namespace GGJ24
 
         public virtual void Collect(Collector collector)
         {
-            //_timeBonusNumber.Spawn(transform.position, GameParamsLoader.BasicEggTimeBonus);
-            CanvasManager.Instance.AddTimeBonus(GameParamsLoader.BasicEggTimeBonus);
-            GameManager.Instance.RemainingTime += GameParamsLoader.BasicEggTimeBonus;
+            CanvasManager.Instance.AddTimeBonus(_timeBonus);
+            GameManager.Instance.RemainingTime += _timeBonus;
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.CollectionSFX, transform.position);
             EggManager.CollectedEggs++;
             CollectedEgg?.Invoke();

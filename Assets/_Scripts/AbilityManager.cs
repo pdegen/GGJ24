@@ -8,6 +8,7 @@ public class AbilityManager : MonoBehaviour
     public static Action<string> AbilityUnlocked;
 
     public static bool CanDodge = false;
+    public static bool CanDash = false;
     public static bool CanDoubleJump = false;
 
     private void OnEnable()
@@ -32,6 +33,12 @@ public class AbilityManager : MonoBehaviour
         {
             AbilityUnlocked?.Invoke("DOUBLE JUMP UNLOCKED!");
             CanDoubleJump = true;
+        }
+
+        if (EggManager.CollectedEggs == GameParamsLoader.EggsCollectedToUnlockDash)
+        {
+            AbilityUnlocked?.Invoke("DASH UNLOCKED!");
+            CanDash = true;
         }
     }
 }

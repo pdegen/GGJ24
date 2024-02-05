@@ -91,6 +91,15 @@ namespace GGJ24
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""0a2b1c87-27ae-47c8-9301-3c3bdbf20599"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -344,6 +353,28 @@ namespace GGJ24
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6eed3d21-790e-418d-9473-c26ae2894815"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dfe5d453-bd86-47bf-88ab-e9da4ea9938e"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -925,6 +956,7 @@ namespace GGJ24
             m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
             m_Player_EscaeAction = m_Player.FindAction("EscaeAction", throwIfNotFound: true);
             m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
+            m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1005,6 +1037,7 @@ namespace GGJ24
         private readonly InputAction m_Player_Interact;
         private readonly InputAction m_Player_EscaeAction;
         private readonly InputAction m_Player_Dodge;
+        private readonly InputAction m_Player_Dash;
         public struct PlayerActions
         {
             private @StarterAssetsInputActions m_Wrapper;
@@ -1016,6 +1049,7 @@ namespace GGJ24
             public InputAction @Interact => m_Wrapper.m_Player_Interact;
             public InputAction @EscaeAction => m_Wrapper.m_Player_EscaeAction;
             public InputAction @Dodge => m_Wrapper.m_Player_Dodge;
+            public InputAction @Dash => m_Wrapper.m_Player_Dash;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1046,6 +1080,9 @@ namespace GGJ24
                 @Dodge.started += instance.OnDodge;
                 @Dodge.performed += instance.OnDodge;
                 @Dodge.canceled += instance.OnDodge;
+                @Dash.started += instance.OnDash;
+                @Dash.performed += instance.OnDash;
+                @Dash.canceled += instance.OnDash;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -1071,6 +1108,9 @@ namespace GGJ24
                 @Dodge.started -= instance.OnDodge;
                 @Dodge.performed -= instance.OnDodge;
                 @Dodge.canceled -= instance.OnDodge;
+                @Dash.started -= instance.OnDash;
+                @Dash.performed -= instance.OnDash;
+                @Dash.canceled -= instance.OnDash;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -1251,6 +1291,7 @@ namespace GGJ24
             void OnInteract(InputAction.CallbackContext context);
             void OnEscaeAction(InputAction.CallbackContext context);
             void OnDodge(InputAction.CallbackContext context);
+            void OnDash(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

@@ -20,6 +20,7 @@ namespace GGJ24
         [SerializeField] private Transform _eggsCollected;
         [SerializeField] private GameObject _controlOverlay;
         [SerializeField] private GameObject _dodgeControlOverlay;
+        [SerializeField] private GameObject _dashControlOverlay;
         [SerializeField] private TMP_Text _unlockedNotificationText;
         [SerializeField] private DamageNumber _timeBonusNumber;
 
@@ -61,20 +62,21 @@ namespace GGJ24
             _inputActions = new StarterAssetsInputActions();
             _inputActions.Player.Enable();
             _dodgeControlOverlay.SetActive(false);
+            _dashControlOverlay.SetActive(false);
         }
 
         private void OnEnable()
         {
             Egg.CollectedEgg += UpdateEggsText;
             AbilityManager.AbilityUnlocked += OnAbilityUnlocked;
-            PlayerHealth.TookDamage += UpdateHealth;
+            PlayerHealth.HealthChanged += UpdateHealth;
         }
 
         private void OnDisable()
         {
             Egg.CollectedEgg -= UpdateEggsText;
             AbilityManager.AbilityUnlocked -= OnAbilityUnlocked;
-            PlayerHealth.TookDamage -= UpdateHealth;
+            PlayerHealth.HealthChanged -= UpdateHealth;
         }
 
         private void Update()
@@ -114,6 +116,9 @@ namespace GGJ24
             {
                 case "DODGE UNLOCKED!":
                     _dodgeControlOverlay.SetActive(true);
+                    break;
+                case "DASH UNLOCKED!":
+                    _dashControlOverlay.SetActive(true);
                     break;
             }
             _unlockedNotificationText.GetComponent<TMP_Text>().alpha = 1f;

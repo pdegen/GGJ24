@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using MoreMountains.Tools;
 //using static UnityEditor.FilePathAttribute;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -90,6 +91,8 @@ namespace StarterAssets
         private float _rotationVelocity;
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
+        private Vector2 _horizontalVelocity;
+        private Vector3 _targetDirection;
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -248,6 +251,7 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+            HandleDashing();
         }
 
         private void LateUpdate()
@@ -361,11 +365,11 @@ namespace StarterAssets
             }
 
 
-            Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
+            _targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
             // move the player
-            _controller.Move(targetDirection.normalized * (CurrentSpeed * Time.deltaTime) +
-                             new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+            _controller.Move(_targetDirection.normalized * (CurrentSpeed * Time.deltaTime) +
+                                         new Vector3(_horizontalVelocity.x, _verticalVelocity, _horizontalVelocity.y) * Time.deltaTime);
 
             // update animator if using character
             if (_hasAnimator)
@@ -452,6 +456,66 @@ namespace StarterAssets
                 }
             }
         }
+
+        #region Dash
+
+        [Header("Dash")][SerializeField] private float _dashSpeed = 30;
+        [SerializeField] private float _dashLength = 0.2f;
+        [SerializeField] private float _dashTimeout = 1f;
+        [SerializeField] private ParticleSystem _dashParticles;
+        [SerializeField] private ParticleSystem _fallParticles;
+        [SerializeField] private AudioClip _dashSound;
+
+        private bool _hasDashed;
+        private bool _dashing;
+        private float _timeStartedDash = 0f;
+        private Vector2 _dashDir;
+
+        private void HandleDashing()
+        {
+            if (!AbilityManager.CanDash) return;
+
+            if (_input.dash && !_hasDashed)
+            {
+                if (_dashTimeout + _timeStartedDash > Time.time) return;
+
+                _dashDir = new Vector2(_targetDirection.x, _targetDirection.z);
+
+                //_dashParticles.Play();
+                _dashing = true;
+                _hasDashed = true;
+                _input.dash = false;
+                _timeStartedDash = Time.time;
+                //_animator.SetTrigger(_animIDDash);
+                //SoundManager.Instance.PlaySound(_dashSound);
+                //_dashVisual.Play();
+            }
+
+            if (_dashing)
+            {
+                _verticalVelocity = 0f;
+                _horizontalVelocity = _dashDir * _dashSpeed;
+
+                if (Time.time >= _timeStartedDash + _dashLength)
+                {
+                    //_dashParticles.Stop();
+                    _dashing = false;
+                    _input.dash = false;
+                    _hasDashed = false;
+                    // Clamp the velocity so they don't keep shooting off
+                    _horizontalVelocity = Vector2.zero;// new Vector2(_horizontalVelocity.x, _horizontalVelocity.y > 3 ? 3 : _horizontalVelocity.y);
+                    //if (Grounded) _hasDashed = false;
+                    //_dashVisual.Stop();
+                }
+            }
+
+            if (!Grounded && _hasDashed)
+            {
+                _input.dash = false;
+            }
+        }
+
+        #endregion
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {

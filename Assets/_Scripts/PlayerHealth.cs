@@ -10,7 +10,7 @@ namespace GGJ24
     public class PlayerHealth : MonoBehaviour, IDamageable
     {
         public Vector3 Position { get => transform.position; private set => transform.position = value; }
-        public static event Action<int> TookDamage;
+        public static event Action<int> HealthChanged;
         public static event Action PlayerDeath;
 
         [SerializeField, Min(0)] private float _hitAnimCooldown = 2f;
@@ -103,7 +103,7 @@ namespace GGJ24
             if (_isInvincible || IsDead) return;
 
             Health -= deltaHealth;
-            TookDamage?.Invoke((int)Health);
+            HealthChanged?.Invoke((int)Health);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.HitSFX, transform.position);
             if (Health > 0)
             {
@@ -139,6 +139,7 @@ namespace GGJ24
         public void Heal(float deltaHealth)
         {
             Health += deltaHealth;
+            HealthChanged?.Invoke((int)Health);
         }
 
         protected virtual void Die()
