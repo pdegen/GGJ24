@@ -473,7 +473,11 @@ namespace StarterAssets
 
         private void HandleDashing()
         {
-            if (!AbilityManager.CanDash) return;
+            if (!AbilityManager.CanDash)
+            {
+                _input.dash = false;
+                return;
+            }
 
             if (_input.dash && !_hasDashed)
             {

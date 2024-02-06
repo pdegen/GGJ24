@@ -105,7 +105,7 @@ MonoBehaviour:
   _rotationSpeed: 10
   _recoilForce: 16
   _recoilTorque: 2
-  _agentDisableDuration: 6
+  _agentDisableDuration: 7
   _wakeUpDuration: 1
   _chickenMeshRenderer: {fileID: 5925378873934812325}
   _emissionMaterial: {fileID: 2100000, guid: ab4784db64cc92046ad553c95a2a0f9b, type: 2}

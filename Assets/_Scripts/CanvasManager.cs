@@ -200,8 +200,12 @@ namespace GGJ24
             {
                 _currentSelectedObject.transform.DOKill();
                 _currentSelectedObject.transform.localScale = _buttonBaseScale;
-                _currentSelectedObject.GetComponent<Image>().DOKill();
-                _currentSelectedObject.GetComponent<Image>().color = _buttonBaseColor;
+
+                if (_currentSelectedObject.TryGetComponent<Image>(out Image img))
+                {
+                    img.DOKill();
+                    img.color = _buttonBaseColor;
+                }
             }
 
             var eventSystem = EventSystem.current;

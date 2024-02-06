@@ -254,8 +254,12 @@ namespace GGJ24
 
         private void ResetChicken()
         {
-            transform.position = Vector3.zero;
+            _agent.enabled = false; // could use NavMeshAgent.Warp(Vector3 newPosition) but not certain that _agent is enabled
+            transform.position = _spawnPoint;
             EndHostilities();
+            IsMovedByRigidBody = false;
+            _agent.enabled = true;
+            TargetReached();
         }
 
         protected virtual void TargetReached()
@@ -289,11 +293,19 @@ namespace GGJ24
             _body.velocity = Vector3.zero;
             _body.isKinematic = true;
             ResetRotation();
-            _agent.enabled = true;
-            //Debug.Log("nav mesh enabled");
-            NavmeshDisabledRoutine = null;
             IsMovedByRigidBody = false;
-            SetNewDestination();
+            NavmeshDisabledRoutine = null;
+
+            if (NavMesh.SamplePosition(transform.position, out NavMeshHit closestHit, 500, 1))
+            {
+                transform.position = closestHit.position;
+                _agent.enabled = true;
+                SetNewDestination();
+            }
+            else
+            {
+                ResetChicken();
+            }
         }
 
         private void ResetRotation()

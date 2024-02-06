@@ -16,14 +16,14 @@ MonoBehaviour:
   BasicEggTimeBonus: 7
   MovingEggSpawnChance: 0.277
   JumpingEggSpawnChance: 0.179
-  GoldenEggSpawnChance: 0.231
+  GoldenEggSpawnChance: 0.197
   MovingEggSpawnMinEggCollected: 3
   JumpingEggSpawnMinEggCollected: 4
   GoldenEggSpawnMinEggCollected: 6
-  GoldenEggTimeBonus: 20
+  GoldenEggTimeBonus: 15
   GoldenEggHealAmount: 200
-  GoldenEggLifetime: 15
+  GoldenEggLifetime: 13
   EggsCollectedToUnlockDoubleJump: 3
   EggsCollectedToUnlockDash: 6
-  EggsCollectedToUnlockDodge: 8
+  EggsCollectedToUnlockDodge: 1
   DodgeChance: 1
