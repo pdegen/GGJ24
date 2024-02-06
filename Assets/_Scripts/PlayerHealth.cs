@@ -3,7 +3,6 @@ using UnityEngine;
 //using MoreMountains.Feedbacks;
 using StarterAssets;
 using System;
-using UnityEngine.Rendering.Universal;
 
 namespace GGJ24
 {
@@ -63,7 +62,6 @@ namespace GGJ24
 
         protected virtual void Awake()
         {
-            _health = _initialHealth;
             IsDead = false;
         }
 
@@ -75,6 +73,7 @@ namespace GGJ24
                 AssignAnimationIDs();
             }
             _hasController = TryGetComponent(out _controller);
+            _health = _initialHealth - GameParamsLoader.GoldenEggHealAmount;
             //_hasHitFeedback = _hitFeedback != null;
         }
 

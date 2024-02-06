@@ -29,6 +29,13 @@ public class AbilityManager : MonoBehaviour
         Egg.CollectedEgg -= UnlockAbilities;
     }
 
+    public static void UnlockAll()
+    {
+        CanDodge = true;
+        CanDash = true;
+        CanDoubleJump = true;
+    }
+
     private void UnlockAbilities()
     {
         if (EggManager.CollectedEggs == GameParamsLoader.EggsCollectedToUnlockDodge)

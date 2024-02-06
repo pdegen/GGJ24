@@ -23,6 +23,7 @@ namespace GGJ24
         [SerializeField] private GameObject _dashControlOverlay;
         [SerializeField] private TMP_Text _unlockedNotificationText;
         [SerializeField] private DamageNumber _timeBonusNumber;
+        [SerializeField] private DamageNumber _healNumber;
 
         [Header("Menus UI")]
         [SerializeField] private TMP_Text _endGameText;
@@ -71,6 +72,8 @@ namespace GGJ24
 
             _buttonBaseColor = _resumeButton.GetComponent<Image>().color;
             _buttonBaseScale = _resumeButton.transform.localScale;
+            Debug.LogWarning("Hard-coded value");
+            UpdateHealth(800);
         }
 
         private void OnEnable()
@@ -94,6 +97,7 @@ namespace GGJ24
             float minutes = Mathf.FloorToInt(time / 60);
             float seconds = Mathf.FloorToInt(time % 60);
             _timerText.text = "TIME\n" + string.Format($"{minutes:00}:{seconds:00}");
+            _timerText.color = time < 10 ? Color.red : Color.white;
 
             // Check if selection changed
             if (Time.timeScale > 0) return;
@@ -107,6 +111,7 @@ namespace GGJ24
 
         public void AddTimeBonus(float t)
         {
+            if (GameManager.Instance.RemainingTime <= 0) return;
             DamageNumber timeNumber = _timeBonusNumber.Spawn(Vector3.zero, t);
             timeNumber.SetAnchoredPosition(_timerText.rectTransform, new Vector2(0, 0));
         }
@@ -149,7 +154,7 @@ namespace GGJ24
             _gameOverPanel.SetActive(true);
             _eggsCollected.gameObject.SetActive(false);
             _endGameText.text = (EggManager.CollectedEggs > GameManager.HighScore) || (EggManager.CollectedEggs > 0 && GameManager.HighScore == 0) ? "NEW HIGH SCORE!" : "GAME OVER!";
-            _scoreText.text = "EGGS: " + EggManager.CollectedEggs.ToString() + "\nPREVIOUS HIGH SCORE: " + GameManager.HighScore;
+            _scoreText.text = "EGGS: " + EggManager.CollectedEggs.ToString() + "\nPREVIOUS HIGH SCORE: " + GameManager.OldHighScore;
         }
 
         public void TogglePauseScreen()
@@ -160,6 +165,7 @@ namespace GGJ24
                 _inputActions.Player.Enable();
                 _pausePanel.SetActive(false);
                 ToggleGameUI(true);
+                Cursor.lockState = CursorLockMode.Locked;
             }
             else
             {
@@ -170,6 +176,8 @@ namespace GGJ24
                 _inputActions.Player.Disable();
                 _pausePanel.SetActive(true);
                 ToggleGameUI(false);
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
             }
         }
 
@@ -182,6 +190,12 @@ namespace GGJ24
 
         public void UpdateHealth(int newValue)
         {
+            if (newValue > _healthSlider.value)
+            {
+                Debug.Log(newValue + " " + _healthSlider.value);
+                DamageNumber healNumber = _healNumber.Spawn(Vector3.zero, newValue - _healthSlider.value);
+                healNumber.SetAnchoredPosition(_healthSlider.gameObject.GetComponent<RectTransform>(), new Vector2(0, 0));
+            }
             _healthSlider.value = newValue;
         }
 
@@ -211,8 +225,11 @@ namespace GGJ24
             var eventSystem = EventSystem.current;
             _currentSelectedObject = eventSystem.currentSelectedGameObject;
 
-            _currentSelectedObject.transform.DOScale(1.1f* _currentSelectedObject.transform.localScale.x, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
-           _currentSelectedObject.GetComponent<Image>().DOColor(_selectedButtonColor, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
+            if (_currentSelectedObject != null)
+            {
+                _currentSelectedObject.transform.DOScale(1.1f * _currentSelectedObject.transform.localScale.x, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
+                _currentSelectedObject.GetComponent<Image>().DOColor(_selectedButtonColor, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
+            }
         }
     }
 }

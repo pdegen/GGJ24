@@ -19,11 +19,16 @@ namespace GGJ24
 
         [field: SerializeField] public float LevelRadius { get; set; } = 60f;
         public static int HighScore = 0;
+        public static int OldHighScore = 0;
 
         [Header("Multiply speed, random shoot, bullet magnet by this factor for every egg collected")]
         public float RageMultiplier = 1.01f;
 
-        public float RemainingTime { get; set; }
+        private float _remainingTime = 0;
+        public float RemainingTime { 
+            get { return _remainingTime; } 
+            set { _remainingTime = _remainingTime < 0 ? 0 : value; }
+        }
 
         private StarterAssetsInputActions _inputActions;
         private bool _isPaused;
@@ -67,10 +72,10 @@ namespace GGJ24
                 return;
             }
 
-            if (ThirdPersonController.IsDancing)
-            {
-                return;
-            }
+            //if (ThirdPersonController.IsDancing)
+            //{
+            //    return;
+            //}
             RemainingTime -= Time.deltaTime;
         }
 
@@ -78,7 +83,8 @@ namespace GGJ24
         {
             _gameHasEnded = true;
             GameEnded?.Invoke();
-            if (EggManager.CollectedEggs > HighScore)
+            OldHighScore = HighScore;
+            if (EggManager.CollectedEggs > OldHighScore)
             {
                 StartCoroutine(NewHighScore());
             }
@@ -107,6 +113,12 @@ namespace GGJ24
             Time.timeScale = 0f;
             CanvasManager.Instance.ToggleGameOverScreen();
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GameOverSFX, transform.position);
+        }
+
+        public void GodMode()
+        {
+            RemainingTime += 1000f;
+            AbilityManager.UnlockAll();
         }
 
         private void OnDrawGizmos()

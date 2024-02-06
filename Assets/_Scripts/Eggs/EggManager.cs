@@ -10,7 +10,6 @@ namespace GGJ24
     {
         public static EggManager Instance { get; private set; }
 
-        public static Action DodgeUnlocked;
         public static int CollectedEggs { get; set; }
 
         [SerializeField] private float _eggSpawnRadius = 40f;

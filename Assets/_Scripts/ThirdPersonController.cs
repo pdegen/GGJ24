@@ -481,7 +481,10 @@ namespace StarterAssets
 
             if (_input.dash && !_hasDashed)
             {
-                if (_dashTimeout + _timeStartedDash > Time.time) return;
+                if (_dashTimeout + _timeStartedDash > Time.time) {
+                    _input.dash = false;
+                    return;
+                }
 
                 _dashDir = new Vector2(_targetDirection.x, _targetDirection.z);
 

@@ -379,10 +379,10 @@ MonoBehaviour:
   enableLerp: 1
   lerpSettings:
     speed: 5
-    minX: -0.1
-    maxX: 0.1
-    minY: 0.3
-    maxY: 0.5
+    minX: -0.2
+    maxX: 0.2
+    minY: 0.2
+    maxY: 0.2
     randomFlip: 0
   enableVelocity: 0
   velocitySettings:

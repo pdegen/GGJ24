@@ -38,10 +38,12 @@ namespace GGJ24
         {
             if (other.gameObject.layer == 12) return; // magnet
 
-            if (other.gameObject.layer == 6 && UnityEngine.Random.Range(0f, 1f) < ThirdPersonController.DodgeProbability)
+            if (other.gameObject.layer == 6 && UnityEngine.Random.Range(0f, 1f) < ThirdPersonController.DodgeProbability && !PlayerHealth.IsDead)
             {
                 _dodgeNumberPrefab.Spawn(0.4f*other.transform.up + other.transform.position, "Dodged!");
                 AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WhooshSFX, transform.position);
+                CanvasManager.Instance.AddTimeBonus(1);
+                GameManager.Instance.RemainingTime += 1;
                 return;
             }
 

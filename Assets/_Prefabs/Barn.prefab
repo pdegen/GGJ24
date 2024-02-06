@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4014743852864153301}
   - component: {fileID: 1492600660440653957}
   - component: {fileID: 8344992266073693922}
-  - component: {fileID: 4207294954943242169}
   - component: {fileID: 8006046032345571389}
+  - component: {fileID: 6289456236875613750}
   m_Layer: 0
   m_Name: Barn
   m_TagString: Untagged
@@ -85,27 +85,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &4207294954943242169
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5269333930951410118}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.01873677, y: 0.0152283525, z: 0.013333822}
-  m_Center: {x: 9.313225e-10, y: 0.0076141763, z: 0}
 --- !u!208 &8006046032345571389
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -122,3 +101,25 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0.008, z: 0}
   m_TimeToStationary: 0.5
+--- !u!64 &6289456236875613750
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5269333930951410118}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -616816430620026901, guid: 1f61d409628fad444a8844130e090eda, type: 3}
