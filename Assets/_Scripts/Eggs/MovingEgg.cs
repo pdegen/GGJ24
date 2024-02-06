@@ -11,6 +11,7 @@ namespace GGJ24
 
         private NavMeshAgent _agent;
         private readonly float _targetDistanceReached = 1f;
+        private float _speed;
 
         private void Awake()
         {
@@ -20,6 +21,7 @@ namespace GGJ24
         protected override void Start()
         {
             base.Start();
+            _agent.speed = GameParamsLoader.MovingEggSpeed;
         }
 
         protected override void InitEggMovement()
@@ -33,6 +35,12 @@ namespace GGJ24
             {
                 _agent.SetDestination(Vector3.zero.RandomNavSphere(GameManager.Instance.LevelRadius, -1));
             }
+        }
+
+        public override void RefreshDifficultyParams()
+        {
+            base.RefreshDifficultyParams();
+            _agent.speed = GameParamsLoader.MovingEggSpeed;
         }
     }
 }

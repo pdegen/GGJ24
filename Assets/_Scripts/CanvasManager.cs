@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 using DG.Tweening;
 using System;
 using DamageNumbersPro;
+using FMOD.Studio;
 
 namespace GGJ24
 {
@@ -109,6 +110,21 @@ namespace GGJ24
             }
         }
 
+        [SerializeField] private GameObject _difficultySelectionMenu;
+        [SerializeField] private GameObject _easyDifficultyButton;
+        [SerializeField] private GameObject _normalDifficultyButton;
+        [SerializeField] private GameObject _hardlDifficultyButton;
+        public void ToggleDifficultySelection(bool activate)
+        {
+            _difficultySelectionMenu.SetActive(activate);
+            if (activate)
+            {
+                var eventSystem = EventSystem.current;
+                eventSystem.SetSelectedGameObject(_normalDifficultyButton, new BaseEventData(eventSystem));
+            }
+            ToggleGameUI(!activate);
+        }
+
         public void AddTimeBonus(float t)
         {
             if (GameManager.Instance.RemainingTime <= 0) return;
@@ -192,7 +208,6 @@ namespace GGJ24
         {
             if (newValue > _healthSlider.value)
             {
-                Debug.Log(newValue + " " + _healthSlider.value);
                 DamageNumber healNumber = _healNumber.Spawn(Vector3.zero, newValue - _healthSlider.value);
                 healNumber.SetAnchoredPosition(_healthSlider.gameObject.GetComponent<RectTransform>(), new Vector2(0, 0));
             }
@@ -208,6 +223,7 @@ namespace GGJ24
             _eggsText.text = "EGGS: " + EggManager.CollectedEggs;
         }
 
+        private EventInstance _stoppableOneShotInstance;
         private void OnSelectionChanged()
         {
             if (_currentSelectedObject != null)
@@ -230,6 +246,15 @@ namespace GGJ24
                 _currentSelectedObject.transform.DOScale(1.1f * _currentSelectedObject.transform.localScale.x, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
                 _currentSelectedObject.GetComponent<Image>().DOColor(_selectedButtonColor, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
             }
+
+            if (_stoppableOneShotInstance.isValid())
+            {
+                _stoppableOneShotInstance.stop(STOP_MODE.IMMEDIATE);
+            }
+            //_stoppableOneShotInstance.stop();
+            if (_currentSelectedObject == _easyDifficultyButton) _stoppableOneShotInstance = AudioManager.Instance.PlayStoppablOneShot(FMODEvents.Instance.ChickenNormal, transform.position);
+            else if (_currentSelectedObject == _normalDifficultyButton) _stoppableOneShotInstance = AudioManager.Instance.PlayStoppablOneShot(FMODEvents.Instance.ChickenAngrySFX, transform.position);
+            else if (_currentSelectedObject == _hardlDifficultyButton) _stoppableOneShotInstance = AudioManager.Instance.PlayStoppablOneShot(FMODEvents.Instance.ChickenWrathfulSFX, transform.position);
         }
     }
 }

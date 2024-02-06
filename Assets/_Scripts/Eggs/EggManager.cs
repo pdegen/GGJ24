@@ -39,7 +39,7 @@ namespace GGJ24
 
         public void SpawnEgg()
         {
-            if (CollectedEggs < 2) return;
+            if (CollectedEggs < 3) return;
 
             GameObject prefab;
 

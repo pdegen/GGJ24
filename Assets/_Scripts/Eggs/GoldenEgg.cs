@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GGJ24
 {
-    public class GoldenEgg : Egg
+    public class GoldenEgg : Egg, IDifficultydDependable
     {
         private float _eggLifeTime;
         [SerializeField] private Material _radialTimerMaterial;
@@ -23,6 +23,15 @@ namespace GGJ24
             _timeBonus = GameParamsLoader.GoldenEggTimeBonus;
             GoldenEggExists = true;
             _radialTimerMaterial.SetFloat("_FillPercent", 1);
+        }
+
+        protected override void OnEnable()
+        {
+            GameManager.DifficultyChanged += RefreshDifficultyParams;
+        }
+        protected override void OnDisable()
+        {
+            GameManager.DifficultyChanged -= RefreshDifficultyParams;
         }
 
         private void Update()
@@ -43,6 +52,13 @@ namespace GGJ24
             base.Collect(collector);
             HealPlayer?.Invoke(GameParamsLoader.GoldenEggHealAmount);
             GoldenEggExists = false;
+        }
+
+        public override void RefreshDifficultyParams()
+        {
+            _timeBonus = GameParamsLoader.GoldenEggTimeBonus;
+            _timer = _eggLifeTime;
+            _eggLifeTime = GameParamsLoader.GoldenEggLifetime;
         }
     }
 }

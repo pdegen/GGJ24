@@ -12,18 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3704b9e5e6e50f74696327aa2df07b08, type: 3}
   m_Name: GameParams
   m_EditorClassIdentifier: 
-  StartTime: 35
+  StartTime: 20
   BasicEggTimeBonus: 5
   MovingEggSpawnChance: 0.277
-  JumpingEggSpawnChance: 0.179
-  GoldenEggSpawnChance: 0.456
+  JumpingEggSpawnChance: 0.195
+  GoldenEggSpawnChance: 0.409
   MovingEggSpawnMinEggCollected: 2
   JumpingEggSpawnMinEggCollected: 3
   GoldenEggSpawnMinEggCollected: 5
-  GoldenEggTimeBonus: 15
+  MovingEggSpeed: 4
+  GoldenEggTimeBonus: 10
   GoldenEggHealAmount: 200
   GoldenEggLifetime: 13
+  EasyMultiplier: 0.5
+  HardMultiplier: 1.5
   EggsCollectedToUnlockDoubleJump: 3
   EggsCollectedToUnlockDash: 5
   EggsCollectedToUnlockDodge: 7
+  ChickenKnockoutDuration: 7
+  MissileDamage: 50
   DodgeChance: 1

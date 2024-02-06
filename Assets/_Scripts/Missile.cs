@@ -18,7 +18,6 @@ namespace GGJ24
         [SerializeField] private float _explosionForce = 10f;
         [SerializeField] private float _explosionBaseDamage;
         [SerializeField] private float _upwardsModifier = 3f; // Adjust the force applied upwards
-        [SerializeField] private float _explosionDamage = 50f;
         [SerializeField, Range(0f, 1f)] private float _gravity = 0.01f;
         [SerializeField] private Transform _decalSpawnPoint;
         [SerializeField] private DamageNumber _dodgeNumberPrefab;
@@ -100,7 +99,7 @@ namespace GGJ24
 
                 if (hit.TryGetComponent(out PlayerHealth playerHealth))
                 {
-                    playerHealth.TakeDamage(_explosionDamage);
+                    playerHealth.TakeDamage(GameParamsLoader.MissileDamage);
                 }
             }
 

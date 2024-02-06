@@ -21,9 +21,15 @@ namespace GGJ24
         public int JumpingEggSpawnMinEggCollected;
         public int GoldenEggSpawnMinEggCollected;
 
+        public float MovingEggSpeed;
+
         public float GoldenEggTimeBonus = 10f;
         public float GoldenEggHealAmount = 200f;
         public float GoldenEggLifetime = 10f;
+
+        [Header("Difficulty Settings")]
+        [Range(0.1f,1f)] public float EasyMultiplier = 0.5f;
+        [Range(1f,3f)] public float HardMultiplier = 1.5f;
 
         [Header("Misc.")]
 
@@ -31,6 +37,11 @@ namespace GGJ24
         public int EggsCollectedToUnlockDoubleJump;
         public int EggsCollectedToUnlockDash;
         public int EggsCollectedToUnlockDodge;
+
+        [Tooltip("How long chickens are incapacitated after firing missile")]
+        public float ChickenKnockoutDuration;
+
+        public float MissileDamage;
 
         [Tooltip("Dodge missile probability while dancing")]
         [Range(0f, 1f)] public float DodgeChance;

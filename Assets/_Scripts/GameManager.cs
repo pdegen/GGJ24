@@ -16,6 +16,7 @@ namespace GGJ24
         public static GameManager Instance { get; private set; }
 
         public static Action GameEnded;
+        public static Action DifficultyChanged;
 
         [field: SerializeField] public float LevelRadius { get; set; } = 60f;
         public static int HighScore = 0;
@@ -34,6 +35,15 @@ namespace GGJ24
         private bool _isPaused;
         private bool _gameHasEnded;
 
+
+        public Difficulty CurrentDifficulty;
+        public enum Difficulty
+        {
+            EASY = 0,
+            NORMAL = 1,
+            HARD = 2
+        }
+
         private void Awake()
         {
             if (Instance != null)
@@ -51,7 +61,33 @@ namespace GGJ24
         private void Start()
         {
             RemainingTime = GameParamsLoader.StartTime;
+            CanvasManager.Instance.ToggleDifficultySelection(true);
+            Time.timeScale = 0;
         }
+
+        public void StartGame(int difficulty)
+        {
+            CurrentDifficulty = (Difficulty)difficulty;
+            GameParamsLoader.AdjustDifficulty(CurrentDifficulty);
+            DifficultyChanged?.Invoke();
+            StartCoroutine(StartGameRoutine());
+        }
+
+        private IEnumerator StartGameRoutine()
+        {
+            //switch (CurrentDifficulty)
+            //{
+            //    case Difficulty.EASY: AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ChickenMoodSFX, transform.position); break;
+            //    case Difficulty.NORMAL: AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ChickenAngrySFX, transform.position); break;
+            //    case Difficulty.HARD: AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ChickenWrathfulSFX, transform.position); break;
+            //}
+            yield return new WaitForSecondsRealtime(0f);
+            CanvasManager.Instance.ToggleDifficultySelection(false);
+            Time.timeScale = 1f;
+            yield return new WaitForSeconds(2f);
+            AudioManager.Instance.StartAmbiance();
+        }
+
         private void OnEnable()
         {
             _inputActions.Player.EscaeAction.performed += TogglePause;
@@ -135,7 +171,7 @@ namespace GGJ24
 
         public void PauseGame()
         {
-            if (_isPaused) return;
+            if (_isPaused || _gameHasEnded) return;
             Time.timeScale = 0f;
             _isPaused = true;
             CanvasManager.Instance.TogglePauseScreen();

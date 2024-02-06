@@ -9,7 +9,7 @@ using FMOD.Studio;
 namespace GGJ24
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class Chicken : MonoBehaviour
+    public class Chicken : MonoBehaviour, IDifficultydDependable
     {
         public bool IsSleeping { get; private set; } = true;
         public bool IsMovedByRigidBody { get; private set; } = false;
@@ -22,7 +22,6 @@ namespace GGJ24
         [SerializeField] private float _rotationSpeed = 10f;
         [SerializeField] private float _recoilForce = 2f;
         [SerializeField] private float _recoilTorque = 2f;
-        [SerializeField] private float _agentDisableDuration = 3f;
         [SerializeField] private float _wakeUpDuration = 1.2f;
 
         [SerializeField] private MeshRenderer _chickenMeshRenderer;
@@ -39,12 +38,12 @@ namespace GGJ24
         [SerializeField] private float _targetDistanceHostile = 15f;
         private float _targetDistanceReached;
         private readonly float _targetDistanceNeutral = 0.3f;
-
+        private float _agentDisableDuration;
         [SerializeField] private ChickenState _state;
         private float _oobRadiusSquared;
         private Rigidbody _body;
         private Coroutine NavmeshDisabledRoutine;
-        private EventInstance ambientEventInstance;
+        private EventInstance _ambientEventInstance;
         private bool _rageSoundsActive;
 
         private enum ChickenState
@@ -71,6 +70,7 @@ namespace GGJ24
             _agent.acceleration *= Random.Range(0.8f, 2f);
             _agent.angularSpeed *= Random.Range(0.8f, 2f);
             _oobRadiusSquared = GameManager.Instance.LevelRadius * GameManager.Instance.LevelRadius;
+            _agentDisableDuration = GameParamsLoader.ChickenKnockoutDuration;
 
             if (_spawnPoint == Vector3.forward)
             {
@@ -91,24 +91,27 @@ namespace GGJ24
 
         private IEnumerator InitAudio()
         {
-            // TO DO: Angry chicken sounds
-            ambientEventInstance = AudioManager.Instance.CreateEventInstance(FMODEvents.Instance.ChickenMoodSFX);
-            ambientEventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            _ambientEventInstance = AudioManager.Instance.CreateEventInstance(FMODEvents.Instance.ChickenMoodSFX);
+            _ambientEventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             yield return new WaitForSeconds(Random.Range(0f,10f));
-            ambientEventInstance.setParameterByName("Chicken Mood", 0);
-            ambientEventInstance.start();
+            _ambientEventInstance.setParameterByName("Chicken Mood", 0);
+            _ambientEventInstance.start();
         }
 
         private void OnEnable()
         {
             _bazooka.TargetStateChanged += OnTargetStateChanged;
             Egg.CollectedEgg += OnEggCollected;
+            GameManager.DifficultyChanged += RefreshDifficultyParams;
+            GameManager.GameEnded += OnGameEnded;
         }
 
         private void OnDisable()
         {
             _bazooka.TargetStateChanged -= OnTargetStateChanged;
             Egg.CollectedEgg -= OnEggCollected;
+            GameManager.DifficultyChanged -= RefreshDifficultyParams;
+            GameManager.GameEnded -= OnGameEnded;
         }
 
         // Update is called once per frame
@@ -188,6 +191,11 @@ namespace GGJ24
         private void OnEggCollected()
         {
             _agent.speed *= GameManager.Instance.RageMultiplier;
+        }
+
+        private void OnGameEnded()
+        {
+            _ambientEventInstance.stop(STOP_MODE.IMMEDIATE);
         }
 
         private void OnTargetStateChanged()
@@ -316,12 +324,17 @@ namespace GGJ24
 
         private IEnumerator ActivateAngryChickenSounds(float duration)
         {
-            if (_rageSoundsActive) yield break;
+            if (_rageSoundsActive || GameManager.Instance.CurrentDifficulty == GameManager.Difficulty.EASY) yield break;
             _rageSoundsActive = true;
-            ambientEventInstance.setParameterByName("Chicken Mood", 2);
+            _ambientEventInstance.setParameterByName("Chicken Mood", 2);
             yield return new WaitForSeconds(duration);
-            ambientEventInstance.setParameterByName("Chicken Mood", 0);
+            _ambientEventInstance.setParameterByName("Chicken Mood", 0);
             _rageSoundsActive = false;
+        }
+
+        public void RefreshDifficultyParams()
+        {
+            _agentDisableDuration = GameParamsLoader.ChickenKnockoutDuration;
         }
     }
 }

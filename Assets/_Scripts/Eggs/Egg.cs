@@ -7,7 +7,7 @@ using DamageNumbersPro;
 
 namespace GGJ24
 {
-    public class Egg : MonoBehaviour, ICollecetable
+    public class Egg : MonoBehaviour, ICollecetable, IDifficultydDependable
     {
         public static event Action CollectedEgg;
         public static event Action<Vector3> CollectedEggAtPosition;
@@ -24,9 +24,13 @@ namespace GGJ24
         {
             transform.DOMoveY(transform.position.y + 0.5f, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
         }
-
+        protected virtual void OnEnable()
+        {
+            GameManager.DifficultyChanged += RefreshDifficultyParams;
+        }
         protected virtual void OnDisable()
         {
+            GameManager.DifficultyChanged -= RefreshDifficultyParams;
             transform.DOKill();
         }
 
@@ -40,6 +44,11 @@ namespace GGJ24
             CollectedEggAtPosition?.Invoke(transform.position);
             EggManager.Instance.SpawnEgg();
             Destroy(gameObject);
+        }
+
+        public virtual void RefreshDifficultyParams()
+        {
+            _timeBonus = GameParamsLoader.BasicEggTimeBonus;
         }
     }
 }

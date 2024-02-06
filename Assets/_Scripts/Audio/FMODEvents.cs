@@ -37,6 +37,16 @@ namespace GGJ24
         [field: SerializeField] public EventReference WhooshSFX { get; private set; }
         [field: Header("Splash SFX")]
         [field: SerializeField] public EventReference SplashSFX { get; private set; }
+        [field: Header("Chicken Normal SFX")]
+        [field: SerializeField] public EventReference ChickenNormal { get; private set; }
+        [field: Header("Chicken Angry SFX")]
+        [field: SerializeField] public EventReference ChickenAngrySFX { get; private set; }
+        [field: Header("Chicken Wrathful SFX")]
+        [field: SerializeField] public EventReference ChickenWrathfulSFX { get; private set; }
+        [field: Header("UI Select SFX")]
+        [field: SerializeField] public EventReference UISelectSFX { get; private set; }
+        [field: Header("UI Submit SFX")]
+        [field: SerializeField] public EventReference UISubmtiSFX { get; private set; }
         public static FMODEvents Instance { get; private set; }
 
         private void Awake()

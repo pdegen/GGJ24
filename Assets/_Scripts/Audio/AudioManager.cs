@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
+using UnityEngine.UIElements;
 
 namespace GGJ24
 {
@@ -30,9 +31,10 @@ namespace GGJ24
             _thresholdTimes = new float[] { _intensityLow, _intensityMid, _intensityHigh };
         }
 
-        private void Start()
+        public void StartAmbiance()
         {
-            InitializeAmbiance(FMODEvents.Instance.Ambiance);
+            ambientEventInstance = CreateEventInstance(FMODEvents.Instance.Ambiance);
+            ambientEventInstance.start();
             InvokeRepeating(nameof(CheckAndUpdateMusicIntensity), 0f, 1f);
         }
 
@@ -56,12 +58,6 @@ namespace GGJ24
             SetAmbianceParameter("Intensity", 3);
         }
 
-        private void InitializeAmbiance(EventReference ambientEventReference)
-        {
-            ambientEventInstance = CreateEventInstance(ambientEventReference);
-            ambientEventInstance.start();
-        }
-
         public void StopAmbiance()
         {
             ambientEventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
@@ -75,6 +71,15 @@ namespace GGJ24
         public void PlayOneShot(EventReference sound, Vector3 worldPosition)
         {
             RuntimeManager.PlayOneShot(sound, worldPosition);
+        }
+
+        public EventInstance PlayStoppablOneShot(EventReference sound, Vector3 worldPosition)
+        {
+            EventInstance instance = RuntimeManager.CreateInstance(sound);
+            instance.set3DAttributes(RuntimeUtils.To3DAttributes(worldPosition));
+            instance.start();
+            instance.release();
+            return instance;
         }
 
         public EventInstance CreateEventInstance(EventReference eventReference)
