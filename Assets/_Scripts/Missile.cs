@@ -6,6 +6,7 @@ using DamageNumbersPro;
 using System;
 using MoreMountains;
 using MoreMountains.Feedbacks;
+using UnityEngine.UIElements;
 
 namespace GGJ24
 {
@@ -21,15 +22,21 @@ namespace GGJ24
         [SerializeField, Range(0f, 1f)] private float _gravity = 0.01f;
         [SerializeField] private Transform _decalSpawnPoint;
         [SerializeField] private DamageNumber _dodgeNumberPrefab;
+        [SerializeField] private GameObject _reflectEffect;
+        [SerializeField] private ParticleSystem _smokeSystem;
         [SerializeField] private MMFeedbacks _explosionFeedback;
 
+        private Rigidbody _body;
+        private bool _wasReflected;
         // TO DO: Limit max decals?
 
         // Check if missile hits default layer to rotate decal or water layer to splash
         private readonly float _raycastDistance = 1.5f;
 
-        private void Start ()
+        private void Awake()
         {
+            _body = GetComponent<Rigidbody>();
+            _wasReflected = false;
             Destroy(gameObject, 20f);
         }
 
@@ -37,17 +44,41 @@ namespace GGJ24
         {
             if (other.gameObject.layer == 12) return; // magnet
 
-            if (other.gameObject.layer == 6 && UnityEngine.Random.Range(0f, 1f) < ThirdPersonController.DodgeProbability && !PlayerHealth.IsDead)
+            if (other.gameObject.layer == 6)
             {
-                _dodgeNumberPrefab.Spawn(0.4f*other.transform.up + other.transform.position, "Dodged!");
-                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WhooshSFX, transform.position);
-                CanvasManager.Instance.AddTimeBonus(1);
-                GameManager.Instance.RemainingTime += 1;
-                return;
+                if (PlayerHealth.IsDead || _wasReflected) return;
+                
+                if (UnityEngine.Random.Range(0f, 1f) < ThirdPersonController.DodgeProbability) {
+                    if (AbilityManager.CanReflectMissiles && !_wasReflected)
+                    {
+                        _body.velocity *= -1;
+                        transform.Rotate(new Vector3(0, 180, 0));
+                        _wasReflected = true;
+                        _dodgeNumberPrefab.Spawn(0.4f * other.transform.up + other.transform.position, "REFLECTED!");
+                        GameObject reflect = Instantiate(_reflectEffect, transform.position, Quaternion.identity);
+                        Destroy(reflect, 0.5f);
+                        StartCoroutine(DisableSmoke(0.2f));
+                    }
+                    else
+                    {
+                        _dodgeNumberPrefab.Spawn(0.4f * other.transform.up + other.transform.position, "DODGED!");
+                    }
+                    AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WhooshSFX, transform.position);
+                    CanvasManager.Instance.AddTimeBonus(1);
+                    GameManager.Instance.RemainingTime += 1;
+                    return;
+                }
             }
 
             Explode();
             Destroy(gameObject);
+        }
+
+        private IEnumerator DisableSmoke(float duration)
+        {
+            _smokeSystem.Stop();
+            yield return new WaitForSeconds(duration);
+            _smokeSystem.Play();
         }
 
         private void Update()
@@ -87,7 +118,10 @@ namespace GGJ24
             {
                 if (hit.TryGetComponent(out Chicken chicken))
                 {
-                    if (chicken.IsSleeping) { chicken.WakeUpWrapper(); }
+                    if (chicken.IsSleeping) {
+                        if (GameManager.CurrentDifficulty == GameManager.Difficulty.EASY) continue;
+                        chicken.WakeUpWrapper();
+                    }
 
                     chicken.TemporarilyDisableNavMeshAgentWrapper();
 

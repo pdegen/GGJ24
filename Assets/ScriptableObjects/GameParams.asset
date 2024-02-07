@@ -21,14 +21,17 @@ MonoBehaviour:
   JumpingEggSpawnMinEggCollected: 3
   GoldenEggSpawnMinEggCollected: 5
   MovingEggSpeed: 4
-  GoldenEggTimeBonus: 10
+  JumpingEggAdditiveTimeBonus: 2
+  MovingEggAdditiveTimeBonus: 1
+  GoldenEggAdditiveTimeBonus: 10
   GoldenEggHealAmount: 200
   GoldenEggLifetime: 13
   EasyMultiplier: 0.5
-  HardMultiplier: 1.5
+  HardMultiplier: 1.3
   EggsCollectedToUnlockDoubleJump: 3
   EggsCollectedToUnlockDash: 5
   EggsCollectedToUnlockDodge: 7
+  EggsCollectedToUnlockReflectMissiles: 9
   ChickenKnockoutDuration: 7
   MissileDamage: 50
   DodgeChance: 1

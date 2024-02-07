@@ -15,34 +15,27 @@ namespace GGJ24
         private void OnEnable()
         {
             Egg.CollectedEgg += OnEggCollected;
-            ThirdPersonController.Dancing += TogglePolarity;
         }
 
         private void OnDisable()
         {
             Egg.CollectedEgg -= OnEggCollected;
-            ThirdPersonController.Dancing -= TogglePolarity;
         }
 
         void FixedUpdate()
         {
-            if (_isRepelling) return;
+            if (AbilityManager.CanReflectMissiles && ThirdPersonController.IsDancing) { return; }
 
             Collider[] colliders = Physics.OverlapSphere(transform.position, _attractRadius, _attractLayer);
             foreach (Collider col in colliders)
             {
                 if (col.TryGetComponent<Rigidbody>(out var rb))
                 {
-                    if (_isRepelling) Repel(rb);
-                    else Attract(rb);
+                    Attract(rb);
                 }
             }
         }
 
-        private void TogglePolarity(bool isRepelling)
-        {
-            _isRepelling = isRepelling;
-        }
         void Attract(Rigidbody rb)
         {
             Vector3 direction = transform.position - rb.position;
@@ -57,17 +50,6 @@ namespace GGJ24
             Vector3 force = direction.normalized * forceMagnitude;
 
             rb.AddForce(force);
-            rb.transform.rotation = Quaternion.LookRotation(rb.velocity.normalized);
-        }
-        void Repel(Rigidbody rb)
-        {
-            Vector3 direction = transform.position - rb.position;
-            float distance = Mathf.Min(1, direction.magnitude);
-
-            float forceMagnitude = _repelStrength * (1f / distance);
-            Vector3 force = direction.normalized * forceMagnitude;
-
-            rb.AddForce(-force);
             rb.transform.rotation = Quaternion.LookRotation(rb.velocity.normalized);
         }
         private void OnEggCollected()

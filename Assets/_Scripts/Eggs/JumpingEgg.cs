@@ -10,6 +10,7 @@ namespace GGJ24
         protected override void Start()
         {
             base.Start();
+            _timeBonus = GameParamsLoader.JumpingEggAdditiveTimeBonus + GameParamsLoader.BasicEggTimeBonus;
         }
 
         protected override void InitEggMovement()

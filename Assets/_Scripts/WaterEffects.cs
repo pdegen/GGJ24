@@ -1,6 +1,7 @@
 using DG.Tweening.Core.Easing;
 using UnityEngine;
 using UnityEngine.UIElements;
+using DG.Tweening;
 
 namespace GGJ24
 {
@@ -13,7 +14,9 @@ namespace GGJ24
         public void SpawnRipple(Vector3 position)
         {
             GameObject ripple = Instantiate(_waterRippleEffect, new Vector3(position.x, GameParamsLoader.WaterLevel, position.z), Quaternion.identity);
-            Destroy(ripple, 2f);
+            ripple.transform.localScale *= 0.3f;
+            ripple.transform.DOScale(3f, 3f);
+            Destroy(ripple, 3f);
         }
 
         public void SpawnSplash(Vector3 position, float scale = 1)

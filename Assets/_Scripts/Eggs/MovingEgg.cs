@@ -22,6 +22,7 @@ namespace GGJ24
         {
             base.Start();
             _agent.speed = GameParamsLoader.MovingEggSpeed;
+            _timeBonus = GameParamsLoader.MovingEggAdditiveTimeBonus + GameParamsLoader.BasicEggTimeBonus;
         }
 
         protected override void InitEggMovement()

@@ -17,10 +17,16 @@ namespace GGJ24
 
         public static Action GameEnded;
         public static Action DifficultyChanged;
+        public static Action TimeScaleChanged;
 
         [field: SerializeField] public float LevelRadius { get; set; } = 60f;
-        public static int HighScore = 0;
-        public static int OldHighScore = 0;
+
+        private static int _easyHighScore { get; set; } = 0;
+        private static int _oldEasyHighScore { get; set; } = 0;
+        private static int _normalHighScore { get; set; } = 0;
+        private static int _oldNormalHighScore { get; set; } = 0;
+        private static int _hardHighScore { get; set; } = 0;
+        private static int _oldHardHighScore { get; set; } = 0;
 
         [Header("Multiply speed, random shoot, bullet magnet by this factor for every egg collected")]
         public float RageMultiplier = 1.01f;
@@ -33,15 +39,27 @@ namespace GGJ24
 
         private StarterAssetsInputActions _inputActions;
         private bool _isPaused;
-        private bool _gameHasEnded;
+        private bool _canPause;
+        private static bool _gameHasEnded;
 
 
-        public Difficulty CurrentDifficulty;
+        public static Difficulty CurrentDifficulty { get; private set; }
         public enum Difficulty
         {
             EASY = 0,
             NORMAL = 1,
             HARD = 2
+        }
+
+        public static string PrintDifficulty()
+        {
+            switch (CurrentDifficulty)
+            {
+                case Difficulty.EASY: return "ANGRY"; break;
+                case Difficulty.NORMAL: return "FURIOUS"; break;
+                default: return "SATANIC";
+            }
+
         }
 
         private void Awake()
@@ -52,8 +70,8 @@ namespace GGJ24
             }
             Instance = this;
             _isPaused = false;
+            _canPause = false;
             _gameHasEnded = false;
-
             _inputActions = new StarterAssetsInputActions();
             _inputActions.Player.Enable();
         }
@@ -63,10 +81,13 @@ namespace GGJ24
             RemainingTime = GameParamsLoader.StartTime;
             CanvasManager.Instance.ToggleDifficultySelection(true);
             Time.timeScale = 0;
+            //TimeScaleChanged?.Invoke(); // can lead to script initialization order issues, temp. workaround to set scale 0 in canvasmanager
         }
 
         public void StartGame(int difficulty)
         {
+            Time.timeScale = 1f;
+            TimeScaleChanged?.Invoke();
             CurrentDifficulty = (Difficulty)difficulty;
             GameParamsLoader.AdjustDifficulty(CurrentDifficulty);
             DifficultyChanged?.Invoke();
@@ -75,16 +96,9 @@ namespace GGJ24
 
         private IEnumerator StartGameRoutine()
         {
-            //switch (CurrentDifficulty)
-            //{
-            //    case Difficulty.EASY: AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ChickenMoodSFX, transform.position); break;
-            //    case Difficulty.NORMAL: AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ChickenAngrySFX, transform.position); break;
-            //    case Difficulty.HARD: AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ChickenWrathfulSFX, transform.position); break;
-            //}
-            yield return new WaitForSecondsRealtime(0f);
             CanvasManager.Instance.ToggleDifficultySelection(false);
-            Time.timeScale = 1f;
-            yield return new WaitForSeconds(2f);
+            _canPause = true;
+            yield return new WaitForSeconds(2.5f);
             AudioManager.Instance.StartAmbiance();
         }
 
@@ -107,20 +121,52 @@ namespace GGJ24
                 EndGame();
                 return;
             }
-
-            //if (ThirdPersonController.IsDancing)
-            //{
-            //    return;
-            //}
             RemainingTime -= Time.deltaTime;
+        }
+
+        public static float ActiveHighScore { get; private set; } = 0;
+        public static float ActiveOldHighScore { get; private set; } = 0;
+        private static void HandleHighscore()
+        {
+            if (_gameHasEnded) return; // extermely weird bug: HandleHighscore called after GameEnded?.Invoke() in EndGame()
+
+            switch (CurrentDifficulty)
+            {
+                case Difficulty.EASY:
+                    ActiveOldHighScore = _easyHighScore;
+                    break;
+                case Difficulty.NORMAL:
+                    ActiveOldHighScore = _normalHighScore;
+                    break;
+                case Difficulty.HARD:
+                    ActiveOldHighScore = _hardHighScore;
+                    break;
+            }
+
+            if (EggManager.CollectedEggs <= ActiveOldHighScore)
+                return;
+
+            switch (CurrentDifficulty)
+            {
+                case Difficulty.EASY:
+                    _easyHighScore = EggManager.CollectedEggs;
+                    break;
+                case Difficulty.NORMAL:
+                    _normalHighScore = EggManager.CollectedEggs;
+                    break;
+                case Difficulty.HARD:
+                    _hardHighScore = EggManager.CollectedEggs;
+                    break;
+            }
+            ActiveHighScore = EggManager.CollectedEggs;
         }
 
         public void EndGame()
         {
+            HandleHighscore();
             _gameHasEnded = true;
             GameEnded?.Invoke();
-            OldHighScore = HighScore;
-            if (EggManager.CollectedEggs > OldHighScore)
+            if (EggManager.CollectedEggs > ActiveOldHighScore)
             {
                 StartCoroutine(NewHighScore());
             }
@@ -131,22 +177,24 @@ namespace GGJ24
 
         }
 
+        [SerializeField] private float _gameOverDelay = 5.5f;
         private IEnumerator NewHighScore()
         {
-            yield return new WaitForSeconds(4.5f);
-            CanvasManager.Instance.ToggleGameOverScreen();
+            yield return new WaitForSeconds(_gameOverDelay);
             AudioManager.Instance.StopAmbiance();
             Time.timeScale = 0f;
+            TimeScaleChanged?.Invoke();
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.VictorySFX, transform.position);
-            HighScore = EggManager.CollectedEggs;
+            CanvasManager.Instance.ToggleGameOverScreen();
         }
 
         private IEnumerator GameOver()
         {
-            yield return new WaitForSeconds(4.5f);
+            yield return new WaitForSeconds(_gameOverDelay);
             CanvasManager.Instance.ToggleGameOverScreen();
             AudioManager.Instance.StopAmbiance();
             Time.timeScale = 0f;
+            TimeScaleChanged?.Invoke();
             CanvasManager.Instance.ToggleGameOverScreen();
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GameOverSFX, transform.position);
         }
@@ -171,8 +219,9 @@ namespace GGJ24
 
         public void PauseGame()
         {
-            if (_isPaused || _gameHasEnded) return;
+            if (_isPaused || _gameHasEnded || !_canPause) return;
             Time.timeScale = 0f;
+            TimeScaleChanged?.Invoke();
             _isPaused = true;
             CanvasManager.Instance.TogglePauseScreen();
         }
@@ -181,6 +230,7 @@ namespace GGJ24
         {
             if (!_isPaused) return;
             Time.timeScale = 1f;
+            TimeScaleChanged?.Invoke();
             _isPaused = false;
             CanvasManager.Instance.TogglePauseScreen();
         }

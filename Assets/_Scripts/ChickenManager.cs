@@ -4,12 +4,13 @@ using UnityEngine;
 
 namespace GGJ24
 {
-    public class ChickenManager : MonoBehaviour
+    public class ChickenManager : MonoBehaviour, IDifficultydDependable
     {
         public static ChickenManager Instance { get; private set; }
 
         [SerializeField] private Material _chickenEmissionMaterial;
-        [SerializeField] float _maxEmissionIntensity = 30f;
+        [SerializeField] private float _maxEmissionIntensity = 30f;
+        private float _maxEmissionIntensityBase;
         [SerializeField] float _startEmissionIntensity = 2f;
         [SerializeField] int _numEggsUntilMaxRageEyes = 10;
 
@@ -29,6 +30,7 @@ namespace GGJ24
             }
             Instance = this;
             _chickensAwake = 0;
+            _maxEmissionIntensityBase = _maxEmissionIntensity;
         }
 
         private void OnEnable()
@@ -144,6 +146,11 @@ namespace GGJ24
             {
                 Debug.LogWarning("Material not found or not initialized.");
             }
+        }
+
+        public void RefreshDifficultyParams()
+        {
+            _maxEmissionIntensity = _maxEmissionIntensityBase * GameParamsLoader.CurrentMultiplier;
         }
     }
 }

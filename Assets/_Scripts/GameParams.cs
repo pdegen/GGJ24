@@ -23,7 +23,10 @@ namespace GGJ24
 
         public float MovingEggSpeed;
 
-        public float GoldenEggTimeBonus = 10f;
+        public float JumpingEggAdditiveTimeBonus = 2f;
+        public float MovingEggAdditiveTimeBonus = 1f;
+        public float GoldenEggAdditiveTimeBonus = 5f;
+
         public float GoldenEggHealAmount = 200f;
         public float GoldenEggLifetime = 10f;
 
@@ -37,6 +40,7 @@ namespace GGJ24
         public int EggsCollectedToUnlockDoubleJump;
         public int EggsCollectedToUnlockDash;
         public int EggsCollectedToUnlockDodge;
+        public int EggsCollectedToUnlockReflectMissiles;
 
         [Tooltip("How long chickens are incapacitated after firing missile")]
         public float ChickenKnockoutDuration;

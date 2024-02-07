@@ -29,6 +29,7 @@ namespace GGJ24
 
         protected Vector3 _destinationPos;
         protected NavMeshAgent _agent;
+        private float _speed;
         protected delegate IEnumerator GetNewDestination();
         protected GetNewDestination _autoNewDestination;
 
@@ -55,6 +56,7 @@ namespace GGJ24
         protected virtual void Awake()
         {
             _agent = GetComponent<NavMeshAgent>();
+            _body = GetComponent<Rigidbody>();
             _agent.enabled = false;
             _targetDistanceReached = _targetDistanceNeutral;
             _rageSoundsActive = false;
@@ -64,13 +66,13 @@ namespace GGJ24
         {
             _bazooka.gameObject.SetActive(false);
             _state = ChickenState.Neutral;
-            _body = GetComponent<Rigidbody>();
             _shooting.CanShoot = false;
             _agent.speed *= Random.Range(1f, 5f);
             _agent.acceleration *= Random.Range(0.8f, 2f);
             _agent.angularSpeed *= Random.Range(0.8f, 2f);
             _oobRadiusSquared = GameManager.Instance.LevelRadius * GameManager.Instance.LevelRadius;
             _agentDisableDuration = GameParamsLoader.ChickenKnockoutDuration;
+            _speed = _agent.speed;
 
             if (_spawnPoint == Vector3.forward)
             {
@@ -178,6 +180,7 @@ namespace GGJ24
         {
             _chickenMeshRenderer.material = _emissionMaterial;
             transform.parent = null;
+            StartCoroutine(ActivateAngryChickenSounds(5f));
             transform.DOLocalJump(transform.position + transform.TransformDirection(new Vector3(0, -0.42f, 2)), 2.5f, 1, _wakeUpDuration);
             yield return new WaitForSeconds(_wakeUpDuration);
             _agent.enabled = true;
@@ -185,7 +188,6 @@ namespace GGJ24
             _bazooka.gameObject.SetActive(true);
             _shooting.CanShoot = true;
             SetNewDestination();
-            StartCoroutine(ActivateAngryChickenSounds(5f));
         }
 
         private void OnEggCollected()
@@ -324,7 +326,7 @@ namespace GGJ24
 
         private IEnumerator ActivateAngryChickenSounds(float duration)
         {
-            if (_rageSoundsActive || GameManager.Instance.CurrentDifficulty == GameManager.Difficulty.EASY) yield break;
+            if (_rageSoundsActive || GameManager.CurrentDifficulty == GameManager.Difficulty.EASY) yield break;
             _rageSoundsActive = true;
             _ambientEventInstance.setParameterByName("Chicken Mood", 2);
             yield return new WaitForSeconds(duration);
@@ -335,6 +337,7 @@ namespace GGJ24
         public void RefreshDifficultyParams()
         {
             _agentDisableDuration = GameParamsLoader.ChickenKnockoutDuration;
+            _agent.speed = _speed * GameParamsLoader.CurrentMultiplier;
         }
     }
 }

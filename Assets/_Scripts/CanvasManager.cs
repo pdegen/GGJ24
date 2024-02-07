@@ -9,6 +9,7 @@ using DG.Tweening;
 using System;
 using DamageNumbersPro;
 using FMOD.Studio;
+using StarterAssets;
 
 namespace GGJ24
 {
@@ -33,13 +34,14 @@ namespace GGJ24
         [SerializeField] private PlayerHealth _health;
         [SerializeField] private GameObject _gameOverPanel;
         [SerializeField] private GameObject _pausePanel;
-        [SerializeField] private TMP_Text _pausePanelText;
+        //[SerializeField] private TMP_Text _pausePanelText;
         [SerializeField] private GameObject _replayButton;
         [SerializeField] private GameObject _resumeButton;
 
 
         private TMP_Text _eggsText;
         private StarterAssetsInputActions _inputActions;
+        [SerializeField] private StarterAssetsInputs _input;
         private GameObject _currentSelectedObject;
 
         [Header("Button tweens")]
@@ -73,8 +75,12 @@ namespace GGJ24
 
             _buttonBaseColor = _resumeButton.GetComponent<Image>().color;
             _buttonBaseScale = _resumeButton.transform.localScale;
-            Debug.LogWarning("Hard-coded value");
+            Debug.LogWarning("Hard-coded health bar value");
             UpdateHealth(800);
+
+            Debug.LogWarning("Setting time scale 0 in canvas manager start");
+            Time.timeScale = 0f;
+            OnTimeScaleChanged();
         }
 
         private void OnEnable()
@@ -82,6 +88,7 @@ namespace GGJ24
             Egg.CollectedEgg += UpdateEggsText;
             AbilityManager.AbilityUnlocked += OnAbilityUnlocked;
             PlayerHealth.HealthChanged += UpdateHealth;
+            GameManager.TimeScaleChanged += OnTimeScaleChanged;
         }
 
         private void OnDisable()
@@ -89,6 +96,7 @@ namespace GGJ24
             Egg.CollectedEgg -= UpdateEggsText;
             AbilityManager.AbilityUnlocked -= OnAbilityUnlocked;
             PlayerHealth.HealthChanged -= UpdateHealth;
+            GameManager.TimeScaleChanged -= OnTimeScaleChanged;
         }
 
         private void Update()
@@ -137,6 +145,25 @@ namespace GGJ24
             StartCoroutine(ShowNotificationRoutine(text));
         }
 
+        private void OnTimeScaleChanged()
+        {
+            if (Time.timeScale == 0)
+            {
+                _inputActions.Player.Disable();
+                _inputActions.UI.Enable();
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            } 
+            else
+            {
+                _inputActions.Player.Enable();
+                _inputActions.UI.Disable();
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                _input.jump = false; // prevent jump after button press
+            }
+        }
+
         private IEnumerator ShowNotificationRoutine(string text)
         {
             // TO DO: refactor this
@@ -144,9 +171,13 @@ namespace GGJ24
             {
                 case "DODGE UNLOCKED!":
                     _dodgeControlOverlay.SetActive(true);
+                    _dodgeControlOverlay.gameObject.GetComponentInChildren<TMP_Text>(true).text = "DODGE";
                     break;
                 case "DASH UNLOCKED!":
                     _dashControlOverlay.SetActive(true);
+                    break;
+                case "REFLECT UNLOCKED!":
+                    _dodgeControlOverlay.gameObject.GetComponentInChildren<TMP_Text>(true).text = "REFLECT";
                     break;
             }
             _unlockedNotificationText.GetComponent<TMP_Text>().alpha = 1f;
@@ -165,35 +196,27 @@ namespace GGJ24
             ToggleGameUI(false);
             var eventSystem = EventSystem.current;
             eventSystem.SetSelectedGameObject(_replayButton, new BaseEventData(eventSystem));
-            _inputActions.Player.Disable();
-            _inputActions.UI.Enable();
+
             _gameOverPanel.SetActive(true);
             _eggsCollected.gameObject.SetActive(false);
-            _endGameText.text = (EggManager.CollectedEggs > GameManager.HighScore) || (EggManager.CollectedEggs > 0 && GameManager.HighScore == 0) ? "NEW HIGH SCORE!" : "GAME OVER!";
-            _scoreText.text = "EGGS: " + EggManager.CollectedEggs.ToString() + "\nPREVIOUS HIGH SCORE: " + GameManager.OldHighScore;
+            _endGameText.text = (EggManager.CollectedEggs > GameManager.ActiveOldHighScore) || (EggManager.CollectedEggs > 0 && GameManager.ActiveOldHighScore == 0) ? "NEW HIGH SCORE!" : "GAME OVER!";
+            _scoreText.text = "EGGS: " + EggManager.CollectedEggs.ToString() + "\nPREVIOUS HIGH SCORE: " + GameManager.ActiveOldHighScore + $"\nDifficulty: ({GameManager.PrintDifficulty()})";
         }
 
         public void TogglePauseScreen()
         {
             if (_pausePanel.activeSelf)
             {
-                _inputActions.UI.Disable();
-                _inputActions.Player.Enable();
                 _pausePanel.SetActive(false);
                 ToggleGameUI(true);
-                Cursor.lockState = CursorLockMode.Locked;
             }
             else
             {
                 var eventSystem = EventSystem.current;
                 eventSystem.SetSelectedGameObject(_resumeButton, new BaseEventData(eventSystem));
-                _pausePanelText.text = $"EGGS: {EggManager.CollectedEggs}\nHIGH SCORE: {GameManager.HighScore}";
-                _inputActions.UI.Enable();
-                _inputActions.Player.Disable();
+                //_pausePanelText.text = $"EGGS: {EggManager.CollectedEggs}\nHIGH SCORE: {GameManager.HighScore}";
                 _pausePanel.SetActive(true);
                 ToggleGameUI(false);
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
             }
         }
 
@@ -208,10 +231,12 @@ namespace GGJ24
         {
             if (newValue > _healthSlider.value)
             {
-                DamageNumber healNumber = _healNumber.Spawn(Vector3.zero, newValue - _healthSlider.value);
-                healNumber.SetAnchoredPosition(_healthSlider.gameObject.GetComponent<RectTransform>(), new Vector2(0, 0));
+                //DamageNumber healNumber = _healNumber.Spawn(Vector3.zero, newValue - _healthSlider.value);
+                //healNumber.SetAnchoredPosition(_healthSlider.gameObject.GetComponent<RectTransform>(), new Vector2(0, 0));
+                _healthSlider.transform.DOPunchScale(new Vector2(1.05f, 1.05f), 0.6f).SetEase(Ease.InOutSine);
             }
-            _healthSlider.value = newValue;
+
+            DOTween.To(() => _healthSlider.value, x => _healthSlider.value = x, newValue, 1);
         }
 
         private void UpdateEggsText()
@@ -251,7 +276,6 @@ namespace GGJ24
             {
                 _stoppableOneShotInstance.stop(STOP_MODE.IMMEDIATE);
             }
-            //_stoppableOneShotInstance.stop();
             if (_currentSelectedObject == _easyDifficultyButton) _stoppableOneShotInstance = AudioManager.Instance.PlayStoppablOneShot(FMODEvents.Instance.ChickenNormal, transform.position);
             else if (_currentSelectedObject == _normalDifficultyButton) _stoppableOneShotInstance = AudioManager.Instance.PlayStoppablOneShot(FMODEvents.Instance.ChickenAngrySFX, transform.position);
             else if (_currentSelectedObject == _hardlDifficultyButton) _stoppableOneShotInstance = AudioManager.Instance.PlayStoppablOneShot(FMODEvents.Instance.ChickenWrathfulSFX, transform.position);

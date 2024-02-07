@@ -7,16 +7,18 @@ public class AbilityManager : MonoBehaviour
 {
     public static Action<string> AbilityUnlocked;
 
-    public static bool CanDodge;
+    public static bool CanDance;
     public static bool CanDash;
     public static bool CanDoubleJump;
+    public static bool CanReflectMissiles;
 
 
     private void Awake()
     {
-        CanDodge = false;
+        CanDance = false;
         CanDash = false;
         CanDoubleJump = false;
+        CanReflectMissiles = false;
     }
 
     private void OnEnable()
@@ -31,9 +33,10 @@ public class AbilityManager : MonoBehaviour
 
     public static void UnlockAll()
     {
-        CanDodge = true;
+        CanDance = true;
         CanDash = true;
         CanDoubleJump = true;
+        CanReflectMissiles = true;
     }
 
     private void UnlockAbilities()
@@ -41,7 +44,7 @@ public class AbilityManager : MonoBehaviour
         if (EggManager.CollectedEggs == GameParamsLoader.EggsCollectedToUnlockDodge)
         {
             AbilityUnlocked?.Invoke("DODGE UNLOCKED!");
-            CanDodge = true;
+            CanDance = true;
         }
 
         if (EggManager.CollectedEggs == GameParamsLoader.EggsCollectedToUnlockDoubleJump)
@@ -54,6 +57,12 @@ public class AbilityManager : MonoBehaviour
         {
             AbilityUnlocked?.Invoke("DASH UNLOCKED!");
             CanDash = true;
+        }
+
+        if (EggManager.CollectedEggs == GameParamsLoader.EggsCollectedToUnlockReflectMissiles)
+        {
+            AbilityUnlocked?.Invoke("REFLECT UNLOCKED!");
+            CanReflectMissiles = true;
         }
     }
 }

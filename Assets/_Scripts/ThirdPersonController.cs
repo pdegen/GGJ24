@@ -128,11 +128,10 @@ namespace StarterAssets
         private bool _hasAnimator;
         private bool _canMove = true;
         private bool _canJump = true;
+        private bool _isDead = false;
         private Coroutine _disableMoveRoutine;
-        public static bool IsDancing { get; private set; } = false;
         public static float DodgeProbability { get; private set; }
-        private float _danceTimer = 0;
-        private float _minDanceTime = 3f;
+
         [SerializeField, Range(0f,1f)] private float _waterSpeedModifier = 0.66f;
 
         private bool IsCurrentDeviceMouse
@@ -177,6 +176,12 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
 
             _hasAnimator = TryGetComponent(out _animator);
+            _canMove = true;
+             _canJump = true;
+            _isDead = false;
+            _dashTimerIndicator.SetActive(false);
+            _danceTimerIndicator.SetActive(false);
+            _danceTimeoutTimer = _danceTimeout;
         }
 
         private void OnEnable()
@@ -194,41 +199,111 @@ namespace StarterAssets
             PlayerHealth.PlayerDeath -= Die;
         }
 
+        #region Dance
+        [Header("Dance")]
+        [SerializeField] private float _danceTimeout;
+        [SerializeField] private float _danceDuration;
+        [SerializeField] private GameObject _danceTimerIndicator;
+        [SerializeField] private Material _danceTimerMaterial;
+        public static bool IsDancing { get; private set; } = false;
+        private float _danceTimer;
+        private float _danceTimeoutTimer = 0;
+        private float _danceTimeStamp = 0;
+        private float _minDanceTime = 3f;
+        private int _lastDanceIndex = 0;
+        private float _dancePercentage = 0;
+        private float _dancePercentageOffset = 0f;
         private void Dance(InputAction.CallbackContext context)
         {
-            if (!Grounded || !_canMove || transform.position.y < GameParamsLoader.WaterLevel || !AbilityManager.CanDodge) return;
+            if (!Grounded || !_canMove || IsDancing || transform.position.y < GameParamsLoader.WaterLevel || !AbilityManager.CanDance || _danceTimeoutTimer < _danceTimeout) return;
             // TO DO: CHANGE CINEMACHINE FOLLOW TARGET
             _disableMoveRoutine = StartCoroutine(TemporarilyDisableMove(_minDanceTime));
             CurrentSpeed = 0;
             IsDancing = true;
-            int randomIndex = UnityEngine.Random.Range(0, 3); // remember to update when adding new animations...
-            _animator.SetInteger(_animIDDanceIndex, randomIndex);
+
+            _lastDanceIndex = (_lastDanceIndex + 1) % 4; // remember to update when adding new animations...
+
+            if (AbilityManager.CanReflectMissiles) _lastDanceIndex = 1; // flair index
+            else if (_lastDanceIndex == 1) _lastDanceIndex++;
+
+            _animator.SetInteger(_animIDDanceIndex, _lastDanceIndex);
+
             _animator.SetTrigger(_animIDDance);
             Dancing?.Invoke(true);
+            _danceTimerIndicator.SetActive(true);
             DodgeProbability = GameParamsLoader.DodgeChance;
+            _danceTimeStamp = Time.time;
+            _danceTimeoutTimer = 0f;
+            _danceTimer = 0f;
         }
 
         private void CancelDanceManually(InputAction.CallbackContext context)
         {
-            CancelDance();
+            StartCoroutine(CancelDance());
+        }
+        private void HandleDance()
+        {
+
+            if (!IsDancing)
+            {
+                if (_dancePercentage >= 1) {
+                    return;
+                }
+
+                _danceTimeoutTimer += Time.deltaTime;
+                _dancePercentage = _dancePercentageOffset + (Time.time - _danceTimeStamp) / _danceTimeout;
+                _danceTimerMaterial.SetFloat("_FillPercent", _dancePercentage);
+
+                if (_dancePercentage >= 1)
+                {
+                    _danceTimerIndicator.SetActive(false);
+                    _danceTimeoutTimer = _danceTimeout;
+                }
+
+                return;
+            }
+
+            _danceTimer += Time.deltaTime;
+
+            _dancePercentage = 1 - (Time.time - _danceTimeStamp) / _danceDuration;
+            _danceTimerMaterial.SetFloat("_FillPercent", _dancePercentage);
+
+            if ((_dancePercentage <= 0 || _input.move.sqrMagnitude > 0.5) && _cancelDanceRoutine == null)
+            {
+                _cancelDanceRoutine = StartCoroutine(CancelDance());
+            }
         }
 
-        private void CancelDance()
+        private Coroutine _cancelDanceRoutine = null;
+        private IEnumerator CancelDance()
         {
-            if (!IsDancing) return;
+            if (!IsDancing || _danceTimer < _minDanceTime) yield break;
+
+            float exitDuration = 0f;
+
+            _animator.SetTrigger(_animIDCancelDance);
+            if (AbilityManager.CanReflectMissiles) exitDuration += 2.4f; // flair exit animation
+
+            yield return new WaitForSeconds(exitDuration);
+
             IsDancing = false;
             Dancing?.Invoke(false);
-            _animator.SetTrigger(_animIDCancelDance);
             _danceTimer = 0;
+            _dancePercentageOffset = _dancePercentage; // when cancelling dance early, add offset to recovery time
+            _danceTimeStamp = Time.time;
             DodgeProbability = 0f;
             _disableMoveRoutine = null;
             _canMove = true;
+            _cancelDanceRoutine = null;
         }
+        #endregion
 
         private void Die()
         {
             _hasAnimator = false;
             _canMove = false;
+            _isDead = true;
+            _canJump = false;
         }
 
         private IEnumerator TemporarilyDisableMove(float duration)
@@ -241,17 +316,16 @@ namespace StarterAssets
 
         private void Update()
         {
+            HandleDance();
+            HandleDashing();
+
             if (IsDancing) 
             {
-                _danceTimer += Time.deltaTime;
-                if (_input.move.sqrMagnitude > 0.5 && _danceTimer > _minDanceTime) { CancelDance(); }
-                else return;
+                return;
             }
-
             JumpAndGravity();
             GroundedCheck();
             Move();
-            HandleDashing();
         }
 
         private void LateUpdate()
@@ -310,6 +384,13 @@ namespace StarterAssets
 
         private void Move()
         {
+            // Gravity shan't spare the dead
+            if (_isDead)
+            {
+                _controller.Move(new Vector3(0, _verticalVelocity, 0) * Time.deltaTime);
+                return;
+            }
+
             if (!_canMove) return;
 
             // set target speed based on move speed, sprint speed and if sprint is pressed
@@ -379,6 +460,7 @@ namespace StarterAssets
             }
         }
 
+        [SerializeField] private ParticleSystem _jumpParticle;
         private void JumpAndGravity()
         {
             if (Grounded) // still grounded for a few frames even after starting jump
@@ -397,7 +479,7 @@ namespace StarterAssets
                     _verticalVelocity = -2f;
                 }
 
-                _canJump = true;
+                _canJump = !_isDead;
                 // Jump
                 Jump();
 
@@ -412,6 +494,8 @@ namespace StarterAssets
                 _animator.SetTrigger(_animIDFrontFlip);
                 Jump(1.5f);
                 _canJump = false;
+                _jumpParticle.Play();
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.PlayerStepFX, transform.position);
             }
             else
             {
@@ -441,7 +525,7 @@ namespace StarterAssets
 
         private void Jump(float jumpHeightModifier = 1)
         {
-            if (_input.jump)
+            if (_input.jump && _canJump)
             {
                 // Lock movement speed when jumping
                 //if (Grounded) _priorTargetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
@@ -464,7 +548,8 @@ namespace StarterAssets
         [SerializeField] private float _dashTimeout = 1f;
         [SerializeField] private ParticleSystem _dashParticles;
         [SerializeField] private ParticleSystem _fallParticles;
-        [SerializeField] private AudioClip _dashSound;
+        [SerializeField] private GameObject _dashTimerIndicator;
+        [SerializeField] private Material _dashTimerMaterial;
 
         private bool _hasDashed;
         private bool _dashing;
@@ -479,7 +564,7 @@ namespace StarterAssets
                 return;
             }
 
-            if (_input.dash && !_hasDashed)
+            if (_input.dash && !_hasDashed && !IsDancing)
             {
                 if (_dashTimeout + _timeStartedDash > Time.time) {
                     _input.dash = false;
@@ -487,28 +572,42 @@ namespace StarterAssets
                 }
 
                 _dashDir = new Vector2(_targetDirection.x, _targetDirection.z);
-
+                _dashTimerIndicator.SetActive(true);
                 //_dashParticles.Play();
                 _dashing = true;
                 _hasDashed = true;
                 _input.dash = false;
                 _timeStartedDash = Time.time;
                 //_animator.SetTrigger(_animIDDash);
-                //SoundManager.Instance.PlaySound(_dashSound);
+                AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WhooshSFX, transform.position);
                 //_dashVisual.Play();
+            }
+
+            if (_hasDashed)
+            {
+                float dashPercentage = (Time.time - _timeStartedDash) / (_dashLength + _dashTimeout);
+
+                if (dashPercentage >= 1)
+                {
+                    _dashTimerIndicator.SetActive(false);
+                    _dashTimerMaterial.SetFloat("_FillPercent", 0);
+                    _input.dash = false;
+                    _hasDashed = false;
+                }
+                //Debug.Log(dashPercentage + " " + Time.deltaTime + " " + _timeStartedDash + " " +_dashLength);
+                _dashTimerMaterial.SetFloat("_FillPercent", dashPercentage);
             }
 
             if (_dashing)
             {
+
                 _verticalVelocity = 0f;
                 _horizontalVelocity = _dashDir * _dashSpeed;
 
-                if (Time.time >= _timeStartedDash + _dashLength)
+                if (Time.time - _timeStartedDash > _dashLength)
                 {
                     //_dashParticles.Stop();
                     _dashing = false;
-                    _input.dash = false;
-                    _hasDashed = false;
                     // Clamp the velocity so they don't keep shooting off
                     _horizontalVelocity = Vector2.zero;// new Vector2(_horizontalVelocity.x, _horizontalVelocity.y > 3 ? 3 : _horizontalVelocity.y);
                     //if (Grounded) _hasDashed = false;

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,18 +21,9 @@ namespace GGJ24
             base.Start();
             _eggLifeTime = GameParamsLoader.GoldenEggLifetime;
             _timer = _eggLifeTime;
-            _timeBonus = GameParamsLoader.GoldenEggTimeBonus;
+            _timeBonus = GameParamsLoader.GoldenEggAdditiveTimeBonus + GameParamsLoader.BasicEggTimeBonus;
             GoldenEggExists = true;
             _radialTimerMaterial.SetFloat("_FillPercent", 1);
-        }
-
-        protected override void OnEnable()
-        {
-            GameManager.DifficultyChanged += RefreshDifficultyParams;
-        }
-        protected override void OnDisable()
-        {
-            GameManager.DifficultyChanged -= RefreshDifficultyParams;
         }
 
         private void Update()
@@ -56,9 +48,9 @@ namespace GGJ24
 
         public override void RefreshDifficultyParams()
         {
-            _timeBonus = GameParamsLoader.GoldenEggTimeBonus;
-            _timer = _eggLifeTime;
+            _timeBonus = GameParamsLoader.GoldenEggAdditiveTimeBonus + GameParamsLoader.BasicEggTimeBonus;
             _eggLifeTime = GameParamsLoader.GoldenEggLifetime;
+            _timer = _eggLifeTime;
         }
     }
 }

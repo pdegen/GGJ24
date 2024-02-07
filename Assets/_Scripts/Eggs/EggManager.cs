@@ -21,6 +21,12 @@ namespace GGJ24
         [SerializeField] private GameObject _jumpingEggPrefab;
         [SerializeField] private GameObject _goldenEggPrefab;
 
+        [Tooltip("New eggs will spawn after this many collected")]
+        [SerializeField] private int _minEggsBeforeSpawn = 3;
+
+        [Tooltip("Golde egg will only spawn if remaining time less than this")]
+        [SerializeField] private float _goldenEggSpawnWindow = 30f;
+
 
         private void Awake()
         {
@@ -39,7 +45,7 @@ namespace GGJ24
 
         public void SpawnEgg()
         {
-            if (CollectedEggs < 3) return;
+            if (CollectedEggs < _minEggsBeforeSpawn) return;
 
             GameObject prefab;
 
@@ -51,7 +57,8 @@ namespace GGJ24
             {
                 prefab = _jumpingEggPrefab;
             }
-            else if (CollectedEggs > GameParamsLoader.GoldenEggSpawnMinEggCollected && UnityEngine.Random.Range(0f, 1f) < GameParamsLoader.GoldenEggSpawnChance && !GoldenEgg.GoldenEggExists)
+            else if (CollectedEggs > GameParamsLoader.GoldenEggSpawnMinEggCollected && UnityEngine.Random.Range(0f, 1f) < GameParamsLoader.GoldenEggSpawnChance 
+                && !GoldenEgg.GoldenEggExists && _goldenEggSpawnWindow > GameManager.Instance.RemainingTime)
             {
                 prefab = _goldenEggPrefab;
             }

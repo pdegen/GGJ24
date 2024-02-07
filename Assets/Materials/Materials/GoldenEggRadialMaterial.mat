@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RadialMaterial
+  m_Name: GoldenEggRadialMaterial
   m_Shader: {fileID: -6465566751694194690, guid: 7978c4c1ed2588c4eb199b119a304c67,
     type: 3}
   m_Parent: {fileID: 0}
@@ -109,7 +109,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _FillPercent: 0.35908604
+    - _FillPercent: -0.0005390122
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0

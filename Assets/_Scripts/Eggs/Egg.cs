@@ -13,6 +13,7 @@ namespace GGJ24
         public static event Action<Vector3> CollectedEggAtPosition;
         public string InteractionPrompt { get => "Collect"; }
         protected float _timeBonus;
+        [SerializeField] protected GameObject _collectedEffect;
 
         protected virtual void Start()
         {
@@ -43,6 +44,8 @@ namespace GGJ24
             CollectedEgg?.Invoke();
             CollectedEggAtPosition?.Invoke(transform.position);
             EggManager.Instance.SpawnEgg();
+            GameObject collectedEffect = Instantiate(_collectedEffect, transform.position, Quaternion.identity);
+            Destroy(collectedEffect, 2f);
             Destroy(gameObject);
         }
 

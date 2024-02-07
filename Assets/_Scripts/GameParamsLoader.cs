@@ -19,15 +19,19 @@ namespace GGJ24
         public static float JumpingEggSpawnMinEggCollected { get; private set; }
         public static float GoldenEggSpawnMinEggCollected { get; private set; }
         public static float MovingEggSpeed { get; private set; }
-        public static float GoldenEggTimeBonus { get; private set; }
+        public static float MovingEggAdditiveTimeBonus { get; private set; }
+        public static float JumpingEggAdditiveTimeBonus { get; private set; }
+        public static float GoldenEggAdditiveTimeBonus { get; private set; }
         public static float GoldenEggLifetime { get; private set; }
         public static float GoldenEggHealAmount { get; private set; }
         public static float DodgeChance { get; private set; }
         public static int EggsCollectedToUnlockDodge { get; private set; }
         public static int EggsCollectedToUnlockDash { get; private set; }
         public static int EggsCollectedToUnlockDoubleJump { get; private set; }
+        public static int EggsCollectedToUnlockReflectMissiles { get; private set; }
         public static float EasyMultiplier { get; private set; }
         public static float HardMultiplier { get; private set; }
+        public static float CurrentMultiplier { get; private set; }
         public static float WaterLevel { get; private set; }
         public static float ChickenKnockoutDuration { get; private set; }
         public static float MissileDamage { get; private set; }
@@ -49,7 +53,10 @@ namespace GGJ24
 
             MovingEggSpeed = _params.MovingEggSpeed;
 
-            GoldenEggTimeBonus = _params.GoldenEggTimeBonus;
+            MovingEggAdditiveTimeBonus = _params.MovingEggAdditiveTimeBonus;
+            JumpingEggAdditiveTimeBonus = _params.JumpingEggAdditiveTimeBonus;
+            GoldenEggAdditiveTimeBonus = _params.GoldenEggAdditiveTimeBonus;
+
             GoldenEggLifetime = _params.GoldenEggLifetime;
             GoldenEggHealAmount = _params.GoldenEggHealAmount;
 
@@ -65,6 +72,7 @@ namespace GGJ24
             EggsCollectedToUnlockDodge = _params.EggsCollectedToUnlockDodge;
             EggsCollectedToUnlockDoubleJump = _params.EggsCollectedToUnlockDoubleJump;
             EggsCollectedToUnlockDash = _params.EggsCollectedToUnlockDash;
+            EggsCollectedToUnlockReflectMissiles = _params.EggsCollectedToUnlockReflectMissiles;
         }
 
         private void Start()
@@ -74,23 +82,24 @@ namespace GGJ24
 
         public static void AdjustDifficulty(GameManager.Difficulty difficulty)
         {
-            float multiplier = 1f;
 
             switch(difficulty)
             {
                 case GameManager.Difficulty.EASY:
-                    multiplier = EasyMultiplier; break;
+                    CurrentMultiplier = EasyMultiplier; break;
+                case GameManager.Difficulty.NORMAL:
+                    CurrentMultiplier = 1f; break;
                 case GameManager.Difficulty.HARD:
-                    multiplier = HardMultiplier; break;
+                    CurrentMultiplier = HardMultiplier; break;
             }
 
-            GoldenEggHealAmount /= multiplier;
-            GoldenEggLifetime /= multiplier;
-            GoldenEggTimeBonus /= multiplier;
-            BasicEggTimeBonus /= multiplier;
-            ChickenKnockoutDuration /= multiplier;
-            MissileDamage *= multiplier;
-            MovingEggSpeed *= multiplier;
+            GoldenEggHealAmount /= CurrentMultiplier;
+            GoldenEggLifetime /= CurrentMultiplier;
+            GoldenEggAdditiveTimeBonus /= CurrentMultiplier;
+            BasicEggTimeBonus /= CurrentMultiplier;
+            ChickenKnockoutDuration /= CurrentMultiplier;
+            MissileDamage *= CurrentMultiplier;
+            MovingEggSpeed *= CurrentMultiplier;
         }
 
     }

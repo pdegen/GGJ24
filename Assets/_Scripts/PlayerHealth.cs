@@ -141,6 +141,7 @@ namespace GGJ24
             HealthChanged?.Invoke((int)Health);
         }
 
+        [SerializeField] private GameObject _deathEffect;
         protected virtual void Die()
         {
             if (IsDead) return;
@@ -148,6 +149,12 @@ namespace GGJ24
             IsDead = true;
             _animator.SetTrigger(_animIDDie);
             GameManager.Instance.EndGame();
+            StartCoroutine(DeathRoutine());
+        }
+        private IEnumerator DeathRoutine()
+        {
+            yield return new WaitForSeconds(3f);
+            Instantiate(_deathEffect, transform.position, Quaternion.identity);
         }
     }
 }

@@ -156,11 +156,13 @@ MonoBehaviour:
   _explosionForce: 30
   _explosionBaseDamage: 0
   _upwardsModifier: 3
-  _explosionDamage: 50
   _gravity: 0.2
   _decalSpawnPoint: {fileID: 6884545070965289209}
   _dodgeNumberPrefab: {fileID: 2496076631707994463, guid: 63b66d9b41fc0404bb623b36f868b301,
     type: 3}
+  _reflectEffect: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7,
+    type: 3}
+  _smokeSystem: {fileID: 2097919443083116305}
   _explosionFeedback: {fileID: 3754363927932106435}
 --- !u!114 &3754363927932106435
 MonoBehaviour:
@@ -427,6 +429,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8766975900200080471, guid: c4ed38c72957f2241ad144a1614956d9,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8766975900200080471, guid: c4ed38c72957f2241ad144a1614956d9,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8766975900200080471, guid: c4ed38c72957f2241ad144a1614956d9,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8766975900200080471, guid: c4ed38c72957f2241ad144a1614956d9,
+        type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.1
       objectReference: {fileID: 0}
@@ -459,6 +476,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0.248
+      objectReference: {fileID: 0}
+    - target: {fileID: 8766975900200080471, guid: c4ed38c72957f2241ad144a1614956d9,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8767152486562788127, guid: c4ed38c72957f2241ad144a1614956d9,
         type: 3}
@@ -562,6 +584,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4ed38c72957f2241ad144a1614956d9, type: 3}
+--- !u!198 &2097919443083116305 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8891649225594186379, guid: c4ed38c72957f2241ad144a1614956d9,
+    type: 3}
+  m_PrefabInstance: {fileID: 7383710146971669914}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2293207414741165701 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8767152486562788127, guid: c4ed38c72957f2241ad144a1614956d9,

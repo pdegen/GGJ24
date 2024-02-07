@@ -122,4 +122,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 254f5cae3bb928e45828dbed35fce11f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeBonusNumber: {fileID: 0}
+  _collectedEffect: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd,
+    type: 3}
