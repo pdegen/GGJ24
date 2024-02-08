@@ -4025,6 +4025,8 @@ MonoBehaviour:
     type: 3}
   _goldenEggPrefab: {fileID: 1493728666167680714, guid: e82e873a24be9984d8d98742dbe7ac03,
     type: 3}
+  _minEggsBeforeSpawn: 3
+  _goldenEggSpawnWindow: 30
 --- !u!4 &1072129728
 Transform:
   m_ObjectHideFlags: 0
@@ -8848,6 +8850,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
         type: 3}
+      propertyPath: <PunchImpactSFX>k__BackingField.Path
+      value: event:/FFX/PunchImpact
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
       propertyPath: <ChickenAngrySFX>k__BackingField.Path
       value: event:/FFX/Chicken/ChickenAngry
       objectReference: {fileID: 0}
@@ -8915,6 +8922,26 @@ PrefabInstance:
         type: 3}
       propertyPath: <ChickenNormal>k__BackingField.Guid.Data4
       value: -1591036450
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <PunchImpactSFX>k__BackingField.Guid.Data1
+      value: 859273924
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <PunchImpactSFX>k__BackingField.Guid.Data2
+      value: 1190616664
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <PunchImpactSFX>k__BackingField.Guid.Data3
+      value: -1767370584
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
+        type: 3}
+      propertyPath: <PunchImpactSFX>k__BackingField.Guid.Data4
+      value: 214638767
       objectReference: {fileID: 0}
     - target: {fileID: 8412993699220504947, guid: 8d18d1b9c14a9ef4caad9220802d65c8,
         type: 3}

@@ -47,6 +47,8 @@ namespace GGJ24
         [field: SerializeField] public EventReference UISelectSFX { get; private set; }
         [field: Header("UI Submit SFX")]
         [field: SerializeField] public EventReference UISubmtiSFX { get; private set; }
+        [field: Header("PunchImpact SFX")]
+        [field: SerializeField] public EventReference PunchImpactSFX { get; private set; }
         public static FMODEvents Instance { get; private set; }
 
         private void Awake()

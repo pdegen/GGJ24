@@ -58,12 +58,13 @@ namespace GGJ24
                         GameObject reflect = Instantiate(_reflectEffect, transform.position, Quaternion.identity);
                         Destroy(reflect, 0.5f);
                         StartCoroutine(DisableSmoke(0.2f));
+                        AudioManager.Instance.PlayOneShot(FMODEvents.Instance.PunchImpactSFX, transform.position);
                     }
                     else
                     {
                         _dodgeNumberPrefab.Spawn(0.4f * other.transform.up + other.transform.position, "DODGED!");
-                    }
                     AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WhooshSFX, transform.position);
+                    }
                     CanvasManager.Instance.AddTimeBonus(1);
                     GameManager.Instance.RemainingTime += 1;
                     return;
