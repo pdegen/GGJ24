@@ -181,8 +181,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _collectedEffect: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd,
     type: 3}
+  _meshObject: {fileID: 5971055765683160833}
   _radialTimerMaterial: {fileID: 2100000, guid: fefa66bd78f171e4eae961fe21659248,
     type: 2}
+--- !u!1 &5971055765683160833 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1547496628787150922, guid: 33099ffe1df7e1044a341c029b32e2da,
+    type: 3}
+  m_PrefabInstance: {fileID: 5162458232407377739}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6630147691959119104 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1992764064169175627, guid: 33099ffe1df7e1044a341c029b32e2da,

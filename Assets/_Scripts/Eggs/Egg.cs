@@ -16,13 +16,12 @@ namespace GGJ24
         protected float _timeBonus;
         [SerializeField] protected GameObject _collectedEffect;
 
-        [SerializeField] private LayerMask _defaultLayer;
-        [SerializeField] private LayerMask _XRayLayer;
-        private GameObject _meshObject;
+        [SerializeField] private GameObject _meshObject;
 
         private void Awake()
         {
-            _meshObject = gameObject.GetComponentInChildren<MeshRenderer>().gameObject;
+            //_meshObject = gameObject.GetComponentInChildren<MeshRenderer>().gameObject; // sometimes _meshObject becomes null in Start??? assign in inspector for now??
+            if (_meshObject == null) Debug.LogError($"No egg mesh found for {this}");
         }
 
         protected virtual void Start()
@@ -31,16 +30,10 @@ namespace GGJ24
             InitEggMovement();
 
             // ensure AbilityManager is initialized by at least waiting until first egg collected
-            //if (EggManager.CollectedEggs > 1 && AbilityManager.XRay.IsUnlocked) StartCoroutine(XRayRoutine(2f));
-        }
-
-        private IEnumerator XRayRoutine(float duration)
-        {
-            Debug.Log("st " + _meshObject.layer);
-            _meshObject.layer = _XRayLayer;
-            yield return new WaitForSeconds(duration);
-            Debug.Log("end " + _meshObject.layer);
-            _meshObject.layer = _defaultLayer;
+            if (EggManager.CollectedEggs > 1 && AbilityManager.XRay.IsUnlocked)
+            {
+                _meshObject.layer = 13;
+            }
         }
 
         protected virtual void InitEggMovement()
