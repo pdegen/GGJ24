@@ -44,9 +44,9 @@ namespace GGJ24
         {
             if (other.gameObject.layer == 12) return; // magnet
 
-            if (other.gameObject.layer == 6)
+            if (other.gameObject.layer == 8) // player target
             {
-                if (PlayerHealth.IsDead || _wasReflected) return;
+                if (PlayerHealth.Instance.IsDead || _wasReflected) return;
                 
                 if (UnityEngine.Random.Range(0f, 1f) < ThirdPersonController.DodgeProbability) {
                     if (AbilityManager.CanReflectMissiles && !_wasReflected)
@@ -131,9 +131,14 @@ namespace GGJ24
                     }
                 }
 
-                if (hit.TryGetComponent(out PlayerHealth playerHealth))
+                //if (hit.TryGetComponent(out PlayerHealth playerHealth))
+                //{
+                //    playerHealth.TakeDamage(GameParamsLoader.MissileDamage);
+                //}
+
+                if (hit.TryGetComponent(out IDamageable damageable))
                 {
-                    playerHealth.TakeDamage(GameParamsLoader.MissileDamage);
+                    damageable.TakeDamage(GameParamsLoader.MissileDamage);
                 }
             }
 

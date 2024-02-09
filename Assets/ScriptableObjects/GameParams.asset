@@ -32,6 +32,7 @@ MonoBehaviour:
   EggsCollectedToUnlockDash: 5
   EggsCollectedToUnlockDodge: 7
   EggsCollectedToUnlockReflectMissiles: 9
+  EggsCollectedToSpawnTank: 10
   ChickenKnockoutDuration: 7
   MissileDamage: 50
   DodgeChance: 1

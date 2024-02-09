@@ -8,6 +8,9 @@ namespace GGJ24
 {
     public class PlayerHealth : MonoBehaviour, IDamageable
     {
+        public static PlayerHealth Instance { get; private set; }
+
+
         public Vector3 Position { get => transform.position; private set => transform.position = value; }
         public static event Action<int> HealthChanged;
         public static event Action PlayerDeath;
@@ -25,8 +28,10 @@ namespace GGJ24
         [SerializeField] private PostProcessController _vignette;
         //[SerializeField] private MMF_Player _hitFeedback;
         private ThirdPersonController _controller;
-        private bool _isInvincible = false;
-        public static bool IsDead { get; private set; }
+        private bool _isInvincible;
+        public bool IsCritical => Health < _criticalThreshold;
+        [SerializeField, Range(0f,1f)] private float _criticalThreshold = 0.25f;
+        public bool IsDead { get; private set; }
         private Coroutine _invincibilityRoutine;
 
         public float Health
@@ -34,7 +39,7 @@ namespace GGJ24
             get { return _health; }
             set
             {
-                bool wasJustAlive = IsAlive;
+                bool wasJustAlive = _health > 0;
                 _health = Mathf.Min(InitialHealth, Mathf.Max(value, 0));
 
                 if (_health <= 0 && wasJustAlive)
@@ -42,11 +47,6 @@ namespace GGJ24
                     Die();
                 }
             }
-        }
-
-        public bool IsAlive
-        {
-            get { return _health > 0; }
         }
 
         [SerializeField] private float _health;
@@ -62,7 +62,18 @@ namespace GGJ24
 
         protected virtual void Awake()
         {
+
+            if (Instance != null)
+            {
+                Debug.LogWarning("Found more than one Spawner Instance");
+            }
+            else
+            {
+                Instance = this;
+            }
+
             IsDead = false;
+            _isInvincible = false;
         }
 
         private void Start()
@@ -107,7 +118,7 @@ namespace GGJ24
             if (Health > 0)
             {
                 _hitRoutine ??= StartCoroutine(HitRoutine());
-                if (Health / InitialHealth > 0.33f) _vignette.SetVignetteIntensity(0f);
+                if (Health / InitialHealth > _criticalThreshold) _vignette.SetVignetteIntensity(0f);
                 else _vignette.SetVignetteIntensity(Mathf.Lerp(0f, 0.5f, 1 - Health / InitialHealth));
             }
         }

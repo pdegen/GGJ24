@@ -6,24 +6,24 @@ namespace GGJ24
 {
     public class Shooting : MonoBehaviour
     {
-        public bool IsShooting { get; private set; } = false;
         public bool IsHostile { get; set; } = false;
         public bool CanShoot { get; set; } = true;
 
         [SerializeField] private GameObject _bulletPrefab;
-        [SerializeField] private float _bulletSpeed = 200f;
+        [SerializeField] private float _bulletSpeed = 10f;
         [SerializeField] private float _cooldown = 2f;
         [SerializeField] private float _randomShootPeriod = 5f;
         [SerializeField, Range(0f, 1f)] private float _randomShootProbability = 0.1f;
+        [SerializeField] private Transform _firepoint;
 
         private Vector3 _firedirection;
         private float _cooldownDeltaTime = 0f;
-        private Chicken _chicken;
+        private AgentMovement _movement;
 
         private void Start()
         {
             InvokeRepeating(nameof(RandomShoot), 2.0f, _randomShootPeriod);
-            _chicken = GetComponentInParent<Chicken>();
+            _movement = GetComponentInParent<AgentMovement>();
         }
 
         private void OnEnable()
@@ -43,10 +43,10 @@ namespace GGJ24
                 return;
             }
 
-            if (_cooldownDeltaTime > _cooldown && CanShoot && !IsShooting)
+            if (_cooldownDeltaTime > _cooldown && CanShoot)
             {
                 Shoot();
-                _chicken.Recoil();
+                _movement.Recoil();
                 _cooldownDeltaTime = 0;
             }
             _cooldownDeltaTime += Time.deltaTime;
@@ -66,9 +66,9 @@ namespace GGJ24
 
         protected virtual void Shoot()
         {
-            GameObject bullet = Instantiate(_bulletPrefab, transform.position, transform.rotation);
-            bullet.GetComponent<Rigidbody>().velocity = _bulletSpeed * transform.forward;
-            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ShootSFX, transform.position);
+            GameObject bullet = Instantiate(_bulletPrefab, _firepoint.position, _firepoint.rotation);
+            bullet.GetComponent<Rigidbody>().velocity = _bulletSpeed * _firepoint.forward;
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.ShootSFX, _firepoint.position);
         }
 
         public void CommenceHostilities()

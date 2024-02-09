@@ -49,7 +49,12 @@ namespace GGJ24
 
             GameObject prefab;
 
-            if (CollectedEggs > GameParamsLoader.MovingEggSpawnMinEggCollected && UnityEngine.Random.Range(0f,1f) < GameParamsLoader.MovingEggSpawnChance)
+            if (CollectedEggs > GameParamsLoader.GoldenEggSpawnMinEggCollected && !GoldenEgg.GoldenEggExists 
+                && PlayerHealth.Instance.IsCritical && UnityEngine.Random.Range(0f, 1f) < GameParamsLoader.GoldenEggSpawnChance)
+            {
+                prefab = _goldenEggPrefab;
+            }
+            else if (CollectedEggs > GameParamsLoader.MovingEggSpawnMinEggCollected && UnityEngine.Random.Range(0f,1f) < GameParamsLoader.MovingEggSpawnChance)
             {
                 prefab = _movingEggPrefab;
             }

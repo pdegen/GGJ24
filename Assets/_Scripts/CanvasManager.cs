@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 using System;
@@ -200,7 +199,7 @@ namespace GGJ24
             _gameOverPanel.SetActive(true);
             _eggsCollected.gameObject.SetActive(false);
             _endGameText.text = (EggManager.CollectedEggs > GameManager.ActiveOldHighScore) || (EggManager.CollectedEggs > 0 && GameManager.ActiveOldHighScore == 0) ? "NEW HIGH SCORE!" : "GAME OVER!";
-            _scoreText.text = "EGGS: " + EggManager.CollectedEggs.ToString() + "\nPREVIOUS HIGH SCORE: " + GameManager.ActiveOldHighScore + $"\nDifficulty: ({GameManager.PrintDifficulty()})";
+            _scoreText.text = "EGGS: " + EggManager.CollectedEggs.ToString() + "\nPREVIOUS HIGH SCORE: " + GameManager.ActiveOldHighScore + $"\nDifficulty: {GameManager.PrintDifficulty()}";
         }
 
         public void TogglePauseScreen()

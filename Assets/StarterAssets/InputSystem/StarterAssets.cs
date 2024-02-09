@@ -303,17 +303,6 @@ namespace GGJ24
                 },
                 {
                     ""name"": """",
-                    ""id"": ""29faa407-23b9-4f5c-8a08-ec5690303b0d"",
-                    ""path"": ""<Pointer>/press"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardMouse;Gamepad"",
-                    ""action"": ""Interact"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""e029309b-4357-4e2b-a18b-051eef886c7b"",
                     ""path"": ""<Keyboard>/p"",
                     ""interactions"": """",

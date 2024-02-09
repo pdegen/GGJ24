@@ -179,6 +179,12 @@ namespace StarterAssets
             _canMove = true;
              _canJump = true;
             _isDead = false;
+            IsDancing = false;
+            _danceTimeoutTimer = 0;
+            _danceTimeStamp = 0;
+            _lastDanceIndex = 0;
+            _dancePercentage = 0;
+            _dancePercentageOffset = 0f;
             _dashTimerIndicator.SetActive(false);
             _danceTimerIndicator.SetActive(false);
             _danceTimeoutTimer = _danceTimeout;
@@ -205,14 +211,14 @@ namespace StarterAssets
         [SerializeField] private float _danceDuration;
         [SerializeField] private GameObject _danceTimerIndicator;
         [SerializeField] private Material _danceTimerMaterial;
-        public static bool IsDancing { get; private set; } = false;
+        [SerializeField] private float _minDanceTime = 3f;
+        public static bool IsDancing { get; private set; }
         private float _danceTimer;
-        private float _danceTimeoutTimer = 0;
-        private float _danceTimeStamp = 0;
-        private float _minDanceTime = 3f;
-        private int _lastDanceIndex = 0;
-        private float _dancePercentage = 0;
-        private float _dancePercentageOffset = 0f;
+        private float _danceTimeoutTimer;
+        private float _danceTimeStamp;
+        private int _lastDanceIndex;
+        private float _dancePercentage;
+        private float _dancePercentageOffset;
         private void Dance(InputAction.CallbackContext context)
         {
             if (!Grounded || !_canMove || IsDancing || transform.position.y < GameParamsLoader.WaterLevel || !AbilityManager.CanDance || _danceTimeoutTimer < _danceTimeout) return;
@@ -222,7 +228,6 @@ namespace StarterAssets
             IsDancing = true;
 
             _lastDanceIndex = (_lastDanceIndex + 1) % 4; // remember to update when adding new animations...
-
             if (AbilityManager.CanReflectMissiles) _lastDanceIndex = 1; // flair index
             else if (_lastDanceIndex == 1) _lastDanceIndex++;
 
@@ -277,12 +282,14 @@ namespace StarterAssets
         private Coroutine _cancelDanceRoutine = null;
         private IEnumerator CancelDance()
         {
+
+            //Debug.Log(_dancePercentage + " " + _input.move.sqrMagnitude);
             if (!IsDancing || _danceTimer < _minDanceTime) yield break;
 
             float exitDuration = 0f;
 
             _animator.SetTrigger(_animIDCancelDance);
-            if (AbilityManager.CanReflectMissiles) exitDuration += 2.4f; // flair exit animation
+            if (AbilityManager.CanReflectMissiles) exitDuration += 2.6f; // flair exit animation
 
             yield return new WaitForSeconds(exitDuration);
 
@@ -295,6 +302,7 @@ namespace StarterAssets
             _disableMoveRoutine = null;
             _canMove = true;
             _cancelDanceRoutine = null;
+            _input.jump = false;
         }
         #endregion
 

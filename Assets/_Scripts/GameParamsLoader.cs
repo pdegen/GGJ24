@@ -29,6 +29,7 @@ namespace GGJ24
         public static int EggsCollectedToUnlockDash { get; private set; }
         public static int EggsCollectedToUnlockDoubleJump { get; private set; }
         public static int EggsCollectedToUnlockReflectMissiles { get; private set; }
+        public static int EggsCollectedToSpawnTank { get; private set; }
         public static float EasyMultiplier { get; private set; }
         public static float HardMultiplier { get; private set; }
         public static float CurrentMultiplier { get; private set; }
@@ -73,6 +74,7 @@ namespace GGJ24
             EggsCollectedToUnlockDoubleJump = _params.EggsCollectedToUnlockDoubleJump;
             EggsCollectedToUnlockDash = _params.EggsCollectedToUnlockDash;
             EggsCollectedToUnlockReflectMissiles = _params.EggsCollectedToUnlockReflectMissiles;
+            EggsCollectedToSpawnTank = _params.EggsCollectedToSpawnTank;
         }
 
         private void Start()

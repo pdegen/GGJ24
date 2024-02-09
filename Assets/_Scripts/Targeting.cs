@@ -4,9 +4,9 @@ using System.Collections;
 
 namespace GGJ24
 {
-    public class Bazooka : MonoBehaviour
+    public class Targeting : MonoBehaviour
     {
-        public Transform Target;
+        public Transform Target { get; set; }
 
         [SerializeField] private GameObject _firePoint;
         [SerializeField] private LayerMask _targetLayer;
@@ -16,25 +16,21 @@ namespace GGJ24
         [SerializeField] private float _coneAngle = 45f;
         [SerializeField] private float _coneRangeSquared = 400f;
 
-
-        [Tooltip("Wait this many seconds after target lost until return to neutral, also alert duration")]
-        [SerializeField] private float _targetLostDelay = 5f;
-        private float _alertTimer = 0f;
-
+        public bool TargetingEnabled { get; set; } = true;
         private float _coneRange;
         private bool _targetIsInCone = false;
         private bool _targetAcquried = false;
         private float _minHostileDuration = 3f;
         private float _hostileTimer = 0f;
-        private bool _isHostile = false;
+        private bool _isHostile { get => State == TargetingState.Hostile; }
 
-        [SerializeField] private BazookaState _state;
-        public BazookaState State { get => _state; private set => _state = value; }
-        private Shooting _shooting;
+        [SerializeField] private TargetingState _state;
+        public TargetingState State { get => _state; private set => _state = value; }
+        public Shooting Shooting;
 
         public event Action TargetStateChanged;
 
-        public enum BazookaState
+        public enum TargetingState
         {
             Neutral = 0,
             Hostile = 1
@@ -45,21 +41,24 @@ namespace GGJ24
             _coneRange = Mathf.Sqrt(_coneRangeSquared);
         }
 
+        private void OnEnable()
+        {
+            Target = GameObject.FindWithTag("PlayerTarget").transform;
+        }   
+
         private void Start()
         {
-            _shooting = _firePoint.GetComponent<Shooting>();
-            _shooting.IsHostile = false;
-            Target = GameObject.FindWithTag("PlayerTarget").transform;
+            Shooting.IsHostile = false;
         }
 
         void Update()
         {
+            if (!TargetingEnabled) return;
             HandleTargeting();
         }
 
         private void HandleTargeting()
         {
-            _isHostile = State == BazookaState.Hostile;
             _targetIsInCone = IsInCone();
             _targetAcquried = IsInCone() && !IsObstructed();
 
@@ -78,16 +77,16 @@ namespace GGJ24
 
         private void ChangeToHostile()
         {
-            State = BazookaState.Hostile;
+            State = TargetingState.Hostile;
             TargetStateChanged?.Invoke();
-            if (!_shooting.IsHostile) _shooting.CommenceHostilities();
+            if (!Shooting.IsHostile) Shooting.CommenceHostilities();
         }
 
         private void RetrunToNeutral(float delayMultiplicator = 1f)
         {
-            State = BazookaState.Neutral;
+            State = TargetingState.Neutral;
             TargetStateChanged?.Invoke();
-            _shooting.IsHostile = false;
+            Shooting.IsHostile = false;
             _hostileTimer = 0f;
             //Debug.Log("return to neutral");
         }
@@ -124,8 +123,11 @@ namespace GGJ24
             DrawConeGizmo();
 
             // Draw targeting gizmo
-            Gizmos.color = _isHostile ? Color.red : _targetAcquried ? Color.cyan : Color.green;
-            Gizmos.DrawLine(_firePoint.transform.position, Target.position);
+            if (Target != null)
+            {
+                Gizmos.color = _isHostile ? Color.red : _targetAcquried ? Color.cyan : Color.green;
+                Gizmos.DrawLine(_firePoint.transform.position, Target.position);
+            }
         }
 
         void DrawConeGizmo()

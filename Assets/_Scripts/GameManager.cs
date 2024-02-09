@@ -32,8 +32,9 @@ namespace GGJ24
         public float RageMultiplier = 1.01f;
 
         private float _remainingTime = 0;
-        public float RemainingTime { 
-            get { return _remainingTime; } 
+        public float RemainingTime
+        {
+            get { return _remainingTime; }
             set { _remainingTime = _remainingTime < 0 ? 0 : value; }
         }
 
@@ -41,6 +42,7 @@ namespace GGJ24
         private bool _isPaused;
         private bool _canPause;
         private static bool _gameHasEnded;
+        private bool _startTimer;
 
 
         public static Difficulty CurrentDifficulty { get; private set; }
@@ -55,8 +57,8 @@ namespace GGJ24
         {
             switch (CurrentDifficulty)
             {
-                case Difficulty.EASY: return "ANGRY"; break;
-                case Difficulty.NORMAL: return "FURIOUS"; break;
+                case Difficulty.EASY: return "ANGRY";
+                case Difficulty.NORMAL: return "FURIOUS";
                 default: return "SATANIC";
             }
 
@@ -72,6 +74,7 @@ namespace GGJ24
             _isPaused = false;
             _canPause = false;
             _gameHasEnded = false;
+            _startTimer = false;
             _inputActions = new StarterAssetsInputActions();
             _inputActions.Player.Enable();
         }
@@ -102,14 +105,22 @@ namespace GGJ24
             AudioManager.Instance.StartAmbiance();
         }
 
+        private void StartTimer()
+        {
+            _startTimer = true;
+            Egg.CollectedEgg -= StartTimer;
+        }
+
         private void OnEnable()
         {
             _inputActions.Player.EscaeAction.performed += TogglePause;
+            Egg.CollectedEgg += StartTimer; // note: unsubscribed in StartTimer()
         }
 
         private void OnDisable()
         {
             _inputActions.Player.EscaeAction.performed -= TogglePause;
+            Egg.CollectedEgg -= StartTimer;
         }
 
         private void Update()
@@ -121,7 +132,8 @@ namespace GGJ24
                 EndGame();
                 return;
             }
-            RemainingTime -= Time.deltaTime;
+            if (_startTimer)
+                RemainingTime -= Time.deltaTime;
         }
 
         public static float ActiveHighScore { get; private set; } = 0;
