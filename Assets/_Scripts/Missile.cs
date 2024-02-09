@@ -49,7 +49,7 @@ namespace GGJ24
                 if (PlayerHealth.Instance.IsDead || _wasReflected) return;
                 
                 if (UnityEngine.Random.Range(0f, 1f) < ThirdPersonController.DodgeProbability) {
-                    if (AbilityManager.CanReflectMissiles && !_wasReflected)
+                    if (AbilityManager.Reflect.IsUnlocked && !_wasReflected)
                     {
                         _body.velocity *= -1;
                         transform.Rotate(new Vector3(0, 180, 0));

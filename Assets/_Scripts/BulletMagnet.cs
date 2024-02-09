@@ -24,7 +24,7 @@ namespace GGJ24
 
         void FixedUpdate()
         {
-            if (AbilityManager.CanReflectMissiles && ThirdPersonController.IsDancing) { return; }
+            if (AbilityManager.Reflect.IsUnlocked && ThirdPersonController.IsDancing) { return; }
 
             Collider[] colliders = Physics.OverlapSphere(transform.position, _attractRadius, _attractLayer);
             foreach (Collider col in colliders)

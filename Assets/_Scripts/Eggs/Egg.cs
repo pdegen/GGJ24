@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using DamageNumbersPro;
+using Unity.VisualScripting;
 
 namespace GGJ24
 {
@@ -15,10 +16,31 @@ namespace GGJ24
         protected float _timeBonus;
         [SerializeField] protected GameObject _collectedEffect;
 
+        [SerializeField] private LayerMask _defaultLayer;
+        [SerializeField] private LayerMask _XRayLayer;
+        private GameObject _meshObject;
+
+        private void Awake()
+        {
+            _meshObject = gameObject.GetComponentInChildren<MeshRenderer>().gameObject;
+        }
+
         protected virtual void Start()
         {
             _timeBonus = GameParamsLoader.BasicEggTimeBonus;
             InitEggMovement();
+
+            // ensure AbilityManager is initialized by at least waiting until first egg collected
+            //if (EggManager.CollectedEggs > 1 && AbilityManager.XRay.IsUnlocked) StartCoroutine(XRayRoutine(2f));
+        }
+
+        private IEnumerator XRayRoutine(float duration)
+        {
+            Debug.Log("st " + _meshObject.layer);
+            _meshObject.layer = _XRayLayer;
+            yield return new WaitForSeconds(duration);
+            Debug.Log("end " + _meshObject.layer);
+            _meshObject.layer = _defaultLayer;
         }
 
         protected virtual void InitEggMovement()

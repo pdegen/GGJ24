@@ -1,24 +1,56 @@
 using GGJ24;
+using MoreMountains.Tools;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class AbilityManager : MonoBehaviour
 {
-    public static Action<string> AbilityUnlocked;
+    public static Action<Ability> AbilityUnlocked;
 
-    public static bool CanDance;
-    public static bool CanDash;
-    public static bool CanDoubleJump;
-    public static bool CanReflectMissiles;
-
-
-    private void Awake()
+    public class Ability
     {
-        CanDance = false;
-        CanDash = false;
-        CanDoubleJump = false;
-        CanReflectMissiles = false;
+        public string Name { get; }
+        public bool IsUnlocked { get; private set; }
+        public int UnlockThreshold { get; private set; }
+
+        public Ability(string name, bool isUnlocked, int unlockThreshold)
+        {
+            Name = name;
+            IsUnlocked = isUnlocked;
+            UnlockThreshold = unlockThreshold;
+        }
+
+        public void CheckAndUnlock(int eggs)
+        {
+            if (eggs == UnlockThreshold)
+            {
+                IsUnlocked = true;
+                AbilityUnlocked?.Invoke(this);
+            }
+        }
+    }
+
+    public static Ability DoubleJump;
+    public static Ability Dash;
+    public static Ability Dodge;
+    public static Ability Reflect;
+    public static Ability XRay;
+
+    private static List<Ability> _alllAbilities;
+
+    private void Start()
+    {
+        // must do in start to guarantee GameParamsLoader is fully initialized
+        DoubleJump = new("DOUBLE JUMP", false, GameParamsLoader.EggsCollectedToUnlockDoubleJump);
+        Dash = new("DASH", false, GameParamsLoader.EggsCollectedToUnlockDash);
+        Dodge = new("DODGE", false, GameParamsLoader.EggsCollectedToUnlockDodge);
+        Reflect = new("REFLECT", false, GameParamsLoader.EggsCollectedToUnlockReflectMissiles);
+        XRay = new("XRAY", false, GameParamsLoader.EggsCollectedToUnlockXRay);
+
+        _alllAbilities = new(typeof(AbilityManager).GetStaticNestedFieldsOfType<Ability>());
+        Debug.Log($"Collected {_alllAbilities.Count} abilities");
     }
 
     private void OnEnable()
@@ -33,36 +65,18 @@ public class AbilityManager : MonoBehaviour
 
     public static void UnlockAll()
     {
-        CanDance = true;
-        CanDash = true;
-        CanDoubleJump = true;
-        CanReflectMissiles = true;
+        foreach (Ability ability in _alllAbilities)
+        {
+            ability.CheckAndUnlock(ability.UnlockThreshold);
+        }
     }
 
     private void UnlockAbilities()
     {
-        if (EggManager.CollectedEggs == GameParamsLoader.EggsCollectedToUnlockDodge)
+        foreach (Ability ability in _alllAbilities)
         {
-            AbilityUnlocked?.Invoke("DODGE UNLOCKED!");
-            CanDance = true;
-        }
-
-        if (EggManager.CollectedEggs == GameParamsLoader.EggsCollectedToUnlockDoubleJump)
-        {
-            AbilityUnlocked?.Invoke("DOUBLE JUMP UNLOCKED!");
-            CanDoubleJump = true;
-        }
-
-        if (EggManager.CollectedEggs == GameParamsLoader.EggsCollectedToUnlockDash)
-        {
-            AbilityUnlocked?.Invoke("DASH UNLOCKED!");
-            CanDash = true;
-        }
-
-        if (EggManager.CollectedEggs == GameParamsLoader.EggsCollectedToUnlockReflectMissiles)
-        {
-            AbilityUnlocked?.Invoke("REFLECT UNLOCKED!");
-            CanReflectMissiles = true;
+            if (!ability.IsUnlocked)
+                ability.CheckAndUnlock(EggManager.CollectedEggs);
         }
     }
 }

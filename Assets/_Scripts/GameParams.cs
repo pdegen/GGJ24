@@ -41,6 +41,7 @@ namespace GGJ24
         public int EggsCollectedToUnlockDash;
         public int EggsCollectedToUnlockDodge;
         public int EggsCollectedToUnlockReflectMissiles;
+        public int EggsCollectedToUnlockXRay;
         public int EggsCollectedToSpawnTank;
 
         [Tooltip("How long chickens are incapacitated after firing missile")]

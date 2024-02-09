@@ -221,14 +221,14 @@ namespace StarterAssets
         private float _dancePercentageOffset;
         private void Dance(InputAction.CallbackContext context)
         {
-            if (!Grounded || !_canMove || IsDancing || transform.position.y < GameParamsLoader.WaterLevel || !AbilityManager.CanDance || _danceTimeoutTimer < _danceTimeout) return;
+            if (!Grounded || !_canMove || IsDancing || transform.position.y < GameParamsLoader.WaterLevel || !AbilityManager.Dodge.IsUnlocked || _danceTimeoutTimer < _danceTimeout) return;
             // TO DO: CHANGE CINEMACHINE FOLLOW TARGET
             _disableMoveRoutine = StartCoroutine(TemporarilyDisableMove(_minDanceTime));
             CurrentSpeed = 0;
             IsDancing = true;
 
             _lastDanceIndex = (_lastDanceIndex + 1) % 4; // remember to update when adding new animations...
-            if (AbilityManager.CanReflectMissiles) _lastDanceIndex = 1; // flair index
+            if (AbilityManager.Reflect.IsUnlocked) _lastDanceIndex = 1; // flair index
             else if (_lastDanceIndex == 1) _lastDanceIndex++;
 
             _animator.SetInteger(_animIDDanceIndex, _lastDanceIndex);
@@ -289,7 +289,7 @@ namespace StarterAssets
             float exitDuration = 0f;
 
             _animator.SetTrigger(_animIDCancelDance);
-            if (AbilityManager.CanReflectMissiles) exitDuration += 2.6f; // flair exit animation
+            if (AbilityManager.Reflect.IsUnlocked) exitDuration += 2.6f; // flair exit animation
 
             yield return new WaitForSeconds(exitDuration);
 
@@ -497,7 +497,7 @@ namespace StarterAssets
                     _jumpTimeoutDelta -= Time.deltaTime;
                 }
             }
-            else if (_canJump && _input.jump && AbilityManager.CanDoubleJump)
+            else if (_canJump && _input.jump && AbilityManager.DoubleJump.IsUnlocked)
             {
                 _animator.SetTrigger(_animIDFrontFlip);
                 Jump(1.5f);
@@ -566,7 +566,7 @@ namespace StarterAssets
 
         private void HandleDashing()
         {
-            if (!AbilityManager.CanDash)
+            if (!AbilityManager.Dash.IsUnlocked)
             {
                 _input.dash = false;
                 return;

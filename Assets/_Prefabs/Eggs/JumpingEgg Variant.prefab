@@ -8,6 +8,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1039980214731293001, guid: 33099ffe1df7e1044a341c029b32e2da,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 28912b8a53bae5d4ba14b2623597b30e, type: 2}
     - target: {fileID: 1992764064169175627, guid: 33099ffe1df7e1044a341c029b32e2da,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -75,7 +80,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5989354468080146817, guid: 33099ffe1df7e1044a341c029b32e2da,
         type: 3}
-      insertIndex: 3
+      insertIndex: -1
       addedObject: {fileID: 6043621925370701745}
   m_SourcePrefab: {fileID: 100100000, guid: 33099ffe1df7e1044a341c029b32e2da, type: 3}
 --- !u!1 &4517854039928831965 stripped

@@ -139,9 +139,9 @@ namespace GGJ24
             timeNumber.SetAnchoredPosition(_timerText.rectTransform, new Vector2(0, 0));
         }
 
-        private void OnAbilityUnlocked(string text)
+        private void OnAbilityUnlocked(AbilityManager.Ability ability)
         {
-            StartCoroutine(ShowNotificationRoutine(text));
+            StartCoroutine(ShowNotificationRoutine($"{ability.Name} UNLOCKED!"));
         }
 
         private void OnTimeScaleChanged()
@@ -170,13 +170,13 @@ namespace GGJ24
             {
                 case "DODGE UNLOCKED!":
                     _dodgeControlOverlay.SetActive(true);
-                    _dodgeControlOverlay.gameObject.GetComponentInChildren<TMP_Text>(true).text = "DODGE";
+                    _dodgeControlOverlay.GetComponentInChildren<TMP_Text>(true).text = "DODGE";
                     break;
                 case "DASH UNLOCKED!":
                     _dashControlOverlay.SetActive(true);
                     break;
                 case "REFLECT UNLOCKED!":
-                    _dodgeControlOverlay.gameObject.GetComponentInChildren<TMP_Text>(true).text = "REFLECT";
+                    _dodgeControlOverlay.GetComponentInChildren<TMP_Text>(true).text = "REFLECT";
                     break;
             }
             _unlockedNotificationText.GetComponent<TMP_Text>().alpha = 1f;
