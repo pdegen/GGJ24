@@ -19,7 +19,7 @@ namespace GGJ24
         private Targeting _targeting;
         private bool _isActive;
         [SerializeField] private GameObject _canvas;
-        private Slider _healthSlider;
+        [SerializeField] private SliderWithDelay _healthSlider;
 
         [SerializeField] private float _maxHealth;
         [SerializeField] private GameObject _deathEffect;
@@ -38,9 +38,7 @@ namespace GGJ24
             _isActive = false;
             _canvas.SetActive(false);
             _currentHealth = _maxHealth;
-            _healthSlider = _canvas.GetComponentInChildren<Slider>();
-            _healthSlider.maxValue = _maxHealth;
-            _healthSlider.value = _maxHealth;
+            _healthSlider.Init(_maxHealth, _maxHealth);
         }
 
         private void Start()
@@ -95,7 +93,7 @@ namespace GGJ24
 
             _currentHealth -= deltaHealth;
             _currentHealth = Mathf.Max(0, _currentHealth);
-            DOTween.To(() => _healthSlider.value, x => _healthSlider.value = x, _currentHealth, 1);
+            _healthSlider.Value = _currentHealth;
             if (_currentHealth <= 0)
             {
                 Destroy(gameObject);

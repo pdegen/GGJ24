@@ -22,11 +22,8 @@ namespace GGJ24
         [field: SerializeField] public float LevelRadius { get; set; } = 60f;
 
         private static int _easyHighScore { get; set; } = 0;
-        private static int _oldEasyHighScore { get; set; } = 0;
         private static int _normalHighScore { get; set; } = 0;
-        private static int _oldNormalHighScore { get; set; } = 0;
         private static int _hardHighScore { get; set; } = 0;
-        private static int _oldHardHighScore { get; set; } = 0;
 
         [Header("Multiply speed, random shoot, bullet magnet by this factor for every egg collected")]
         public float RageMultiplier = 1.01f;

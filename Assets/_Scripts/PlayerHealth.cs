@@ -34,13 +34,17 @@ namespace GGJ24
         public bool IsDead { get; private set; }
         private Coroutine _invincibilityRoutine;
 
+        [SerializeField, Range(0f, 1f)] private float _damageReductionMultiplier = 0.3f;
+        private float _currentDamageModifier = 1f;
+
+
         public float Health
         {
             get { return _health; }
             set
             {
                 bool wasJustAlive = _health > 0;
-                _health = Mathf.Min(InitialHealth, Mathf.Max(value, 0));
+                _health = Mathf.Min(MaxHealth, Mathf.Max(value, 0));
 
                 if (_health <= 0 && wasJustAlive)
                 {
@@ -50,13 +54,13 @@ namespace GGJ24
         }
 
         [SerializeField] private float _health;
-        [SerializeField, Range(0, 1000)] private float _initialHealth;
-        public float InitialHealth
+        [SerializeField, Range(0, 1000)] private float _maxHealth;
+        public float MaxHealth
         {
-            get { return _initialHealth; }
+            get { return _maxHealth; }
             set
             {
-                _initialHealth = Mathf.Max(value, 0);
+                _maxHealth = Mathf.Max(value, 0);
             }
         }
 
@@ -84,20 +88,23 @@ namespace GGJ24
                 AssignAnimationIDs();
             }
             _hasController = TryGetComponent(out _controller);
-            _health = _initialHealth - GameParamsLoader.GoldenEggHealAmount;
+            Debug.Log("Hard-coded initial health penalty");
+            _health = _maxHealth - GameParamsLoader.GoldenEggHealAmount;
             //_hasHitFeedback = _hitFeedback != null;
         }
 
         private void OnEnable()
         {
-            ThirdPersonController.TriggerIFRame += TriggerInvincibility;
+            ThirdPersonController.TriggerIFRame += TriggerDamageReduction;
+            ThirdPersonController.Dancing += ActivateDamageReduction;
             GameManager.GameEnded += Die;
             GoldenEgg.HealPlayer += Heal;
         }
 
         private void OnDisable()
         {
-            ThirdPersonController.TriggerIFRame -= TriggerInvincibility;
+            ThirdPersonController.TriggerIFRame -= TriggerDamageReduction;
+            ThirdPersonController.Dancing -= ActivateDamageReduction;
             GameManager.GameEnded -= Die;
             GoldenEgg.HealPlayer -= Heal;
         }
@@ -111,19 +118,24 @@ namespace GGJ24
         public virtual void TakeDamage(float deltaHealth)
         {
             if (_isInvincible || IsDead) return;
-
+            deltaHealth *= _currentDamageModifier;
             Health -= deltaHealth;
             HealthChanged?.Invoke((int)Health);
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.HitSFX, transform.position);
             if (Health > 0)
             {
                 _hitRoutine ??= StartCoroutine(HitRoutine());
-                if (Health / InitialHealth > _criticalThreshold) _vignette.SetVignetteIntensity(0f);
-                else _vignette.SetVignetteIntensity(Mathf.Lerp(0f, 0.5f, 1 - Health / InitialHealth));
+                if (Health / MaxHealth > _criticalThreshold) _vignette.SetVignetteIntensity(0f);
+                else _vignette.SetVignetteIntensity(Mathf.Lerp(0f, 0.5f, 1 - Health / MaxHealth));
             }
         }
 
-        public void TriggerInvincibility(float duration)
+        public void ActivateDamageReduction(bool activate)
+        {
+            _currentDamageModifier = activate ? _damageReductionMultiplier : 1f;
+        }
+
+        public void TriggerDamageReduction(float duration)
         {
             if (_invincibilityRoutine != null) return;
             _invincibilityRoutine = StartCoroutine(InvincibilityRoutine(duration));

@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Active: 1
   settings:
     passTag: Opaque
-    Event: 300
+    Event: 200
     filterSettings:
       RenderQueueType: 0
       LayerMask:

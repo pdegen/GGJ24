@@ -122,7 +122,6 @@ namespace StarterAssets
 
       
         public static event Action<float> TriggerIFRame;
-        public static event Action<bool> Dancing;
 
         [Header("Custom")]
         private bool _hasAnimator;
@@ -206,6 +205,8 @@ namespace StarterAssets
         }
 
         #region Dance
+        public static event Action<bool> Dancing;
+
         [Header("Dance")]
         [SerializeField] private float _danceTimeout;
         [SerializeField] private float _danceDuration;
@@ -283,12 +284,13 @@ namespace StarterAssets
         private IEnumerator CancelDance()
         {
 
-            //Debug.Log(_dancePercentage + " " + _input.move.sqrMagnitude);
             if (!IsDancing || _danceTimer < _minDanceTime) yield break;
 
             float exitDuration = 0f;
 
             _animator.SetTrigger(_animIDCancelDance);
+            Debug.Log(_dancePercentage + " " + _input.move.sqrMagnitude);
+
             if (AbilityManager.Reflect.IsUnlocked) exitDuration += 2.6f; // flair exit animation
 
             yield return new WaitForSeconds(exitDuration);

@@ -17,7 +17,7 @@ namespace GGJ24
         public static CanvasManager Instance { get; private set; }
 
         [Header("Ingame UI")]
-        [SerializeField] private Slider _healthSlider;
+        [SerializeField] private SliderWithDelay _healthSlider;
         [SerializeField] private Transform _eggsCollected;
         [SerializeField] private GameObject _controlOverlay;
         [SerializeField] private GameObject _dodgeControlOverlay;
@@ -63,9 +63,6 @@ namespace GGJ24
         {
             UpdateEggsText();
 
-            _healthSlider.maxValue = _health.InitialHealth;
-            _healthSlider.minValue = 0;
-            _healthSlider.value = _health.InitialHealth;
 
             _inputActions = new StarterAssetsInputActions();
             _inputActions.Player.Enable();
@@ -75,7 +72,7 @@ namespace GGJ24
             _buttonBaseColor = _resumeButton.GetComponent<Image>().color;
             _buttonBaseScale = _resumeButton.transform.localScale;
             Debug.LogWarning("Hard-coded health bar value");
-            UpdateHealth(800);
+            _healthSlider.Init(800, _health.MaxHealth);
 
             Debug.LogWarning("Setting time scale 0 in canvas manager start");
             Time.timeScale = 0f;
@@ -228,14 +225,13 @@ namespace GGJ24
 
         public void UpdateHealth(int newValue)
         {
-            if (newValue > _healthSlider.value)
+            if (newValue > _healthSlider.Value)
             {
                 //DamageNumber healNumber = _healNumber.Spawn(Vector3.zero, newValue - _healthSlider.value);
                 //healNumber.SetAnchoredPosition(_healthSlider.gameObject.GetComponent<RectTransform>(), new Vector2(0, 0));
                 _healthSlider.transform.DOPunchScale(new Vector2(1.05f, 1.05f), 0.6f).SetEase(Ease.InOutSine);
             }
-
-            DOTween.To(() => _healthSlider.value, x => _healthSlider.value = x, newValue, 1);
+            _healthSlider.Value = newValue;
         }
 
         private void UpdateEggsText()
