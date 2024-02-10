@@ -160,7 +160,7 @@ namespace GGJ24
             }
         }
 
-        private IEnumerator ShowNotificationRoutine(string text)
+        public IEnumerator ShowNotificationRoutine(string text)
         {
             // TO DO: refactor this
             switch (text)
@@ -179,12 +179,11 @@ namespace GGJ24
             _unlockedNotificationText.GetComponent<TMP_Text>().alpha = 1f;
             _unlockedNotificationText.gameObject.SetActive(true);
             _unlockedNotificationText.text = text;
-            Vector3 priorScale = _unlockedNotificationText.transform.localScale;
-            _unlockedNotificationText.transform.DOScale(1.7f * priorScale, 0.4f);
+            _unlockedNotificationText.transform.DOScale(1.7f * Vector3.one, 0.4f);
             yield return new WaitForSeconds(2f);
             _unlockedNotificationText.GetComponent<TMP_Text>().DOFade(0, 0.3f);
             yield return new WaitForSeconds(0.3f);
-            _unlockedNotificationText.transform.localScale = priorScale;
+            _unlockedNotificationText.transform.localScale = Vector3.one;
         }
 
         public void ToggleGameOverScreen()
@@ -225,18 +224,12 @@ namespace GGJ24
 
         public void UpdateHealth(int newValue)
         {
-            if (newValue > _healthSlider.Value)
-            {
-                //DamageNumber healNumber = _healNumber.Spawn(Vector3.zero, newValue - _healthSlider.value);
-                //healNumber.SetAnchoredPosition(_healthSlider.gameObject.GetComponent<RectTransform>(), new Vector2(0, 0));
-                _healthSlider.transform.DOPunchScale(new Vector2(1.05f, 1.05f), 0.6f).SetEase(Ease.InOutSine);
-            }
             _healthSlider.Value = newValue;
         }
 
         private void UpdateEggsText()
         {
-            if (EggManager.CollectedEggs > 0)
+            if (EggManager.CollectedEggs > 0 && !DOTween.IsTweening(_eggsCollected))
             {
                 _eggsCollected.DOPunchScale(new Vector2(1.1f,1.1f), 0.6f).SetEase(Ease.InOutSine);
             }

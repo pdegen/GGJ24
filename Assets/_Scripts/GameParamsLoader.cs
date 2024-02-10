@@ -25,11 +25,13 @@ namespace GGJ24
         public static float GoldenEggLifetime { get; private set; }
         public static float GoldenEggHealAmount { get; private set; }
         public static float DodgeChance { get; private set; }
+        public static float AutoHealPerSecond { get; private set; }
         public static int EggsCollectedToUnlockDodge { get; private set; }
         public static int EggsCollectedToUnlockDash { get; private set; }
         public static int EggsCollectedToUnlockDoubleJump { get; private set; }
         public static int EggsCollectedToUnlockReflectMissiles { get; private set; }
         public static int EggsCollectedToUnlockXRay { get; private set; }
+        public static int EggsCollectedToUnlockAutoHeal { get; private set; }
         public static int EggsCollectedToSpawnTank { get; private set; }
         public static float EasyMultiplier { get; private set; }
         public static float HardMultiplier { get; private set; }
@@ -62,20 +64,24 @@ namespace GGJ24
             GoldenEggLifetime = _params.GoldenEggLifetime;
             GoldenEggHealAmount = _params.GoldenEggHealAmount;
 
+            // ABILITIES
+            DodgeChance = _params.DodgeChance;
+            AutoHealPerSecond = _params.AutoHealPerSecond;
+
             // DIFFICULTY
             EasyMultiplier = _params.EasyMultiplier;
             HardMultiplier = _params.HardMultiplier;
-
-            // MISC
             StartTime = _params.StartTime;
-            DodgeChance = _params.DodgeChance;
             ChickenKnockoutDuration = _params.ChickenKnockoutDuration;
             MissileDamage = _params.MissileDamage;
+
+            // UNLOCKS
             EggsCollectedToUnlockDodge = _params.EggsCollectedToUnlockDodge;
             EggsCollectedToUnlockDoubleJump = _params.EggsCollectedToUnlockDoubleJump;
             EggsCollectedToUnlockDash = _params.EggsCollectedToUnlockDash;
             EggsCollectedToUnlockReflectMissiles = _params.EggsCollectedToUnlockReflectMissiles;
             EggsCollectedToUnlockXRay = _params.EggsCollectedToUnlockXRay;
+            EggsCollectedToUnlockAutoHeal = _params.EggsCollectedToUnlockAutoHeal;
             EggsCollectedToSpawnTank = _params.EggsCollectedToSpawnTank;
         }
 

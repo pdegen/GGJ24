@@ -87,5 +87,13 @@ namespace GGJ24
             EventInstance eventInstance = RuntimeManager.CreateInstance(eventReference);
             return eventInstance;
         }
+
+        public EventInstance CreateAttachedEventInstance(EventReference eventReference, Transform transform)
+        {
+            EventInstance eventInstance = RuntimeManager.CreateInstance(eventReference);
+            eventInstance.start(); // must start first before attaching
+            RuntimeManager.AttachInstanceToGameObject(eventInstance, transform);
+            return eventInstance;
+        }
     }
 }

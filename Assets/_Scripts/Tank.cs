@@ -38,7 +38,6 @@ namespace GGJ24
             _isActive = false;
             _canvas.SetActive(false);
             _currentHealth = _maxHealth;
-            _healthSlider.Init(_maxHealth, _maxHealth);
         }
 
         private void Start()
@@ -66,6 +65,7 @@ namespace GGJ24
         {
             if (EggManager.CollectedEggs != GameParamsLoader.EggsCollectedToSpawnTank) { return; }
             Egg.CollectedEgg -= ActivateTankWrapper;
+            StartCoroutine(CanvasManager.Instance.ShowNotificationRoutine("BOSS INCOMING"));
             StartCoroutine(ActivateTank());
         }
 
@@ -85,6 +85,7 @@ namespace GGJ24
             _isActive = true;
             _shooting.CanShoot = true;
             _canvas.SetActive(true);
+            _healthSlider.Init(_maxHealth, _maxHealth);
         }
 
         public void TakeDamage(float deltaHealth)

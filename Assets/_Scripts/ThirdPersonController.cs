@@ -33,9 +33,9 @@ namespace StarterAssets
         [Tooltip("Acceleration and deceleration")]
         public float SpeedChangeRate = 10.0f;
 
-        public AudioClip LandingAudioClip;
-        public AudioClip[] FootstepAudioClips;
-        [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
+        //public AudioClip LandingAudioClip;
+        //public AudioClip[] FootstepAudioClips;
+        //[Range(0, 1)] public float FootstepAudioVolume = 0.5f;
 
         [Space(10)]
         [Tooltip("The height the player can jump")]
@@ -289,7 +289,6 @@ namespace StarterAssets
             float exitDuration = 0f;
 
             _animator.SetTrigger(_animIDCancelDance);
-            Debug.Log(_dancePercentage + " " + _input.move.sqrMagnitude);
 
             if (AbilityManager.Reflect.IsUnlocked) exitDuration += 2.6f; // flair exit animation
 

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using DG.Tweening;
 using FMOD.Studio;
+using FMODUnity;
 
 namespace GGJ24
 {
@@ -33,11 +34,9 @@ namespace GGJ24
 
         private IEnumerator InitAudio()
         {
-            _ambientEventInstance = AudioManager.Instance.CreateEventInstance(FMODEvents.Instance.ChickenMoodSFX);
-            _ambientEventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             yield return new WaitForSeconds(Random.Range(0f,10f));
+            _ambientEventInstance = AudioManager.Instance.CreateAttachedEventInstance(FMODEvents.Instance.ChickenMoodSFX, transform);
             _ambientEventInstance.setParameterByName("Chicken Mood", 0);
-            _ambientEventInstance.start();
         }
 
         protected override void OnEnable()
@@ -60,6 +59,7 @@ namespace GGJ24
         {
             if (IsSleeping) { return; }
             base.Update();
+            //_ambientEventInstance.set3DAttributes(RuntimeUtils.To3DAttributes(transform));
         }
 
         public void WakeUpWrapper()
@@ -88,7 +88,7 @@ namespace GGJ24
 
         private void OnGameEnded()
         {
-            _ambientEventInstance.stop(STOP_MODE.IMMEDIATE);
+            _ambientEventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
 
         protected override void CommenceHostilities()

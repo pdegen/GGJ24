@@ -37,6 +37,7 @@ public class AbilityManager : MonoBehaviour
     public static Ability Dodge;
     public static Ability Reflect;
     public static Ability XRay;
+    public static Ability AutoHeal;
 
     private static List<Ability> _alllAbilities;
 
@@ -48,6 +49,7 @@ public class AbilityManager : MonoBehaviour
         Dodge = new("DODGE", false, GameParamsLoader.EggsCollectedToUnlockDodge);
         Reflect = new("REFLECT", false, GameParamsLoader.EggsCollectedToUnlockReflectMissiles);
         XRay = new("XRAY", false, GameParamsLoader.EggsCollectedToUnlockXRay);
+        AutoHeal = new("AUTO HEAL", false, GameParamsLoader.EggsCollectedToUnlockAutoHeal);
 
         _alllAbilities = new(typeof(AbilityManager).GetStaticNestedFieldsOfType<Ability>());
         Debug.Log($"Collected {_alllAbilities.Count} abilities");

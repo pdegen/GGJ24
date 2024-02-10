@@ -99,6 +99,7 @@ namespace GGJ24
             ThirdPersonController.Dancing += ActivateDamageReduction;
             GameManager.GameEnded += Die;
             GoldenEgg.HealPlayer += Heal;
+            AbilityManager.AbilityUnlocked += StartAutoHeal;
         }
 
         private void OnDisable()
@@ -107,6 +108,7 @@ namespace GGJ24
             ThirdPersonController.Dancing -= ActivateDamageReduction;
             GameManager.GameEnded -= Die;
             GoldenEgg.HealPlayer -= Heal;
+            AbilityManager.AbilityUnlocked -= StartAutoHeal;
         }
 
         protected virtual void AssignAnimationIDs()
@@ -156,6 +158,22 @@ namespace GGJ24
             if (_hasAnimator && !ThirdPersonController.IsDancing) _animator.SetTrigger(_animIDHit);
             yield return new WaitForSeconds(_hitAnimCooldown);
             _hitRoutine = null;
+        }
+
+        private void StartAutoHeal(AbilityManager.Ability ability)
+        {
+            if (ability.Name != AbilityManager.AutoHeal.Name) { return; }
+            AbilityManager.AbilityUnlocked -= StartAutoHeal;
+            StartCoroutine(AutoHealRoutine());
+        }
+
+        private IEnumerator AutoHealRoutine()
+        {
+            while(true)
+            {
+                Heal(GameParamsLoader.AutoHealPerSecond);
+                yield return new WaitForSeconds(1f);
+            }
         }
 
         public void Heal(float deltaHealth)

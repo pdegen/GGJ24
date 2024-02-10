@@ -138,7 +138,9 @@ namespace GGJ24
 
                 if (hit.TryGetComponent(out IDamageable damageable))
                 {
-                    damageable.TakeDamage(GameParamsLoader.MissileDamage);
+                    float damage = GameParamsLoader.MissileDamage;
+                    damage *= 1 - (damageable.Position - transform.position).magnitude / ExplosionRadius;
+                    damageable.TakeDamage(damage);
                 }
             }
 
