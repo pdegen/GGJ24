@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{8c63d52a-3d3a-471e-9227-34b16132be7d}">
 		<property name="name">
-			<value>Music Manager</value>
+			<value>Music Manager NORMAL</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -149,9 +149,6 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{f6ee7745-c515-42aa-98d5-7944c601a7ad}">
-		<property name="volume">
-			<value>4</value>
-		</property>
 		<relationship name="effectChain">
 			<destination>{865cacb2-e0f1-4c37-a5ab-6104649ba9c0}</destination>
 		</relationship>
@@ -509,6 +506,8 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{865cacb2-e0f1-4c37-a5ab-6104649ba9c0}">
 		<relationship name="effects">
+			<destination>{39dcc77f-3a08-4ae0-9548-b3d002185b11}</destination>
+			<destination>{48f64f74-cb14-4298-9be0-43ba8c347ec5}</destination>
 			<destination>{15f5a138-e4d6-4f7e-b376-fd656834c0d5}</destination>
 		</relationship>
 	</object>
@@ -675,6 +674,16 @@
 		<relationship name="parameter">
 			<destination>{6fe56d5b-cb5b-41e8-90b2-376631ab8a7c}</destination>
 		</relationship>
+	</object>
+	<object class="GainEffect" id="{39dcc77f-3a08-4ae0-9548-b3d002185b11}">
+		<property name="gain">
+			<value>10</value>
+		</property>
+	</object>
+	<object class="GainEffect" id="{48f64f74-cb14-4298-9be0-43ba8c347ec5}">
+		<property name="gain">
+			<value>4</value>
+		</property>
 	</object>
 	<object class="MixerBusFader" id="{15f5a138-e4d6-4f7e-b376-fd656834c0d5}" />
 	<object class="AutomationPoint" id="{31045d7e-8a21-4014-baab-c0c3da2a3cee}">
