@@ -22,7 +22,7 @@ namespace GGJ24
         private bool _targetAcquried = false;
         private float _minHostileDuration = 3f;
         private float _hostileTimer = 0f;
-        private bool _isHostile { get => State == TargetingState.Hostile; }
+        public bool IsHostile { get => State == TargetingState.Hostile; }
 
         [SerializeField] private TargetingState _state;
         public TargetingState State { get => _state; private set => _state = value; }
@@ -62,12 +62,12 @@ namespace GGJ24
             _targetIsInCone = IsInCone();
             _targetAcquried = IsInCone() && !IsObstructed();
 
-            if (!_isHostile && _targetAcquried)
+            if (!IsHostile && _targetAcquried)
             {
                 ChangeToHostile();
             }
 
-            if (_isHostile && !_targetAcquried)
+            if (IsHostile && !_targetAcquried)
             {
                 _hostileTimer += Time.deltaTime;
                 if (_hostileTimer > _minHostileDuration)
@@ -125,7 +125,7 @@ namespace GGJ24
             // Draw targeting gizmo
             if (Target != null)
             {
-                Gizmos.color = _isHostile ? Color.red : _targetAcquried ? Color.cyan : Color.green;
+                Gizmos.color = IsHostile ? Color.red : _targetAcquried ? Color.cyan : Color.green;
                 Gizmos.DrawLine(_firePoint.transform.position, Target.position);
             }
         }

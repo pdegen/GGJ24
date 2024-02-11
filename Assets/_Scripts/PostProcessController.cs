@@ -10,7 +10,7 @@ namespace GGJ24
 
         private Volume _postProcessVolume;
         private Vignette _vignette;
-        private Bloom _bloom;
+        //private Bloom _bloom;
 
         private void Awake()
         {
@@ -30,17 +30,17 @@ namespace GGJ24
             }
         }
 
-        public void SetBloomIntensity(float intensity)
-        {
-            if (_vignette != null)
-            {
-                _bloom.intensity.value = intensity;
-            }
-            else
-            {
-                Debug.LogWarning("Vignette effect not found or not initialized.");
-            }
-        }
+        //public void SetBloomIntensity(float intensity)
+        //{
+        //    if (_vignette != null)
+        //    {
+        //        _bloom.intensity.value = intensity;
+        //    }
+        //    else
+        //    {
+        //        Debug.LogWarning("Vignette effect not found or not initialized.");
+        //    }
+        //}
 
         public void SetVignetteIntensity(float intensity)
         {

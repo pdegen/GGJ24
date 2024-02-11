@@ -4,18 +4,17 @@ using UnityEngine;
 
 namespace GGJ24
 {
-    public class ChickenManager : MonoBehaviour, IDifficultydDependable
+    public class ChickenManager : MonoBehaviour//, IDifficultydDependable
     {
         public static ChickenManager Instance { get; private set; }
 
         [SerializeField] private Material _chickenEmissionMaterial;
-        [SerializeField] private float _maxEmissionIntensity = 30f;
-        private float _maxEmissionIntensityBase;
-        [SerializeField] float _startEmissionIntensity = 2f;
-        [SerializeField] int _numEggsUntilMaxRageEyes = 10;
+        [SerializeField] private float _emissionIntensity = 30f;
+        //private float _maxEmissionIntensityBase;
+        //[SerializeField] float _startEmissionIntensity = 2f;
+        //[SerializeField] int _numEggsUntilMaxRageEyes = 10;
 
         [SerializeField] private int _numChickensPerEggCollected = 2;
-        [SerializeField] private bool _enableDummyWave = false;
 
         private static int _totalChickens;
         private float _nearbyChickenSearchRadius = 4f;
@@ -30,7 +29,6 @@ namespace GGJ24
             }
             Instance = this;
             _chickensAwake = 0;
-            _maxEmissionIntensityBase = _maxEmissionIntensity;
         }
 
         private void OnEnable()
@@ -52,7 +50,7 @@ namespace GGJ24
             {
                 Debug.LogWarning("Chicken emission material not found");
             }
-            _chickenEmissionMaterial.SetColor("_EmissionColor", Color.red);
+            _chickenEmissionMaterial.SetColor("_EmissionColor", _emissionIntensity * Color.red);
         }
 
         public void GetChickens()
@@ -121,7 +119,7 @@ namespace GGJ24
         private void OnEggCollected(Vector3 position)
         {
             WakeUpChickens(position);
-            UpdateEmission();
+            //UpdateEmission();
             //UdpateBloom();
         }
         //private void UdpateBloom()
@@ -132,25 +130,25 @@ namespace GGJ24
         //    Debug.Log("set bloom"  + newBloomIntensity);
         //}
 
-        private void UpdateEmission()
-        {
-            float parameterValue = Mathf.Min(1f, (float)EggManager.CollectedEggs / (float)_numEggsUntilMaxRageEyes);
+        //private void UpdateEmission()
+        //{
+        //    float parameterValue = Mathf.Min(1f, (float)EggManager.CollectedEggs / (float)_numEggsUntilMaxRageEyes);
 
-            if (_chickenEmissionMaterial != null)
-            {
-                float newEmissionIntensity = Mathf.Lerp(_startEmissionIntensity, _maxEmissionIntensity, parameterValue);
-                Color newEmissionColor = Color.red * newEmissionIntensity;
-                _chickenEmissionMaterial.SetColor("_EmissionColor", newEmissionColor);
-            }
-            else
-            {
-                Debug.LogWarning("Material not found or not initialized.");
-            }
-        }
+        //    if (_chickenEmissionMaterial != null)
+        //    {
+        //        float newEmissionIntensity = Mathf.Lerp(_startEmissionIntensity, _maxEmissionIntensity, parameterValue);
+        //        Color newEmissionColor = Color.red * newEmissionIntensity;
+        //        _chickenEmissionMaterial.SetColor("_EmissionColor", newEmissionColor);
+        //    }
+        //    else
+        //    {
+        //        Debug.LogWarning("Material not found or not initialized.");
+        //    }
+        //}
 
-        public void RefreshDifficultyParams()
-        {
-            _maxEmissionIntensity = _maxEmissionIntensityBase * GameParamsLoader.CurrentMultiplier;
-        }
+        //public void RefreshDifficultyParams()
+        //{
+        //    _maxEmissionIntensity = _maxEmissionIntensityBase * GameParamsLoader.CurrentMultiplier;
+        //}
     }
 }

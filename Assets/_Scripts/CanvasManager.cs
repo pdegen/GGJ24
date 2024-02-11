@@ -157,6 +157,9 @@ namespace GGJ24
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
                 _input.jump = false; // prevent jump after button press
+
+                // fade out difficulty selection sound
+                if (_stoppableOneShotInstance.isValid()) { _stoppableOneShotInstance.stop(STOP_MODE.ALLOWFADEOUT); }
             }
         }
 
@@ -233,7 +236,7 @@ namespace GGJ24
             {
                 _eggsCollected.DOPunchScale(new Vector2(1.1f,1.1f), 0.6f).SetEase(Ease.InOutSine);
             }
-            _eggsText.text = "EGGS: " + EggManager.CollectedEggs;
+            _eggsText.text = EggManager.CollectedEggs.ToString();
         }
 
         private EventInstance _stoppableOneShotInstance;

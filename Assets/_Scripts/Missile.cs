@@ -104,7 +104,7 @@ namespace GGJ24
             // Decal
             if (Physics.Raycast(_decalSpawnPoint.position, _decalSpawnPoint.transform.forward, out RaycastHit decalhit, _raycastDistance, layerMask: 1 << 0))
             {
-                GameObject decal = Instantiate(_explosionDecal, _decalSpawnPoint.position, Quaternion.identity);
+                GameObject decal = Instantiate(_explosionDecal, _decalSpawnPoint.position + new Vector3(UnityEngine.Random.Range(-5,5),0, UnityEngine.Random.Range(-5, 5)), Quaternion.identity);
                 decal.transform.forward = -decalhit.normal;
             }
             else
@@ -130,11 +130,6 @@ namespace GGJ24
                         rb.AddExplosionForce(_explosionForce, transform.position, ExplosionRadius, _upwardsModifier, ForceMode.Impulse);
                     }
                 }
-
-                //if (hit.TryGetComponent(out PlayerHealth playerHealth))
-                //{
-                //    playerHealth.TakeDamage(GameParamsLoader.MissileDamage);
-                //}
 
                 if (hit.TryGetComponent(out IDamageable damageable))
                 {

@@ -16,8 +16,10 @@ namespace GGJ24
         [SerializeField] private Slider _mainSlider;
         [SerializeField] private Slider _delayedSlider;
         [SerializeField] private float _delay = 1f;
+        [SerializeField] private int _maxDelayStacks = 4;
         [SerializeField] private float _duration = 1f;
         private Coroutine _delayRoutine;
+        private int _delayStacks;
 
         public void Init(float initialValue, float maxValue, float minValue = 0)
         {
@@ -31,6 +33,7 @@ namespace GGJ24
             MaxValue = maxValue;
             MinValue = minValue;
             Value = initialValue;
+            _delayStacks = 0;
         }
 
         private void UpdateSlider(float newValue)
@@ -39,19 +42,26 @@ namespace GGJ24
 
             if (_delayRoutine == null)
             {
-                _delayRoutine = StartCoroutine(UpdateDelayedSlider(newValue));
+                _delayStacks = 0;
+                _delayRoutine = StartCoroutine(UpdateDelayedSlider());
             }
             else
             {
-                StopCoroutine(_delayRoutine);
-                _delayRoutine = StartCoroutine(UpdateDelayedSlider(newValue));
+                _delayStacks++;
+
+                if (_delayStacks < _maxDelayStacks)
+                {
+                    StopCoroutine(_delayRoutine);
+                    _delayRoutine = StartCoroutine(UpdateDelayedSlider());
+                }
             }
         }
 
-        private IEnumerator UpdateDelayedSlider(float newValue)
+        private IEnumerator UpdateDelayedSlider()
         {
             yield return new WaitForSeconds(_delay);
-            DOTween.To(() => _delayedSlider.value, x => _delayedSlider.value = x, newValue, _duration);
+            DOTween.To(() => _delayedSlider.value, x => _delayedSlider.value = x, _mainSlider.value, _duration);
+            _delayRoutine = null;
         }
 
     }

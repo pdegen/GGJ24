@@ -127,9 +127,8 @@ namespace GGJ24
             if (Health > 0)
             {
                 _hitRoutine ??= StartCoroutine(HitRoutine());
-                if (Health / MaxHealth > _criticalThreshold) _vignette.SetVignetteIntensity(0f);
-                else _vignette.SetVignetteIntensity(Mathf.Lerp(0f, 0.5f, 1 - Health / MaxHealth));
             }
+            UpdateCriticalVignette();
         }
 
         public void ActivateDamageReduction(bool activate)
@@ -180,6 +179,13 @@ namespace GGJ24
         {
             Health += deltaHealth;
             HealthChanged?.Invoke((int)Health);
+            UpdateCriticalVignette();
+        }
+
+        private void UpdateCriticalVignette()
+        {
+            if (Health / MaxHealth > _criticalThreshold) _vignette.SetVignetteIntensity(0f);
+            else _vignette.SetVignetteIntensity(Mathf.Lerp(0f, 0.5f, 1 - Health / MaxHealth));
         }
 
         [SerializeField] private GameObject _deathEffect;
@@ -195,7 +201,7 @@ namespace GGJ24
         private IEnumerator DeathRoutine()
         {
             yield return new WaitForSeconds(3f);
-            Instantiate(_deathEffect, transform.position, Quaternion.identity);
+            Instantiate(_deathEffect, transform.position + 0.3f*Vector3.up, Quaternion.identity);
         }
     }
 }

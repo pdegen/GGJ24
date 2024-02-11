@@ -29,8 +29,8 @@ MonoBehaviour:
   EasyMultiplier: 0.6
   HardMultiplier: 1.3
   ChickenKnockoutDuration: 7
-  MissileDamage: 50
-  AutoHealPerSecond: 1
+  MissileDamage: 75
+  AutoHealPerSecond: 2
   DodgeChance: 1
   EggsCollectedToUnlockDoubleJump: 3
   EggsCollectedToUnlockDash: 5

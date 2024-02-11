@@ -117,46 +117,46 @@ namespace GGJ24
             //HandleDistanceCheck();
         }
 
-        private void HandleDistanceCheck()
-        {
+        //private void HandleDistanceCheck()
+        //{
 
-            switch (_state)
-            {
-                case AgentState.Neutral:
-                    if (_agent.remainingDistance < _targetDistanceReached) TargetReached(); break;
-                case AgentState.Hostile:
-                    _agent.isStopped = true;
-                    RotateTowardsTarget();
-                    break;
-            }
-            return;
+        //    switch (_state)
+        //    {
+        //        case AgentState.Neutral:
+        //            if (_agent.remainingDistance < _targetDistanceReached) TargetReached(); break;
+        //        case AgentState.Hostile:
+        //            _agent.isStopped = true;
+        //            RotateTowardsTarget();
+        //            break;
+        //    }
+        //    return;
 
-            try
-            {
-                if (_agent.remainingDistance < _targetDistanceReached)
-                {
-                    switch (_state)
-                    {
-                        case AgentState.Neutral:
-                            TargetReached();
-                            break;
-                        case AgentState.Hostile:
-                            _agent.isStopped = true;
-                            RotateTowardsTarget();
-                            break;
-                    }
-                }
-                else
-                {
-                    _agent.isStopped = false;
-                }
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogWarning("Unable to handle distance check, resetting:" + ex);
-                ResetAgent();
-            }
-        }
+        //    try
+        //    {
+        //        if (_agent.remainingDistance < _targetDistanceReached)
+        //        {
+        //            switch (_state)
+        //            {
+        //                case AgentState.Neutral:
+        //                    TargetReached();
+        //                    break;
+        //                case AgentState.Hostile:
+        //                    _agent.isStopped = true;
+        //                    RotateTowardsTarget();
+        //                    break;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            _agent.isStopped = false;
+        //        }
+        //    }
+        //    catch (System.Exception ex)
+        //    {
+        //        Debug.LogWarning("Unable to handle distance check, resetting:" + ex);
+        //        ResetAgent();
+        //    }
+        //}
 
         protected bool IsOOB()
         {

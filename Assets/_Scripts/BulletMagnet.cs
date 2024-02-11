@@ -7,10 +7,8 @@ namespace GGJ24
     public class BulletMagnet : MonoBehaviour
     {
         [SerializeField] private float _attractStrength = 10f;
-        [SerializeField] private float _repelStrength = 1f;
         [SerializeField] private float _attractRadius = 5f;
         public LayerMask _attractLayer = 1 << 9;
-        private bool _isRepelling = false;
 
         private void OnEnable()
         {

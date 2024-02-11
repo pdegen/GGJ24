@@ -11,19 +11,21 @@ namespace GGJ24
     [RequireComponent(typeof(NavMeshAgent), typeof(AgentMovement), typeof(Targeting))]
     public class Tank : MonoBehaviour, IDamageable
     {
-
         [SerializeField] private float _awakenDuration = 10f;
+        [SerializeField] private float _maxHealth;
+        [SerializeField] private GameObject _canvas;
+        [SerializeField] private SliderWithDelay _healthSlider;
+        [SerializeField] private GameObject _deathEffect;
+        [SerializeField] private Transform _turret;
+        [SerializeField] private float _turretRotationSpeed;
+
+        private bool _isActive;
+        private float _currentHealth;
         private NavMeshAgent _agent;
         private AgentMovement _movement;
         private Shooting _shooting;
         private Targeting _targeting;
-        private bool _isActive;
-        [SerializeField] private GameObject _canvas;
-        [SerializeField] private SliderWithDelay _healthSlider;
 
-        [SerializeField] private float _maxHealth;
-        [SerializeField] private GameObject _deathEffect;
-        private float _currentHealth;
 
         public Vector3 Position => transform.position;
 
@@ -56,10 +58,47 @@ namespace GGJ24
             Egg.CollectedEgg -= ActivateTankWrapper;
         }
 
-        //private void Update()
-        //{
-        //    if (!_isActive) { return; }
-        //}
+        private void Update()
+        {
+            if (!_isActive) { return; }
+
+            if (_targeting.IsHostile)
+            {
+                if (_resetTurretRotationRoutine != null)
+                {
+                    StopCoroutine(_resetTurretRotationRoutine);
+                    _resetTurretRotationRoutine = null;
+                    _turret.DOKill();
+                }
+                RotateTurret();
+            } 
+            else if (_resetTurretRotationRoutine == null && _turret.localEulerAngles.y != 0)
+            {
+                _resetTurretRotationRoutine = StartCoroutine(ResetTurretRotation());
+            }
+        }
+
+        private Coroutine _resetTurretRotationRoutine;
+        private IEnumerator ResetTurretRotation()
+        {
+            _turret.DOLocalRotate(Vector3.zero, 3f);
+            yield return new WaitForSeconds(3f);
+            _resetTurretRotationRoutine = null;
+        }
+
+        private void RotateTurret()
+        {
+            Vector3 direction = _targeting.Target.position - _turret.transform.position;
+
+            // Project the direction onto the xz-plane (ignoring height)
+            direction.y = 0;
+
+            if (direction != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                _turret.transform.rotation = Quaternion.RotateTowards(_turret.transform.rotation, targetRotation, Time.deltaTime * _turretRotationSpeed);
+            }
+        }
 
         private void ActivateTankWrapper()
         {
@@ -74,7 +113,7 @@ namespace GGJ24
             // Step 0: Unparent from barn
             transform.parent = null;
 
-            // Step 1: tween position in fron of barn
+            // Step 1: tween position in front of barn
             transform.DOMove(transform.position + 9 * transform.forward, _awakenDuration).SetEase(Ease.InOutCubic);
             yield return new WaitForSeconds(_awakenDuration);
 

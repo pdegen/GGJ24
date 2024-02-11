@@ -208,10 +208,12 @@ namespace GGJ24
             AudioManager.Instance.PlayOneShot(FMODEvents.Instance.GameOverSFX, transform.position);
         }
 
+        [SerializeField] private PlayerHealth _health;
         public void GodMode()
         {
             RemainingTime += 1000f;
             AbilityManager.UnlockAll();
+            _health.Heal(1000);
         }
 
         private void OnDrawGizmos()
