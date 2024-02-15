@@ -181,7 +181,7 @@ MonoBehaviour:
   _spawnPointTagName: ChickenSpawnPoint
   _wakeUpDuration: 1
   _chickenMeshRenderer: {fileID: 5925378873934812325}
-  _emissionMaterial: {fileID: 2100000, guid: ab4784db64cc92046ad553c95a2a0f9b, type: 2}
+  _emissionMaterial: {fileID: 2100000, guid: 63743db312eddd94ebee8fbca001a5d6, type: 2}
   _bazooka: {fileID: 8668946218665268324}
 --- !u!114 &4286978725165820779
 MonoBehaviour:
