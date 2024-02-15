@@ -9,6 +9,8 @@ namespace GGJ24
     {
         [field: Header("Ambiance")]
         [field: SerializeField] public EventReference Ambiance { get; private set; }
+        [field: Header("ChickenRageHard")]
+        [field: SerializeField] public EventReference ChickenRageHard { get; private set; }
 
         [field: Header("Explosion SFX")]
         [field: SerializeField] public EventReference ExplosionSFX { get; private set; }
@@ -35,6 +37,8 @@ namespace GGJ24
         [field: SerializeField] public EventReference PlayerLandSFX { get; private set; }
         [field: Header("Whoosh SFX")]
         [field: SerializeField] public EventReference WhooshSFX { get; private set; }
+        [field: Header("PunchImpact SFX")]
+        [field: SerializeField] public EventReference PunchImpactSFX { get; private set; }
         [field: Header("Splash SFX")]
         [field: SerializeField] public EventReference SplashSFX { get; private set; }
         [field: Header("Chicken Normal SFX")]

@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 359c411670909b147b02a6afa6fcad06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intensityLow: 25
+  _intensityMid: 15
+  _intensityHigh: 10
 --- !u!1 &2999795160389213823
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,7 +98,7 @@ MonoBehaviour:
       Data2: 1193164090
       Data3: -1321982062
       Data4: 2109616737
-    Path: event:/Music/Music Manager
+    Path: event:/Music/Music Manager NORMAL
   <ExplosionSFX>k__BackingField:
     Guid:
       Data1: 340980372
@@ -180,3 +183,38 @@ MonoBehaviour:
       Data3: -1752818775
       Data4: -552675018
     Path: event:/FFX/SPLASH_Water_Pool_Jump_01_RR3_mono
+  <ChickenNormal>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <ChickenAngrySFX>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <ChickenWrathfulSFX>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <UISelectSFX>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <UISubmtiSFX>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 

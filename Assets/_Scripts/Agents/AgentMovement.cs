@@ -21,7 +21,7 @@ namespace GGJ24
         protected float _speed;
         protected delegate IEnumerator GetNewDestination();
         protected GetNewDestination _autoNewDestination;
-        [SerializeField] private float _targetDistanceHostile = 15f;
+        [SerializeField] protected float _targetDistanceHostile = 15f;
         protected float _targetDistanceReached;
         protected readonly float _targetDistanceNeutral = 0.3f;
         protected float _agentDisableDuration;
@@ -103,6 +103,11 @@ namespace GGJ24
             }
             if (!_agent.enabled || !_agent.isOnNavMesh) return;
 
+            HandleDistanceCheck();
+        }
+
+        protected virtual void HandleDistanceCheck()
+        {
             if (_state == AgentState.Neutral)
             {
                 _agent.isStopped = false;
@@ -113,50 +118,7 @@ namespace GGJ24
                 _agent.isStopped = true;
                 RotateTowardsTarget();
             }
-
-            //HandleDistanceCheck();
         }
-
-        //private void HandleDistanceCheck()
-        //{
-
-        //    switch (_state)
-        //    {
-        //        case AgentState.Neutral:
-        //            if (_agent.remainingDistance < _targetDistanceReached) TargetReached(); break;
-        //        case AgentState.Hostile:
-        //            _agent.isStopped = true;
-        //            RotateTowardsTarget();
-        //            break;
-        //    }
-        //    return;
-
-        //    try
-        //    {
-        //        if (_agent.remainingDistance < _targetDistanceReached)
-        //        {
-        //            switch (_state)
-        //            {
-        //                case AgentState.Neutral:
-        //                    TargetReached();
-        //                    break;
-        //                case AgentState.Hostile:
-        //                    _agent.isStopped = true;
-        //                    RotateTowardsTarget();
-        //                    break;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            _agent.isStopped = false;
-        //        }
-        //    }
-        //    catch (System.Exception ex)
-        //    {
-        //        Debug.LogWarning("Unable to handle distance check, resetting:" + ex);
-        //        ResetAgent();
-        //    }
-        //}
 
         protected bool IsOOB()
         {
@@ -190,12 +152,13 @@ namespace GGJ24
             }
         }
 
-        private void EndHostilities()
+        protected virtual void EndHostilities()
         {
             _shooting.IsHostile = false;
             _state = AgentState.Neutral;
             _targetDistanceReached = _targetDistanceNeutral;
         }
+
         protected virtual void CommenceHostilities()
         {
             _targetDistanceReached = _targetDistanceHostile;
@@ -210,8 +173,7 @@ namespace GGJ24
                 ResetAgent();
             }
         }
-
-
+        
         protected virtual void SetNewDestination()
         {
             if (!_agent.enabled || IsMovedByRigidBody || !_agent.isOnNavMesh)

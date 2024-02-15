@@ -47,7 +47,7 @@ MonoBehaviour:
   _bulletPrefab: {fileID: 5632713401504439107, guid: 6ffe2f138d260ce43a4a66e566b26b5c,
     type: 3}
   _bulletSpeed: 10
-  _cooldown: 1.5
+  Cooldown: 1
   _randomShootPeriod: 5
   _randomShootProbability: 0.1
   _firepoint: {fileID: 5861571706455978527}
@@ -182,6 +182,7 @@ MonoBehaviour:
   _wakeUpDuration: 1
   _chickenMeshRenderer: {fileID: 5925378873934812325}
   _emissionMaterial: {fileID: 2100000, guid: ab4784db64cc92046ad553c95a2a0f9b, type: 2}
+  _bazooka: {fileID: 8668946218665268324}
 --- !u!114 &4286978725165820779
 MonoBehaviour:
   m_ObjectHideFlags: 0

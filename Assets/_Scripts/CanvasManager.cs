@@ -9,6 +9,7 @@ using System;
 using DamageNumbersPro;
 using FMOD.Studio;
 using StarterAssets;
+using Unity.VisualScripting;
 
 namespace GGJ24
 {
@@ -159,7 +160,7 @@ namespace GGJ24
                 _input.jump = false; // prevent jump after button press
 
                 // fade out difficulty selection sound
-                if (_stoppableOneShotInstance.isValid()) { _stoppableOneShotInstance.stop(STOP_MODE.ALLOWFADEOUT); }
+                //if (_stoppableOneShotInstance.isValid()) { _stoppableOneShotInstance.stop(STOP_MODE.ALLOWFADEOUT); }
             }
         }
 
@@ -242,7 +243,14 @@ namespace GGJ24
         private EventInstance _stoppableOneShotInstance;
         private void OnSelectionChanged()
         {
-            if (_currentSelectedObject != null)
+            if (_currentSelectedObject == null)
+            {
+                _currentSelectedObject = EventSystem.current.currentSelectedGameObject;
+            }
+
+            bool isButton = _currentSelectedObject.TryGetComponent(out Button _);
+
+            if (_currentSelectedObject != null && isButton)
             {
                 _currentSelectedObject.transform.DOKill();
                 _currentSelectedObject.transform.localScale = _buttonBaseScale;
@@ -257,7 +265,7 @@ namespace GGJ24
             var eventSystem = EventSystem.current;
             _currentSelectedObject = eventSystem.currentSelectedGameObject;
 
-            if (_currentSelectedObject != null)
+            if (_currentSelectedObject != null && isButton)
             {
                 _currentSelectedObject.transform.DOScale(1.1f * _currentSelectedObject.transform.localScale.x, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
                 _currentSelectedObject.GetComponent<Image>().DOColor(_selectedButtonColor, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);

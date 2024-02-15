@@ -58,12 +58,13 @@ namespace GGJ24
                         GameObject reflect = Instantiate(_reflectEffect, transform.position, Quaternion.identity);
                         Destroy(reflect, 0.5f);
                         StartCoroutine(DisableSmoke(0.2f));
+                        AudioManager.Instance.PlayOneShot(FMODEvents.Instance.PunchImpactSFX, transform.position);
                     }
                     else
                     {
                         _dodgeNumberPrefab.Spawn(0.4f * other.transform.up + other.transform.position, "DODGED!");
+                        AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WhooshSFX, transform.position);
                     }
-                    AudioManager.Instance.PlayOneShot(FMODEvents.Instance.WhooshSFX, transform.position);
                     CanvasManager.Instance.AddTimeBonus(1);
                     GameManager.Instance.RemainingTime += 1;
                     return;
@@ -104,8 +105,11 @@ namespace GGJ24
             // Decal
             if (Physics.Raycast(_decalSpawnPoint.position, _decalSpawnPoint.transform.forward, out RaycastHit decalhit, _raycastDistance, layerMask: 1 << 0))
             {
-                GameObject decal = Instantiate(_explosionDecal, _decalSpawnPoint.position + new Vector3(UnityEngine.Random.Range(-5,5),0, UnityEngine.Random.Range(-5, 5)), Quaternion.identity);
+                GameObject decal = Instantiate(_explosionDecal, _decalSpawnPoint.position, Quaternion.identity);
                 decal.transform.forward = -decalhit.normal;
+
+                // Ensure no stretched decal on ground when spawning onto vertical object
+                //decal.transform.position = new Vector3(decal.transform.position.x, Mathf.Max(1.6f, decal.transform.position.y, decal.transform.position.z));
             }
             else
             {

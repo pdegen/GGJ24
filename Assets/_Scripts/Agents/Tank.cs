@@ -11,7 +11,7 @@ namespace GGJ24
     [RequireComponent(typeof(NavMeshAgent), typeof(AgentMovement), typeof(Targeting))]
     public class Tank : MonoBehaviour, IDamageable
     {
-        [SerializeField] private float _awakenDuration = 10f;
+        [SerializeField] private float _awakenDuration = 12.8f;
         [SerializeField] private float _maxHealth;
         [SerializeField] private GameObject _canvas;
         [SerializeField] private SliderWithDelay _healthSlider;
@@ -22,16 +22,23 @@ namespace GGJ24
         private bool _isActive;
         private float _currentHealth;
         private NavMeshAgent _agent;
-        private AgentMovement _movement;
+        private TankMovement _movement;
         private Shooting _shooting;
         private Targeting _targeting;
 
+        [SerializeField, Range(0f,1f)] float _changePhaseThreshold = 0.5f;
+        private Phases _phase;
+        private enum Phases
+        {
+            Phase1,
+            Phase2
+        }
 
         public Vector3 Position => transform.position;
 
         private void Awake()
         {
-            _movement = GetComponent<AgentMovement>();
+            _movement = GetComponent<TankMovement>();
             _movement.enabled = false;
             _targeting = GetComponent<Targeting>();
             _targeting.TargetingEnabled = false; // don't do _targeting.enabled = false else AgentMovement rotate towards target will fail
@@ -46,6 +53,7 @@ namespace GGJ24
         {
             _shooting = _targeting.Shooting;
             _shooting.CanShoot = false;
+            _phase = Phases.Phase1;
         }
 
         private void OnEnable()
@@ -110,12 +118,17 @@ namespace GGJ24
 
         private IEnumerator ActivateTank()
         {
+            AudioManager.Instance.StopAmbiance();
+            AudioManager.Instance.StartAmbiance(FMODEvents.Instance.ChickenRageHard, timedIntensity: false);
+            AudioManager.Instance.UpdateMusicIntensityManually(0);
+
             // Step 0: Unparent from barn
             transform.parent = null;
 
             // Step 1: tween position in front of barn
             transform.DOMove(transform.position + 9 * transform.forward, _awakenDuration).SetEase(Ease.InOutCubic);
             yield return new WaitForSeconds(_awakenDuration);
+            AudioManager.Instance.UpdateMusicIntensityManually(1);
 
             // Step 2: connect to navmesh and activate
             _targeting.TargetingEnabled = true;
@@ -134,13 +147,34 @@ namespace GGJ24
             _currentHealth -= deltaHealth;
             _currentHealth = Mathf.Max(0, _currentHealth);
             _healthSlider.Value = _currentHealth;
+
+            if (_currentHealth < _changePhaseThreshold * _maxHealth && _phase == Phases.Phase1)
+            {
+                _phase = Phases.Phase2;
+                AudioManager.Instance.UpdateMusicIntensityManually(2);
+                _shooting.Cooldown *= 0.5f;
+            }
+
             if (_currentHealth <= 0)
             {
-                Destroy(gameObject);
-                GameObject deathEffect = Instantiate(_deathEffect,transform.position, Quaternion.identity);
-                deathEffect.transform.localScale *= 3;
-                Destroy(deathEffect, 3f);
+                StartCoroutine(Die());
             }
+        }
+
+        private IEnumerator Die()
+        {
+            float deltaTime = 0f;
+            while (deltaTime <= 3f)
+            {
+                deltaTime += 1f;
+                GameObject deathEffect = Instantiate(_deathEffect, transform.position, Quaternion.identity);
+                deathEffect.transform.localScale *= 3;
+                Destroy(deathEffect, 1f);
+                yield return new WaitForSeconds(1f);
+            }
+            AudioManager.Instance.StopAmbiance();
+            AudioManager.Instance.StartAmbiance(FMODEvents.Instance.Ambiance, timedIntensity: true);
+            Destroy(gameObject);
         }
     }
 }

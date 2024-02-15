@@ -98,8 +98,8 @@ namespace GGJ24
         {
             CanvasManager.Instance.ToggleDifficultySelection(false);
             _canPause = true;
-            yield return new WaitForSeconds(2.5f);
-            AudioManager.Instance.StartAmbiance();
+            yield return new WaitForSeconds(2f);
+            AudioManager.Instance.StartAmbiance(FMODEvents.Instance.Ambiance, timedIntensity: true);
         }
 
         private void StartTimer()

@@ -16,7 +16,8 @@ namespace GGJ24
         [SerializeField] private float _intensityLow = 25;
         [SerializeField] private float _intensityMid = 15;
         [SerializeField] private float _intensityHigh = 10;
-        float[] _thresholdTimes;
+        private float[] _thresholdTimes;
+        private float _sfxVolume = 1f;
 
 
         private void Awake()
@@ -31,11 +32,13 @@ namespace GGJ24
             _thresholdTimes = new float[] { _intensityLow, _intensityMid, _intensityHigh };
         }
 
-        public void StartAmbiance()
+        public void StartAmbiance(EventReference eventRef, bool timedIntensity)
         {
-            ambientEventInstance = CreateEventInstance(FMODEvents.Instance.Ambiance);
+            ambientEventInstance = CreateEventInstance(eventRef);
             ambientEventInstance.start();
-            InvokeRepeating(nameof(CheckAndUpdateMusicIntensity), 0f, 1f);
+
+            if (timedIntensity)
+                InvokeRepeating(nameof(CheckAndUpdateMusicIntensity), 0f, 1f);
         }
 
         private void CheckAndUpdateMusicIntensity()
@@ -53,14 +56,31 @@ namespace GGJ24
             }
         }
 
-        private void UpdateMusicIntensity(float threshold)
+        public void SetMusicVolume(float volume)
         {
-            SetAmbianceParameter("Intensity", 3);
+            ambientEventInstance.setVolume(volume);
         }
 
-        public void StopAmbiance()
+        public void SetSFXVolume(float volume)
         {
-            ambientEventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            _sfxVolume = volume;
+        }
+
+        public void SetMasterVolume(float volume)
+        {
+            SetMusicVolume(volume);
+            SetSFXVolume(volume);    
+        }
+
+        public void UpdateMusicIntensityManually(int intensity)
+        {
+            SetAmbianceParameter("Intensity", intensity);
+        }
+
+        public void StopAmbiance(FMOD.Studio.STOP_MODE stopmode = FMOD.Studio.STOP_MODE.IMMEDIATE)
+        {
+            ambientEventInstance.stop(stopmode);
+            CancelInvoke();
         }
 
         public void SetAmbianceParameter(string parameterName, int parameterValue)
@@ -70,13 +90,19 @@ namespace GGJ24
 
         public void PlayOneShot(EventReference sound, Vector3 worldPosition)
         {
-            RuntimeManager.PlayOneShot(sound, worldPosition);
+            //RuntimeManager.PlayOneShot(sound, worldPosition);
+            EventInstance instance = RuntimeManager.CreateInstance(sound);
+            instance.set3DAttributes(RuntimeUtils.To3DAttributes(worldPosition));
+            instance.setVolume(_sfxVolume);
+            instance.start();
+            instance.release();
         }
 
         public EventInstance PlayStoppablOneShot(EventReference sound, Vector3 worldPosition)
         {
             EventInstance instance = RuntimeManager.CreateInstance(sound);
             instance.set3DAttributes(RuntimeUtils.To3DAttributes(worldPosition));
+            instance.setVolume(_sfxVolume);
             instance.start();
             instance.release();
             return instance;

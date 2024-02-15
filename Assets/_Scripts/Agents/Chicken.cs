@@ -15,6 +15,7 @@ namespace GGJ24
         [SerializeField] private float _wakeUpDuration = 1.2f;
         [SerializeField] private MeshRenderer _chickenMeshRenderer;
         [SerializeField] private Material _emissionMaterial;
+        [SerializeField] private GameObject _bazooka;
 
         private EventInstance _ambientEventInstance;
         private bool _rageSoundsActive;
@@ -28,6 +29,7 @@ namespace GGJ24
         {
             base.Start();
             _shooting.CanShoot = false;
+            _bazooka.SetActive(false);
             StartCoroutine(InitAudio());
             _targeting.TargetingEnabled = false;
         }
@@ -71,6 +73,7 @@ namespace GGJ24
         {
             _chickenMeshRenderer.material = _emissionMaterial;
             transform.parent = null;
+            _bazooka.SetActive(true);
             StartCoroutine(ActivateAngryChickenSounds(5f));
             transform.DOLocalJump(transform.position + transform.TransformDirection(new Vector3(0, -0.42f, 2)), 2.5f, 1, _wakeUpDuration);
             yield return new WaitForSeconds(_wakeUpDuration);

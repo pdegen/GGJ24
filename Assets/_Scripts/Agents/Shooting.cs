@@ -11,7 +11,7 @@ namespace GGJ24
 
         [SerializeField] private GameObject _bulletPrefab;
         [SerializeField] private float _bulletSpeed = 10f;
-        [SerializeField] private float _cooldown = 2f;
+        public float Cooldown = 2f;
         [SerializeField] private float _randomShootPeriod = 5f;
         [SerializeField, Range(0f, 1f)] private float _randomShootProbability = 0.1f;
         [SerializeField] private Transform _firepoint;
@@ -43,7 +43,7 @@ namespace GGJ24
                 return;
             }
 
-            if (_cooldownDeltaTime > _cooldown && CanShoot)
+            if (_cooldownDeltaTime > Cooldown && CanShoot)
             {
                 Shoot();
                 _movement.Recoil();
