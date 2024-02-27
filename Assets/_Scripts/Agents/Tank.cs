@@ -21,6 +21,19 @@ namespace GGJ24
 
         private bool _isActive;
         private float _currentHealth;
+        private float CurrentHealth
+        {
+            get => _currentHealth;
+            set
+            {
+                bool wasJustAlive = _currentHealth > 0;
+                _currentHealth = Mathf.Max(0, value);
+                if (wasJustAlive && _currentHealth <= 0)
+                {
+                    StartCoroutine(Die());
+                }
+            }
+        }
         private NavMeshAgent _agent;
         private TankMovement _movement;
         private Shooting _shooting;
@@ -46,7 +59,7 @@ namespace GGJ24
             _agent.enabled = false;
             _isActive = false;
             _canvas.SetActive(false);
-            _currentHealth = _maxHealth;
+            CurrentHealth = _maxHealth;
         }
 
         private void Start()
@@ -144,20 +157,14 @@ namespace GGJ24
         {
             if (!_isActive) return;
 
-            _currentHealth -= deltaHealth;
-            _currentHealth = Mathf.Max(0, _currentHealth);
-            _healthSlider.Value = _currentHealth;
+            CurrentHealth -= deltaHealth;
+            _healthSlider.Value = CurrentHealth;
 
-            if (_currentHealth < _changePhaseThreshold * _maxHealth && _phase == Phases.Phase1)
+            if (CurrentHealth < _changePhaseThreshold * _maxHealth && _phase == Phases.Phase1)
             {
                 _phase = Phases.Phase2;
                 AudioManager.Instance.UpdateMusicIntensityManually(2);
                 _shooting.Cooldown *= 0.5f;
-            }
-
-            if (_currentHealth <= 0)
-            {
-                StartCoroutine(Die());
             }
         }
 
@@ -172,9 +179,25 @@ namespace GGJ24
                 Destroy(deathEffect, 1f);
                 yield return new WaitForSeconds(1f);
             }
+            Disable();
             AudioManager.Instance.StopAmbiance();
+            yield return new WaitForSeconds(1f);
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.VictorySFX, transform.position);
+            yield return new WaitForSeconds(7f);
             AudioManager.Instance.StartAmbiance(FMODEvents.Instance.Ambiance, timedIntensity: true);
             Destroy(gameObject);
+        }
+
+        private void Disable()
+        {
+            enabled = false;
+            gameObject.GetComponent<Targeting>().enabled = false;
+            gameObject.GetComponent<Shooting>().enabled = false;
+            gameObject.GetComponent<TankMovement>().enabled = false;
+            MeshRenderer[] _renderers = GetComponentsInChildren<MeshRenderer>();
+            Collider[] _colliders = GetComponentsInChildren<Collider>();
+            foreach (var r in _renderers) { r.enabled = false;}
+            foreach (var c in _colliders) { c.enabled = false; }
         }
     }
 }

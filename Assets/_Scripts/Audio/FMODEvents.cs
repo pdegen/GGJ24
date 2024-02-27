@@ -21,6 +21,8 @@ namespace GGJ24
         [field: Header("Collection SFX")]
         [field: SerializeField] public EventReference CollectionSFX { get; private set; }
         [field: Header("Hit SFX")]
+        [field: SerializeField] public EventReference DeathSFX { get; private set; }
+        [field: Header("Death SFX")]
         [field: SerializeField] public EventReference HitSFX { get; private set; }
         [field: Header("Victory SFX")]
         [field: SerializeField] public EventReference VictorySFX { get; private set; }

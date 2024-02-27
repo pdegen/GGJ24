@@ -265,7 +265,7 @@ namespace GGJ24
             var eventSystem = EventSystem.current;
             _currentSelectedObject = eventSystem.currentSelectedGameObject;
 
-            if (_currentSelectedObject != null && isButton)
+            if (_currentSelectedObject != null && _currentSelectedObject.TryGetComponent(out Button _))
             {
                 _currentSelectedObject.transform.DOScale(1.1f * _currentSelectedObject.transform.localScale.x, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
                 _currentSelectedObject.GetComponent<Image>().DOColor(_selectedButtonColor, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);

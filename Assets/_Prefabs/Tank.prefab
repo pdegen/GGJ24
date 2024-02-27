@@ -557,7 +557,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 5561349426305759274, guid: d66a2c09c1e5b2d479b2d808a96fbfc0, type: 3}
+  - {fileID: 2100000, guid: 223021bbf0737be428eb8da3fa85a824, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -848,6 +848,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _awakenDuration: 10
+  _maxHealth: 0
+  _canvas: {fileID: 0}
+  _healthSlider: {fileID: 0}
+  _deathEffect: {fileID: 0}
+  _turret: {fileID: 0}
+  _turretRotationSpeed: 0
+  _changePhaseThreshold: 0.5
 --- !u!114 &2522517056578451941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -886,7 +893,7 @@ MonoBehaviour:
   _bulletPrefab: {fileID: 5632713401504439107, guid: 6ffe2f138d260ce43a4a66e566b26b5c,
     type: 3}
   _bulletSpeed: 10
-  _cooldown: 2
+  Cooldown: 2
   _randomShootPeriod: 5
   _randomShootProbability: 0.1
   _firepoint: {fileID: 4620387131506354823}

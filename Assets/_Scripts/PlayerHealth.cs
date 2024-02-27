@@ -200,7 +200,9 @@ namespace GGJ24
         }
         private IEnumerator DeathRoutine()
         {
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1f);
+            AudioManager.Instance.PlayOneShot(FMODEvents.Instance.DeathSFX, transform.position);
+            yield return new WaitForSeconds(2f);
             Instantiate(_deathEffect, transform.position + 0.3f*Vector3.up, Quaternion.identity);
         }
     }
