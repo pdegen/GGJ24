@@ -9,7 +9,6 @@ using System;
 using DamageNumbersPro;
 using FMOD.Studio;
 using StarterAssets;
-using Unity.VisualScripting;
 
 namespace GGJ24
 {
@@ -224,6 +223,20 @@ namespace GGJ24
             _timerText.gameObject.SetActive(showUI);
             _eggsCollected.gameObject.SetActive(showUI);
             _controlOverlay.SetActive(showUI);
+            ChangeVisibility(_healthSlider.gameObject, showUI);
+        }
+
+        private void ChangeVisibility(GameObject obj, bool visible)
+        {
+            foreach (var renderer in obj.GetComponentsInChildren<Renderer>())
+            {
+                renderer.enabled = visible;
+            }
+            float t = visible ? 1.0f : 0.0f;
+            foreach (var canvasRenderer in obj.GetComponentsInChildren<CanvasRenderer>())
+            {
+                canvasRenderer.SetAlpha(t);
+            }
         }
 
         public void UpdateHealth(int newValue)
@@ -267,6 +280,7 @@ namespace GGJ24
 
             if (_currentSelectedObject != null && _currentSelectedObject.TryGetComponent(out Button _))
             {
+                _buttonBaseScale = _currentSelectedObject.transform.localScale;
                 _currentSelectedObject.transform.DOScale(1.1f * _currentSelectedObject.transform.localScale.x, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
                 _currentSelectedObject.GetComponent<Image>().DOColor(_selectedButtonColor, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
             }

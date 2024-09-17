@@ -4,10 +4,10 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.AI;
 using System;
+using UnityEngine.UI;
 
 namespace GGJ24
 {
-
     public static class ListExtensions
     {
         // Extension method to shuffle a generic list using Fisher-Yates algorithm

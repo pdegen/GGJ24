@@ -38,4 +38,4 @@ MonoBehaviour:
   EggsCollectedToUnlockReflectMissiles: 11
   EggsCollectedToUnlockXRay: 14
   EggsCollectedToUnlockAutoHeal: 16
-  EggsCollectedToSpawnTank: 1
+  EggsCollectedToSpawnTank: 13
